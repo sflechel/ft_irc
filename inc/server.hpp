@@ -6,7 +6,7 @@
 /*   By: sflechel <sflechel@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/13 13:39:56 by sflechel          #+#    #+#             */
-/*   Updated: 2025/06/13 15:34:24 by sflechel         ###   ########.fr       */
+/*   Updated: 2025/06/16 17:41:51 by sflechel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,17 +17,16 @@
 # define MY_PORT 5000
 # define LISTEN_BACKLOG 5
 
-#include <string>
 #include <sys/socket.h>
 #include <netinet/in.h>
 
 class Server
 {
 	public:
-		Server(std::string ip_address, int port);
+		Server(int port);
 		~Server();
 	private:
-		std::string			m_ip_address;
+		Server(void) {}
 		int					m_port;
 		int					m_master_socket;
 		struct sockaddr_in	m_master_socket_address;
