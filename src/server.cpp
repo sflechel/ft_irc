@@ -6,7 +6,7 @@
 /*   By: sflechel <sflechel@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/13 13:44:04 by sflechel          #+#    #+#             */
-/*   Updated: 2025/06/17 18:02:32 by sflechel         ###   ########.fr       */
+/*   Updated: 2025/06/17 18:35:22 by sflechel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,14 @@ Server::Server(int port) : m_port(port)
 	if (fcntl(m_master_socket, F_SETFL, O_NONBLOCK) == -1)
 		throw  std::runtime_error("failed to change socket to non-blocking");
 
-	std::cout << "Server waiting for a connection..." << std::endl;
+	// std::cout << "Server waiting for a connection..." << std::endl;
+	// std::cout << m_master_socket << std::endl;
+	// struct sockaddr	addr;
+	// socklen_t		len_addr;
+	// int				conn_fd;
+	// while (true) {
+	// conn_fd = accept(m_master_socket, &addr, &len_addr);
+	// }
 }
 
 int	Server::get_msocket_fd()

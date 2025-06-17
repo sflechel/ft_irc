@@ -6,7 +6,7 @@
 /*   By: sflechel <sflechel@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/13 13:36:54 by sflechel          #+#    #+#             */
-/*   Updated: 2025/06/17 17:55:47 by sflechel         ###   ########.fr       */
+/*   Updated: 2025/06/17 18:18:12 by sflechel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ int	main(void)
 	try {
 	Server server = Server(MY_PORT);
 	Reactor reactor = Reactor(server);
+	reactor.polling_loop();
 	} catch (std::runtime_error &e) {
 		std::cerr << e.what() << std::endl;
 	}

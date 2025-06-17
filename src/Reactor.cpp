@@ -6,23 +6,36 @@
 /*   By: sflechel <sflechel@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/17 10:24:56 by sflechel          #+#    #+#             */
-/*   Updated: 2025/06/17 18:00:20 by sflechel         ###   ########.fr       */
+/*   Updated: 2025/06/17 18:35:11 by sflechel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Reactor.hpp"
 #include "Handler_connection.hpp"
 #include "Handler_receive.hpp"
+#include <iostream>
 #include <stdexcept>
 #include <sys/epoll.h>
+#include <sys/socket.h>
+#include <unistd.h>
 
 void	Reactor::polling_loop()
 {
 	struct epoll_event	poll_opts;
-	int	nb_fds;
+	int					nb_fds;
 
 	while (true)
 	{
+		std::cout << "reached main loop" << std::endl;
+
+		std::cout << this->m_server.get_msocket_fd() << std::endl;
+		struct sockaddr	addr;
+		socklen_t		len_addr;
+		int				conn_fd;
+		while (true) {
+		conn_fd = accept(this->m_server.get_msocket_fd(), &addr, &len_addr);
+		}
+
 		nb_fds = epoll_wait(this->m_epollfd, this->m_events, MAX_EVENTS, -1);
 		if (nb_fds == -1)
 			throw std::runtime_error("epoll failed");
@@ -33,7 +46,7 @@ void	Reactor::polling_loop()
 			{
 				Handler_connection hconn = Handler_connection(this->m_server.get_msocket_fd());
 				int	conn_fd = hconn.accept_connection();
-				poll_opts.events = EPOLLIN | EPOLLET;
+				poll_opts.events = EPOLLIN | EPOLLOUT | EPOLLET;
 				poll_opts.data.fd = conn_fd;
 				if (epoll_ctl(this->m_epollfd, EPOLL_CTL_ADD, conn_fd, &poll_opts) == -1)
 					throw std::runtime_error("failed to add connection to epoll");
@@ -49,7 +62,7 @@ void	Reactor::polling_loop()
 
 Reactor::Reactor(Server server) : m_server(server)
 {
-	m_epollfd = epoll_create(0);
+	m_epollfd = epoll_create(1);
 	if (m_epollfd == -1)
 		throw std::runtime_error("failed to initialize epoll");
 	m_poll_opts.events = EPOLLIN;
@@ -59,4 +72,6 @@ Reactor::Reactor(Server server) : m_server(server)
 }
 
 Reactor::~Reactor()
-{}
+{
+	close(this->m_epollfd);
+}
