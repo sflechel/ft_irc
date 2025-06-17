@@ -6,7 +6,7 @@
 /*   By: sflechel <sflechel@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/13 13:44:04 by sflechel          #+#    #+#             */
-/*   Updated: 2025/06/16 17:55:20 by sflechel         ###   ########.fr       */
+/*   Updated: 2025/06/17 14:38:44 by sflechel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,6 @@
 #include <netdb.h>
 #include <fcntl.h>
 #include <iostream>
-
 
 Server::Server(int port) : m_port(port)
 {
@@ -41,7 +40,7 @@ Server::Server(int port) : m_port(port)
 	for (iter = server_info ; iter != NULL ; iter = iter->ai_next)
 	{
 		if ((sockfd = socket(iter->ai_family, iter->ai_socktype, iter->ai_protocol)) == -1)
-			continue ;//TODO add error printing with strerror
+			continue ;
 		if (setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(int)) == -1)
 		{
 			close(sockfd);

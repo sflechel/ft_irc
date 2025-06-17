@@ -1,37 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   server.hpp                                         :+:      :+:    :+:   */
+/*   Reactor.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sflechel <sflechel@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/13 13:39:56 by sflechel          #+#    #+#             */
-/*   Updated: 2025/06/17 15:16:32 by sflechel         ###   ########.fr       */
+/*   Created: 2025/06/17 10:25:10 by sflechel          #+#    #+#             */
+/*   Updated: 2025/06/17 15:24:10 by sflechel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef SERVER_HPP
+#ifndef REACTOR_HPP
 
-# define SERVER_HPP
+# define REACTOR_HPP
 
-# define MY_PORT 5000
-# define LISTEN_BACKLOG 5
+# define MAX_EVENTS 10
 
-# include <sys/socket.h>
-# include <netinet/in.h>
+# include "server.hpp"
+# include <sys/epoll.h>
 
-class Server
+class Reactor
 {
 	public:
-		Server(int port);
-		~Server();
-		int					get_msocket_fd();
+		Reactor(Server server);
+		~Reactor();
+		void				polling_loop();
 	private:
-		Server(void) {}
-		int					m_master_socket;
-		int					m_port;
-		struct sockaddr_in	m_master_socket_address;
-		unsigned int		m_master_socket_address_len;
+		Server				m_server;
+		int					m_epollfd;
+		struct epoll_event	m_poll_opts;
+		struct epoll_event	m_events[MAX_EVENTS];
 };
 
-#endif //SERVER_HPP
+#endif // !REACTOR_HPP
