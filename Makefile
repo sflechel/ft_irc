@@ -8,11 +8,18 @@ OBJ_DIR = obj/
 
 I = -I $(INC_DIR)
 
-HEADERS_FILES =	server.hpp
+HEADERS_FILES =	server.hpp\
+				Reactor.hpp\
+				Handler_connection.hpp\
+				Handler_receive.hpp\
+
 HEADERS = $(addprefix $(INC_DIR), $(HEADERS_FILES))
 
 SRC =	main.cpp\
 		server.cpp\
+		Reactor.cpp\
+		Handler_connection.cpp\
+		Handler_receive.cpp\
 
 SRC_FILES = $(addprefix $(SRC_DIR), $(SRC))
 

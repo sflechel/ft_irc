@@ -1,27 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.cpp                                           :+:      :+:    :+:   */
+/*   Handler_receive.hpp                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sflechel <sflechel@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/13 13:36:54 by sflechel          #+#    #+#             */
-/*   Updated: 2025/06/17 17:55:47 by sflechel         ###   ########.fr       */
+/*   Created: 2025/06/17 16:56:00 by sflechel          #+#    #+#             */
+/*   Updated: 2025/06/17 17:11:21 by sflechel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "server.hpp"
-#include "Reactor.hpp"
-#include <stdexcept>
-#include <iostream>
+#ifndef HANDLER_RECEIVE_HPP
 
-int	main(void)
+# define HANDLER_RECEIVE_HPP
+# define READ_BUFFER_SIZE 1024
+class Handler_receive
 {
-	try {
-	Server server = Server(MY_PORT);
-	Reactor reactor = Reactor(server);
-	} catch (std::runtime_error &e) {
-		std::cerr << e.what() << std::endl;
-	}
-	return (0);
-}
+	public:
+		Handler_receive(int sock_fd);
+		~Handler_receive();
+		void	read_data_sent();
+	private:
+		int		m_sock_fd;
+};
+
+#endif // !HANDLER_RECEIVE_HPP

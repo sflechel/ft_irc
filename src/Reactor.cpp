@@ -6,14 +6,15 @@
 /*   By: sflechel <sflechel@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/17 10:24:56 by sflechel          #+#    #+#             */
-/*   Updated: 2025/06/17 16:44:51 by sflechel         ###   ########.fr       */
+/*   Updated: 2025/06/17 18:00:20 by sflechel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Reactor.hpp"
+#include "Handler_connection.hpp"
+#include "Handler_receive.hpp"
 #include <stdexcept>
 #include <sys/epoll.h>
-#include "Handler_connection.hpp"
 
 void	Reactor::polling_loop()
 {
@@ -26,9 +27,9 @@ void	Reactor::polling_loop()
 		if (nb_fds == -1)
 			throw std::runtime_error("epoll failed");
 
-		for (int n = 0 ; n < nb_fds ; n++)
+		for (int i = 0 ; i < nb_fds ; i++)
 		{
-			if (this->m_events[n].data.fd == this->m_epollfd)
+			if (this->m_events[i].data.fd == this->m_epollfd)
 			{
 				Handler_connection hconn = Handler_connection(this->m_server.get_msocket_fd());
 				int	conn_fd = hconn.accept_connection();
@@ -38,6 +39,10 @@ void	Reactor::polling_loop()
 					throw std::runtime_error("failed to add connection to epoll");
 			}
 			else
+			{
+				Handler_receive	hrecv = Handler_receive(this->m_events[i].data.fd);
+				hrecv.read_data_sent();
+			}
 		}
 	}
 }
@@ -52,3 +57,6 @@ Reactor::Reactor(Server server) : m_server(server)
 	if (epoll_ctl(m_epollfd, EPOLL_CTL_ADD, m_server.get_msocket_fd(), &m_poll_opts) == -1)
 		throw std::runtime_error("failed to parametrize epoll");
 }
+
+Reactor::~Reactor()
+{}

@@ -6,12 +6,13 @@
 /*   By: sflechel <sflechel@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/17 15:20:30 by sflechel          #+#    #+#             */
-/*   Updated: 2025/06/17 16:33:42 by sflechel         ###   ########.fr       */
+/*   Updated: 2025/06/17 18:01:44 by sflechel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Handler_connection.hpp"
 #include <fcntl.h>
+#include <iostream>
 #include <stdexcept>
 #include <sys/socket.h>
 #include <sys/epoll.h>
@@ -33,5 +34,9 @@ int	Handler_connection::accept_connection()
 	if (fcntl(conn_fd, F_SETFL, O_NONBLOCK) == -1)
 		throw std::runtime_error("failed to set connection socket to non blocking");
 
+	std::cout << "Server connected to a client!" << std::endl;
 	return (conn_fd);
 }
+
+Handler_connection::~Handler_connection()
+{}

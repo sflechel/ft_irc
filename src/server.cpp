@@ -6,12 +6,13 @@
 /*   By: sflechel <sflechel@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/13 13:44:04 by sflechel          #+#    #+#             */
-/*   Updated: 2025/06/17 14:38:44 by sflechel         ###   ########.fr       */
+/*   Updated: 2025/06/17 18:02:32 by sflechel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "server.hpp"
 #include <asm-generic/socket.h>
+#include <iostream>
 #include <stdexcept>
 #include <sys/socket.h>
 #include <sys/types.h>
@@ -19,7 +20,6 @@
 #include <arpa/inet.h>
 #include <netdb.h>
 #include <fcntl.h>
-#include <iostream>
 
 Server::Server(int port) : m_port(port)
 {
@@ -67,17 +67,12 @@ Server::Server(int port) : m_port(port)
 	if (fcntl(m_master_socket, F_SETFL, O_NONBLOCK) == -1)
 		throw  std::runtime_error("failed to change socket to non-blocking");
 
-	struct	sockaddr_storage	their_addr;
-	socklen_t	addr_size = sizeof(their_addr);
-	std::cerr << "waiting for a connection..." << std::endl;
-	while (1)
-	{
-		int new_fd = accept(sockfd, (struct sockaddr *)&their_addr, &addr_size);
-		if (new_fd == -1)
-			continue ;
-		else
-			std::cerr << "server connected to client!" << std::endl;
-	}
+	std::cout << "Server waiting for a connection..." << std::endl;
+}
+
+int	Server::get_msocket_fd()
+{
+	return (this->m_master_socket);
 }
 
 Server::~Server()
