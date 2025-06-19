@@ -6,7 +6,7 @@
 /*   By: sflechel <sflechel@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/13 13:39:56 by sflechel          #+#    #+#             */
-/*   Updated: 2025/06/19 15:18:40 by sflechel         ###   ########.fr       */
+/*   Updated: 2025/06/19 16:58:40 by sflechel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,28 +14,31 @@
 
 # define SERVER_HPP
 
-# define MY_PORT 5000
+#include <vector>
 # define LISTEN_BACKLOG 5
 # define MAX_EVENTS 10
 
 # include <sys/socket.h>
 # include <netinet/in.h>
+# include <string>
+# include "Handler_connection.hpp"
 
 class Server
 {
 	public:
-		Server(int port);
+		Server(char *port, char *password);
 		~Server();
 	private:
-		void				setup_master_socket();
+		int					m_master_socket;
+		int					m_epollfd;
+		std::string			m_password;
+		struct sockaddr_in	m_master_socket_address;
+		unsigned int		m_master_socket_address_len;
+		std::vector<Client>	m_clients;
+		void				setup_master_socket(char *port);
 		void				setup_poll();
 		void				poll_events();
 		Server(void)		{}
-		int					m_master_socket;
-		int					m_epollfd;
-		int					m_port;
-		struct sockaddr_in	m_master_socket_address;
-		unsigned int		m_master_socket_address_len;
 };
 
 #endif //SERVER_HPP

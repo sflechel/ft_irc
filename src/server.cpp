@@ -6,7 +6,7 @@
 /*   By: sflechel <sflechel@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/13 13:44:04 by sflechel          #+#    #+#             */
-/*   Updated: 2025/06/19 15:24:49 by sflechel         ###   ########.fr       */
+/*   Updated: 2025/06/19 17:00:43 by sflechel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,8 +39,10 @@ void	Server::poll_events()
 			if (events[i].data.fd == this->m_master_socket)
 			{
 				Handler_connection hconn = Handler_connection(this->m_master_socket);
-				int	conn_fd = hconn.accept_connection();
+				Client	new_client = hconn.accept_connection();
+				this->m_clients.push_back(new_client);
 				poll_opts.events = EPOLLIN | EPOLLOUT | EPOLLET;
+				int conn_fd = new_client.get_my_fd();
 				poll_opts.data.fd = conn_fd;
 				if (epoll_ctl(this->m_epollfd, EPOLL_CTL_ADD, conn_fd, &poll_opts) == -1)
 					throw std::runtime_error("failed to add connection to epoll");
@@ -71,7 +73,7 @@ void Server::setup_poll()
 		throw std::runtime_error("failed to parametrize epoll");
 }
 
-void	Server::setup_master_socket()
+void	Server::setup_master_socket(char *port)
 {
 	struct addrinfo	hints = {};
 	struct addrinfo	*server_info, *iter;
@@ -82,7 +84,7 @@ void	Server::setup_master_socket()
 	hints.ai_socktype = SOCK_STREAM;
 	hints.ai_flags = AI_PASSIVE;
 
-	if (getaddrinfo(NULL, "5000", &hints, &server_info) != 0)//TODO fix port/service TODO be more error specific
+	if (getaddrinfo(NULL, port, &hints, &server_info) != 0)//TODO fix port/service TODO be more error specific
 		throw std::runtime_error("could not get addr info");
 
 	for (iter = server_info ; iter != NULL ; iter = iter->ai_next)
@@ -116,10 +118,11 @@ void	Server::setup_master_socket()
 		throw  std::runtime_error("failed to change socket to non-blocking");
 }
 
-Server::Server(int port) : m_port(port)
+Server::Server(char *port, char *password)
 {
-	(void) m_port;
-	setup_master_socket();
+	m_password = std::string(password);
+
+	setup_master_socket(port);
 	setup_poll();
 	poll_events();
 }
