@@ -6,11 +6,15 @@
 /*   By: sflechel <sflechel@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 16:29:52 by sflechel          #+#    #+#             */
-/*   Updated: 2025/06/19 16:56:00 by sflechel         ###   ########.fr       */
+/*   Updated: 2025/06/19 18:04:25 by sflechel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <string>
+#ifndef CLIENT_HPP
+
+# define CLIENT_HPP
+
+# include <string>
 
 class Client{
 	public:
@@ -24,3 +28,5 @@ class Client{
 		std::string		m_username;
 		Client(void)	{}
 };
+
+#endif // !CLIENT_HPP

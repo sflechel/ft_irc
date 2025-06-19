@@ -6,7 +6,7 @@
 /*   By: sflechel <sflechel@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/13 13:39:56 by sflechel          #+#    #+#             */
-/*   Updated: 2025/06/19 16:58:40 by sflechel         ###   ########.fr       */
+/*   Updated: 2025/06/19 18:05:31 by sflechel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,14 +14,14 @@
 
 # define SERVER_HPP
 
-#include <vector>
 # define LISTEN_BACKLOG 5
 # define MAX_EVENTS 10
 
 # include <sys/socket.h>
 # include <netinet/in.h>
 # include <string>
-# include "Handler_connection.hpp"
+# include "Client.hpp"
+# include <vector>
 
 class Server
 {

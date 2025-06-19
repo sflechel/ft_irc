@@ -1,4 +1,4 @@
-NAME = ft_irc
+NAME = ircserv
 CC = c++
 CFLAGS = -Wall -Wextra -Werror -g3 -std=c++98
 
@@ -11,6 +11,7 @@ I = -I $(INC_DIR)
 HEADERS_FILES =	server.hpp\
 				Handler_connection.hpp\
 				Handler_receive.hpp\
+				Client.hpp\
 
 HEADERS = $(addprefix $(INC_DIR), $(HEADERS_FILES))
 
@@ -18,6 +19,7 @@ SRC =	main.cpp\
 		server.cpp\
 		Handler_connection.cpp\
 		Handler_receive.cpp\
+		Client.cpp\
 
 SRC_FILES = $(addprefix $(SRC_DIR), $(SRC))
 

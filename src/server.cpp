@@ -6,7 +6,7 @@
 /*   By: sflechel <sflechel@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/13 13:44:04 by sflechel          #+#    #+#             */
-/*   Updated: 2025/06/19 17:00:43 by sflechel         ###   ########.fr       */
+/*   Updated: 2025/06/19 18:07:58 by sflechel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,12 +44,13 @@ void	Server::poll_events()
 				poll_opts.events = EPOLLIN | EPOLLOUT | EPOLLET;
 				int conn_fd = new_client.get_my_fd();
 				poll_opts.data.fd = conn_fd;
+				poll_opts.data.ptr = &new_client;
 				if (epoll_ctl(this->m_epollfd, EPOLL_CTL_ADD, conn_fd, &poll_opts) == -1)
 					throw std::runtime_error("failed to add connection to epoll");
 			}
 			else if (events[i].events & EPOLLIN)
 			{
-				Handler_receive	hrecv = Handler_receive(events[i].data.fd);
+				Handler_receive	hrecv = Handler_receive(*(Client *)(events[i].data.ptr));
 				hrecv.read_data_sent();
 			}
 			else if (events[i].events & EPOLLOUT)
@@ -129,6 +130,8 @@ Server::Server(char *port, char *password)
 
 Server::~Server()
 {
+	for (size_t i = 0 ; i >= this->m_clients.size() ; i++)
+		close(this->m_clients[i].get_my_fd());
 	close(m_master_socket);
 	close(m_epollfd);
 }
