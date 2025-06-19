@@ -21,14 +21,14 @@ SRC =	main.cpp\
 
 SRC_FILES = $(addprefix $(SRC_DIR), $(SRC))
 
-OBJ_FILES = $(SRC_FILES:$(SRC_DIR)%.c=$(OBJ_DIR)%.o)
+OBJ_FILES = $(SRC_FILES:$(SRC_DIR)%.cpp=$(OBJ_DIR)%.o)
 
 all: $(NAME)
 
 $(OBJ_DIR):
 	mkdir $(OBJ_DIR)
 
-$(OBJ_DIR)%.o:$(SRC_DIR)%.c $(HEADERS) | $(OBJ_DIR)
+$(OBJ_DIR)%.o:$(SRC_DIR)%.cpp $(HEADERS) | $(OBJ_DIR)
 	mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) $(I) -c $< -o $@
 

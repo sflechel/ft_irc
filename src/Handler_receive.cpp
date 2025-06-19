@@ -6,7 +6,7 @@
 /*   By: edarnand <edarnand@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/17 16:56:49 by sflechel          #+#    #+#             */
-/*   Updated: 2025/06/19 10:56:06 by edarnand         ###   ########.fr       */
+/*   Updated: 2025/06/19 15:23:33 by sflechel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,6 @@ void	Handler_receive::read_data_sent()
 		std::string message(read_buffer);
 		std::cout << message;
 	}
-	std::cout << std::endl;
 }
 
 Handler_receive::Handler_receive(int sock_fd) : m_sock_fd(sock_fd)

@@ -6,7 +6,7 @@
 /*   By: sflechel <sflechel@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/13 13:44:04 by sflechel          #+#    #+#             */
-/*   Updated: 2025/06/19 15:17:35 by sflechel         ###   ########.fr       */
+/*   Updated: 2025/06/19 15:24:49 by sflechel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,11 +45,15 @@ void	Server::poll_events()
 				if (epoll_ctl(this->m_epollfd, EPOLL_CTL_ADD, conn_fd, &poll_opts) == -1)
 					throw std::runtime_error("failed to add connection to epoll");
 			}
-			else
+			else if (events[i].events & EPOLLIN)
 			{
 				Handler_receive	hrecv = Handler_receive(events[i].data.fd);
 				hrecv.read_data_sent();
 			}
+			else if (events[i].events & EPOLLOUT)
+			{}
+			else
+				throw std::runtime_error("how did we get here?");
 		}
 	}
 }
@@ -57,6 +61,7 @@ void	Server::poll_events()
 void Server::setup_poll()
 {
 	struct epoll_event	poll_opts;
+
 	m_epollfd = epoll_create(1);
 	if (this->m_epollfd == -1)
 		throw std::runtime_error("failed to initialize epoll");
