@@ -6,13 +6,12 @@
 /*   By: sflechel <sflechel@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/13 13:44:04 by sflechel          #+#    #+#             */
-/*   Updated: 2025/06/17 18:35:22 by sflechel         ###   ########.fr       */
+/*   Updated: 2025/06/19 15:17:35 by sflechel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "server.hpp"
 #include <asm-generic/socket.h>
-#include <iostream>
 #include <stdexcept>
 #include <sys/socket.h>
 #include <sys/types.h>
@@ -20,8 +19,54 @@
 #include <arpa/inet.h>
 #include <netdb.h>
 #include <fcntl.h>
+#include <sys/epoll.h>
+#include "Handler_connection.hpp"
+#include "Handler_receive.hpp"
 
-Server::Server(int port) : m_port(port)
+void	Server::poll_events()
+{
+	struct epoll_event	events[MAX_EVENTS], poll_opts;
+	int					nb_fds;
+
+	while (true)
+	{
+		nb_fds = epoll_wait(this->m_epollfd, events, MAX_EVENTS, -1);
+		if (nb_fds == -1)
+			throw std::runtime_error("epoll failed");
+
+		for (int i = 0 ; i < nb_fds ; i++)
+		{
+			if (events[i].data.fd == this->m_master_socket)
+			{
+				Handler_connection hconn = Handler_connection(this->m_master_socket);
+				int	conn_fd = hconn.accept_connection();
+				poll_opts.events = EPOLLIN | EPOLLOUT | EPOLLET;
+				poll_opts.data.fd = conn_fd;
+				if (epoll_ctl(this->m_epollfd, EPOLL_CTL_ADD, conn_fd, &poll_opts) == -1)
+					throw std::runtime_error("failed to add connection to epoll");
+			}
+			else
+			{
+				Handler_receive	hrecv = Handler_receive(events[i].data.fd);
+				hrecv.read_data_sent();
+			}
+		}
+	}
+}
+
+void Server::setup_poll()
+{
+	struct epoll_event	poll_opts;
+	m_epollfd = epoll_create(1);
+	if (this->m_epollfd == -1)
+		throw std::runtime_error("failed to initialize epoll");
+	poll_opts.events = EPOLLIN;
+	poll_opts.data.fd = this->m_master_socket;
+	if (epoll_ctl(this->m_epollfd, EPOLL_CTL_ADD, this->m_master_socket, &poll_opts) == -1)
+		throw std::runtime_error("failed to parametrize epoll");
+}
+
+void	Server::setup_master_socket()
 {
 	struct addrinfo	hints = {};
 	struct addrinfo	*server_info, *iter;
@@ -32,8 +77,6 @@ Server::Server(int port) : m_port(port)
 	hints.ai_socktype = SOCK_STREAM;
 	hints.ai_flags = AI_PASSIVE;
 
-	(void)port;
-	(void)m_port;
 	if (getaddrinfo(NULL, "5000", &hints, &server_info) != 0)//TODO fix port/service TODO be more error specific
 		throw std::runtime_error("could not get addr info");
 
@@ -66,23 +109,18 @@ Server::Server(int port) : m_port(port)
 		throw std::runtime_error("failed to listen");
 	if (fcntl(m_master_socket, F_SETFL, O_NONBLOCK) == -1)
 		throw  std::runtime_error("failed to change socket to non-blocking");
-
-	// std::cout << "Server waiting for a connection..." << std::endl;
-	// std::cout << m_master_socket << std::endl;
-	// struct sockaddr	addr;
-	// socklen_t		len_addr;
-	// int				conn_fd;
-	// while (true) {
-	// conn_fd = accept(m_master_socket, &addr, &len_addr);
-	// }
 }
 
-int	Server::get_msocket_fd()
+Server::Server(int port) : m_port(port)
 {
-	return (this->m_master_socket);
+	(void) m_port;
+	setup_master_socket();
+	setup_poll();
+	poll_events();
 }
 
 Server::~Server()
 {
 	close(m_master_socket);
+	close(m_epollfd);
 }
