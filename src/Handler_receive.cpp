@@ -6,13 +6,37 @@
 /*   By: edarnand <edarnand@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/17 16:56:49 by sflechel          #+#    #+#             */
-/*   Updated: 2025/06/19 10:56:06 by edarnand         ###   ########.fr       */
+/*   Updated: 2025/06/20 10:49:47 by edarnand         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Handler_receive.hpp"
+#include <algorithm>
 #include <sys/socket.h>
 #include <iostream>
+#include <sstream>
+
+void	Handler_receive::parse_client_msg(char *msg, int msg_len)
+{
+	if (msg[0] == '\0')
+		return ;
+	char *crlf = std::find(msg, msg + msg_len, "\r\n");
+	if (!crlf)
+		return ;//ignore empty msg
+
+	char *first_space = std::find(msg, msg + msg_len,  ' ');
+	char *cmd = msg;
+	char *params;
+
+	if (first_space)
+	{
+		*first_space = '\0';
+		params = first_space + 1;
+	}
+	else
+		params = NULL;
+	std::cout << cmd << " " << params << std::endl;
+}
 
 void	Handler_receive::read_data_sent()
 {
@@ -29,10 +53,8 @@ void	Handler_receive::read_data_sent()
 		std::cout << message;
 	}
 	std::cout << std::endl;
-}
 
-Handler_receive::Handler_receive(int sock_fd) : m_sock_fd(sock_fd)
-{
+	parse_client_msg(read_buffer, bytes_read);
 }
 
 Handler_receive::~Handler_receive()

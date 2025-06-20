@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Handler_receive.hpp                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sflechel <sflechel@student.42lyon.fr>      +#+  +:+       +#+        */
+/*   By: edarnand <edarnand@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/17 16:56:00 by sflechel          #+#    #+#             */
-/*   Updated: 2025/06/17 17:11:21 by sflechel         ###   ########.fr       */
+/*   Updated: 2025/06/20 10:50:26 by edarnand         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ class Handler_receive
 		~Handler_receive();
 		void	read_data_sent();
 	private:
+		void	parse_client_msg(char *msg, int msg_len);
 		int		m_sock_fd;
 };
 
