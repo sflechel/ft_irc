@@ -1,35 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Reactor.hpp                                        :+:      :+:    :+:   */
+/*   Client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sflechel <sflechel@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/17 10:25:10 by sflechel          #+#    #+#             */
-/*   Updated: 2025/06/17 15:24:10 by sflechel         ###   ########.fr       */
+/*   Created: 2025/06/19 16:42:13 by sflechel          #+#    #+#             */
+/*   Updated: 2025/06/19 18:10:04 by sflechel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef REACTOR_HPP
+#include "Client.hpp"
 
-# define REACTOR_HPP
-
-# define MAX_EVENTS 10
-
-# include "server.hpp"
-# include <sys/epoll.h>
-
-class Reactor
+int	Client::get_my_fd()
 {
-	public:
-		Reactor(Server server);
-		~Reactor();
-		void				polling_loop();
-	private:
-		Server				m_server;
-		int					m_epollfd;
-		struct epoll_event	m_poll_opts;
-		struct epoll_event	m_events[MAX_EVENTS];
-};
+	return (this->m_my_fd);
+}
 
-#endif // !REACTOR_HPP
+Client::Client(int fd) : m_my_fd(fd)
+{
+	this->m_nickname = std::string();
+	this->m_username = std::string();
+	this->m_is_registered = false;
+}
+
+Client::~Client() {}

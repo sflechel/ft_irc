@@ -1,4 +1,4 @@
-NAME = webserv
+NAME = ircserv
 CC = c++
 CFLAGS = -Wall -Wextra -Werror -g3 -std=c++98
 
@@ -9,28 +9,28 @@ OBJ_DIR = obj/
 I = -I $(INC_DIR)
 
 HEADERS_FILES =	server.hpp\
-				Reactor.hpp\
 				Handler_connection.hpp\
 				Handler_receive.hpp\
+				Client.hpp\
 
 HEADERS = $(addprefix $(INC_DIR), $(HEADERS_FILES))
 
 SRC =	main.cpp\
 		server.cpp\
-		Reactor.cpp\
 		Handler_connection.cpp\
 		Handler_receive.cpp\
+		Client.cpp\
 
 SRC_FILES = $(addprefix $(SRC_DIR), $(SRC))
 
-OBJ_FILES = $(SRC_FILES:$(SRC_DIR)%.c=$(OBJ_DIR)%.o)
+OBJ_FILES = $(SRC_FILES:$(SRC_DIR)%.cpp=$(OBJ_DIR)%.o)
 
 all: $(NAME)
 
 $(OBJ_DIR):
 	mkdir $(OBJ_DIR)
 
-$(OBJ_DIR)%.o:$(SRC_DIR)%.c $(HEADERS) | $(OBJ_DIR)
+$(OBJ_DIR)%.o:$(SRC_DIR)%.cpp $(HEADERS) | $(OBJ_DIR)
 	mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) $(I) -c $< -o $@
 

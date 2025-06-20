@@ -1,30 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Handler_connection.hpp                             :+:      :+:    :+:   */
+/*   Client.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sflechel <sflechel@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/17 15:20:00 by sflechel          #+#    #+#             */
-/*   Updated: 2025/06/19 16:40:20 by sflechel         ###   ########.fr       */
+/*   Created: 2025/06/19 16:29:52 by sflechel          #+#    #+#             */
+/*   Updated: 2025/06/19 18:04:25 by sflechel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef HANDLER_CONNECTION_HPP
+#ifndef CLIENT_HPP
 
-# define HANDLER_CONNECTION_HPP
+# define CLIENT_HPP
 
-# include <Client.hpp>
+# include <string>
 
-class Handler_connection
-{
+class Client{
 	public:
-		Handler_connection(int master_sock);
-		~Handler_connection();
-		Client	accept_connection();
+		Client(int fd);
+		~Client();
+		int				get_my_fd();
 	private:
-		int	m_master_sock;
-
+		int				m_my_fd;
+		bool			m_is_registered;
+		std::string		m_nickname;
+		std::string		m_username;
+		Client(void)	{}
 };
 
-#endif // !HANDLER_CONNECTION_HPP
+#endif // !CLIENT_HPP
