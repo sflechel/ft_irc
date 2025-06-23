@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sflechel <sflechel@student.42lyon.fr>      +#+  +:+       +#+        */
+/*   By: edarnand <edarnand@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/13 13:36:54 by sflechel          #+#    #+#             */
-/*   Updated: 2025/06/19 16:27:34 by sflechel         ###   ########.fr       */
+/*   Updated: 2025/06/23 17:19:50 by edarnand         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ int	main(int ac, char **av)
 		return (1);
 	}//TODO: protect port from non-ints
 	try {
-	Server server = Server(port, password);
+		Server server = Server(port, password);
 	} catch (std::runtime_error &e) {
 		std::cerr << e.what() << std::endl;
 	}

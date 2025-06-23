@@ -6,7 +6,7 @@
 /*   By: edarnand <edarnand@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/17 16:56:00 by sflechel          #+#    #+#             */
-/*   Updated: 2025/06/20 10:52:45 by edarnand         ###   ########.fr       */
+/*   Updated: 2025/06/23 15:51:29 by edarnand         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,8 @@ class Handler_receive
 		~Handler_receive();
 		void	read_data_sent();
 	private:
-		void	parse_client_msg(char *msg, int msg_len);
+		void	handle_client_msg(std::string msg);
+		void	handle_cmd(std::string msg);
 		int		m_sock_fd;
 		Client	m_client;
 };
