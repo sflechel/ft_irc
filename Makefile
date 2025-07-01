@@ -12,6 +12,7 @@ HEADERS_FILES =	server.hpp\
 				Handler_connection.hpp\
 				Handler_receive.hpp\
 				Client.hpp\
+				Command.hpp\
 
 HEADERS = $(addprefix $(INC_DIR), $(HEADERS_FILES))
 
@@ -20,6 +21,7 @@ SRC =	main.cpp\
 		Handler_connection.cpp\
 		Handler_receive.cpp\
 		Client.cpp\
+		Command.cpp\
 
 SRC_FILES = $(addprefix $(SRC_DIR), $(SRC))
 
