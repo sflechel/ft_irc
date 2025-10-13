@@ -1,0 +1,20 @@
+#ifndef HandlerReceive_HPP
+# define HandlerReceive_HPP
+
+# define READ_BUFFER_SIZE 1024
+
+# include "Client.hpp"
+
+class HandlerReceive
+{
+	public:
+		HandlerReceive(Client client);
+		~HandlerReceive();
+
+		void	read_data_sent();
+
+	private:
+		Client	_client;
+};
+
+#endif // !HandlerReceive_HPP

@@ -1,53 +1,60 @@
 NAME = ircserv
-CC = c++
-CFLAGS = -Wall -Wextra -Werror -g3 -std=c++98
+CXX = c++
+CXXFLAGS = -Wall -Wextra -Werror -g3 -std=c++98 -MMD -MP
 
+#__directory__
 SRC_DIR = src/
 INC_DIR = inc/
 OBJ_DIR = obj/
 
-I = -I $(INC_DIR)
+#__src__
+SRC_FILES = \
+	main.cpp\
+	Server.cpp\
+	HandlerConnection.cpp\
+	HandlerReceive.cpp\
+	Client.cpp\
+	Command.cpp\
 
-HEADERS_FILES =	server.hpp\
-				Handler_connection.hpp\
-				Handler_receive.hpp\
-				Client.hpp\
-				Command.hpp\
+SRC = $(addprefix $(SRC_DIR), $(SRC_FILES))
 
-HEADERS = $(addprefix $(INC_DIR), $(HEADERS_FILES))
+#__obj_&_deps__
+OBJ_FILES = $(SRC_FILES:.cpp=.o)
+OBJ = $(addprefix $(OBJ_DIR), $(OBJ_FILES))
 
-SRC =	main.cpp\
-		server.cpp\
-		Handler_connection.cpp\
-		Handler_receive.cpp\
-		Client.cpp\
-		Command.cpp\
+DEP = $(OBJ:.o=.d)
 
-SRC_FILES = $(addprefix $(SRC_DIR), $(SRC))
+#__header_&_include__
+HEADER_FILES = \
+	Server.hpp\
+	HandlerConnection.hpp\
+	HandlerReceive.hpp\
+	Client.hpp\
+	Command.hpp\
 
-OBJ_FILES = $(SRC_FILES:$(SRC_DIR)%.cpp=$(OBJ_DIR)%.o)
+HEADER = $(addprefix $(INC_DIR), $(HEADER_FILES))
+INC = -I $(INC_DIR)
 
+#__rule__
 all: $(NAME)
 
-$(OBJ_DIR):
-	mkdir $(OBJ_DIR)
+$(NAME): $(OBJ)
+	$(CXX) $(CXXFLAGS) $(OBJ) -o $(NAME)
 
-$(OBJ_DIR)%.o:$(SRC_DIR)%.cpp $(HEADERS) | $(OBJ_DIR)
-	mkdir -p $(dir $@)
-	$(CC) $(CFLAGS) $(I) -c $< -o $@
-
-$(NAME): $(OBJ_FILES) Makefile
-	$(CC) $(CFLAGS) $(OBJ_FILES) $(I) -o $(NAME)
+$(OBJ_DIR)%.o:$(SRC_DIR)%.cpp  Makefile
+	@mkdir -p $(dir $@)
+	$(CXX) $(CXXFLAGS) $(INC) -c $< -o $@
 
 clean:
 	rm -rf $(OBJ_DIR)
 
 fclean:
-	@$(MAKE) --no-print-directory clean
-	rm -f $(NAME) a.out
+	rm -rf $(OBJ_DIR) $(NAME)
 
 re:
-	@$(MAKE) --no-print-directory fclean
-	@$(MAKE) --no-print-directory all
+	$(MAKE) fclean
+	$(MAKE) all
 
 .PHONY: all clean fclean re
+
+-include $(DEP)

@@ -1,16 +1,4 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   server.cpp                                         :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: sflechel <sflechel@student.42lyon.fr>      +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/13 13:44:04 by sflechel          #+#    #+#             */
-/*   Updated: 2025/06/19 18:07:58 by sflechel         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
-#include "server.hpp"
+#include "Server.hpp"
 #include <asm-generic/socket.h>
 #include <stdexcept>
 #include <sys/socket.h>
@@ -20,8 +8,8 @@
 #include <netdb.h>
 #include <fcntl.h>
 #include <sys/epoll.h>
-#include "Handler_connection.hpp"
-#include "Handler_receive.hpp"
+#include "HandlerConnection.hpp"
+#include "HandlerReceive.hpp"
 
 void	Server::poll_events()
 {
@@ -30,27 +18,27 @@ void	Server::poll_events()
 
 	while (true)
 	{
-		nb_fds = epoll_wait(this->m_epollfd, events, MAX_EVENTS, -1);
+		nb_fds = epoll_wait(_epollfd, events, MAX_EVENTS, 0);
 		if (nb_fds == -1)
 			throw std::runtime_error("epoll failed");
 
 		for (int i = 0 ; i < nb_fds ; i++)
 		{
-			if (events[i].data.fd == this->m_master_socket)
+			if (events[i].data.fd == _master_socket)
 			{
-				Handler_connection hconn = Handler_connection(this->m_master_socket);
+				HandlerConnection hconn = HandlerConnection(_master_socket);
 				Client	new_client = hconn.accept_connection();
-				this->m_clients.push_back(new_client);
+				_clients.push_back(new_client);
 				poll_opts.events = EPOLLIN | EPOLLOUT | EPOLLET;
 				int conn_fd = new_client.get_my_fd();
 				poll_opts.data.fd = conn_fd;
 				poll_opts.data.ptr = &new_client;
-				if (epoll_ctl(this->m_epollfd, EPOLL_CTL_ADD, conn_fd, &poll_opts) == -1)
+				if (epoll_ctl(_epollfd, EPOLL_CTL_ADD, conn_fd, &poll_opts) == -1)
 					throw std::runtime_error("failed to add connection to epoll");
 			}
 			else if (events[i].events & EPOLLIN)
 			{
-				Handler_receive	hrecv = Handler_receive(*(Client *)(events[i].data.ptr));
+				HandlerReceive	hrecv = HandlerReceive(*(Client *)(events[i].data.ptr));
 				hrecv.read_data_sent();
 			}
 			else if (events[i].events & EPOLLOUT)
@@ -65,12 +53,12 @@ void Server::setup_poll()
 {
 	struct epoll_event	poll_opts;
 
-	m_epollfd = epoll_create(1);
-	if (this->m_epollfd == -1)
+	_epollfd = epoll_create(1);
+	if (_epollfd == -1)
 		throw std::runtime_error("failed to initialize epoll");
 	poll_opts.events = EPOLLIN;
-	poll_opts.data.fd = this->m_master_socket;
-	if (epoll_ctl(this->m_epollfd, EPOLL_CTL_ADD, this->m_master_socket, &poll_opts) == -1)
+	poll_opts.data.fd = _master_socket;
+	if (epoll_ctl(_epollfd, EPOLL_CTL_ADD, _master_socket, &poll_opts) == -1)
 		throw std::runtime_error("failed to parametrize epoll");
 }
 
@@ -109,19 +97,19 @@ void	Server::setup_master_socket(char *port)
 		freeaddrinfo(server_info);
 		throw std::runtime_error("failed to find working address");
 	}
-	this->m_master_socket_address = *(struct sockaddr_in *)iter;//TODO fix casts
-	this->m_master_socket_address_len = iter->ai_addrlen;
-	this->m_master_socket = sockfd;
+	_master_socket_address = *(struct sockaddr_in *)iter;//TODO fix casts
+	_master_socket_address_len = iter->ai_addrlen;
+	_master_socket = sockfd;
 
-	if (listen(m_master_socket, LISTEN_BACKLOG) == -1)
+	if (listen(_master_socket, LISTEN_BACKLOG) == -1)
 		throw std::runtime_error("failed to listen");
-	if (fcntl(m_master_socket, F_SETFL, O_NONBLOCK) == -1)
+	if (fcntl(_master_socket, F_SETFL, O_NONBLOCK) == -1)
 		throw  std::runtime_error("failed to change socket to non-blocking");
 }
 
 Server::Server(char *port, char *password)
 {
-	m_password = std::string(password);
+	_password = std::string(password);
 
 	setup_master_socket(port);
 	setup_poll();
@@ -130,8 +118,8 @@ Server::Server(char *port, char *password)
 
 Server::~Server()
 {
-	for (size_t i = 0 ; i >= this->m_clients.size() ; i++)
-		close(this->m_clients[i].get_my_fd());
-	close(m_master_socket);
-	close(m_epollfd);
+	for (size_t i = 0 ; i >= _clients.size() ; i++)
+		close(_clients[i].get_my_fd());
+	close(_master_socket);
+	close(_epollfd);
 }
