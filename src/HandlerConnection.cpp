@@ -1,4 +1,5 @@
 #include "HandlerConnection.hpp"
+#include "Client.hpp"
 #include <fcntl.h>
 #include <iostream>
 #include <stdexcept>
@@ -24,7 +25,8 @@ Client	HandlerConnection::accept_connection()
 
 	std::cout << "Server connected to a client!" << std::endl;
 
-	return (Client(conn_fd));
+    Client* output = new Client(conn_fd);
+	return (*output);
 }
 
 HandlerConnection::~HandlerConnection()

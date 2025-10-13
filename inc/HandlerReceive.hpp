@@ -8,13 +8,13 @@
 class HandlerReceive
 {
 	public:
-		HandlerReceive(Client client);
+		HandlerReceive(Client& client);
 		~HandlerReceive();
 
 		void	read_data_sent();
 
 	private:
-		Client	_client;
+		Client&	_client;
 };
 
 #endif // !HANDLER_RECEIVE_HPP
