@@ -1,5 +1,5 @@
-#ifndef HandlerReceive_HPP
-# define HandlerReceive_HPP
+#ifndef HANDLER_RECEIVE_HPP
+# define HANDLER_RECEIVE_HPP
 
 # define READ_BUFFER_SIZE 1024
 
@@ -17,4 +17,4 @@ class HandlerReceive
 		Client	_client;
 };
 
-#endif // !HandlerReceive_HPP
+#endif // !HANDLER_RECEIVE_HPP

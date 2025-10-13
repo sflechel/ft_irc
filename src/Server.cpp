@@ -29,7 +29,7 @@ void	Server::poll_events()
 				HandlerConnection hconn = HandlerConnection(_master_socket);
 				Client	new_client = hconn.accept_connection();
 				_clients.push_back(new_client);
-				poll_opts.events = EPOLLIN | EPOLLOUT | EPOLLET;
+				poll_opts.events = EPOLLIN | EPOLLOUT;
 				int conn_fd = new_client.get_my_fd();
 				poll_opts.data.fd = conn_fd;
 				poll_opts.data.ptr = &new_client;
@@ -118,7 +118,7 @@ Server::Server(char *port, char *password)
 
 Server::~Server()
 {
-	for (size_t i = 0 ; i >= _clients.size() ; i++)
+	for (size_t i = 0 ; i > _clients.size() ; i++)
 		close(_clients[i].get_my_fd());
 	close(_master_socket);
 	close(_epollfd);

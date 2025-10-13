@@ -16,7 +16,7 @@ class Client
 		bool			_is_registered;
 		std::string		_nickname;
 		std::string		_username;
-
+        std::string     _response;
 		Client(void)	{}
 };
 
