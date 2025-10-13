@@ -10,6 +10,7 @@
 #include <sys/epoll.h>
 #include "HandlerConnection.hpp"
 #include "HandlerReceive.hpp"
+#include "HandlerRespond.hpp"
 
 void	Server::poll_events()
 {
@@ -42,7 +43,10 @@ void	Server::poll_events()
 				hrecv.read_data_sent();
 			}
 			else if (events[i].events & EPOLLOUT)
-			{}
+			{
+                HandlerRespond  hresp = HandlerRespond(*(Client *)(events[i].data.ptr));
+                hresp.respond();
+            }
 			else
 				throw std::runtime_error("how did we get here?");
 		}

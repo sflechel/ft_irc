@@ -1,8 +1,19 @@
 #include "Client.hpp"
+#include <string>
 
-int	Client::get_my_fd()
+int	Client::get_my_fd(void)
 {
-	return (_my_fd);
+	return (this->_my_fd);
+}
+
+std::string Client::getResponse(void)
+{
+    return (this->_response);
+}
+
+void    Client::setResponse(std::string response)
+{
+    this->_response = response;
 }
 
 Client::Client(int fd) : _my_fd(fd)
@@ -12,4 +23,4 @@ Client::Client(int fd) : _my_fd(fd)
 	_is_registered = false;
 }
 
-Client::~Client() {}
+Client::~Client(void) {}

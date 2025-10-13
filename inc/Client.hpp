@@ -7,10 +7,11 @@ class Client
 {
 	public:
 		Client(int fd);
-		~Client();
+		~Client(void);
 
-		int				get_my_fd();
-
+		int				get_my_fd(void) const;
+        std::string     getResponse(void) const;
+        void            setResponse(std::string response);
 	private:
 		int				_my_fd;
 		bool			_is_registered;
