@@ -1,12 +1,12 @@
 #include "Client.hpp"
 #include <string>
 
-int	Client::get_my_fd(void)
+int	Client::get_my_fd(void) const
 {
 	return (this->_my_fd);
 }
 
-std::string Client::getResponse(void)
+std::string Client::getResponse(void) const
 {
     return (this->_response);
 }
