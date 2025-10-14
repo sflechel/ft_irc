@@ -47,7 +47,7 @@ void HandlerReceive::read_data_sent()
 	}
 }
 
-HandlerReceive::HandlerReceive(Client client) : _client(client)
+HandlerReceive::HandlerReceive(Client& client) : _client(client)
 {}
 
 HandlerReceive::~HandlerReceive()

@@ -10,10 +10,11 @@
 #include <sys/epoll.h>
 #include "HandlerConnection.hpp"
 #include "HandlerReceive.hpp"
+#include "HandlerRespond.hpp"
 
 void	Server::poll_events()
 {
-	struct epoll_event	events[MAX_EVENTS], poll_opts;
+	struct epoll_event	events[MAX_EVENTS];
 	int					nb_fds;
 
 	while (true)
@@ -27,14 +28,8 @@ void	Server::poll_events()
 			if (events[i].data.fd == _master_socket)
 			{
 				HandlerConnection hconn = HandlerConnection(_master_socket);
-				Client	new_client = hconn.accept_connection();
-				_clients.push_back(new_client);
-				poll_opts.events = EPOLLIN | EPOLLOUT;
-				int conn_fd = new_client.get_my_fd();
-				poll_opts.data.fd = conn_fd;
-				poll_opts.data.ptr = &new_client;
-				if (epoll_ctl(_epollfd, EPOLL_CTL_ADD, conn_fd, &poll_opts) == -1)
-					throw std::runtime_error("failed to add connection to epoll");
+				Client	newClient = hconn.acceptConnection();
+                hconn.registerClient(newClient, this->_clients, this->_epollfd);
 			}
 			else if (events[i].events & EPOLLIN)
 			{
@@ -42,7 +37,10 @@ void	Server::poll_events()
 				hrecv.read_data_sent();
 			}
 			else if (events[i].events & EPOLLOUT)
-			{}
+			{
+                HandlerRespond  hresp = HandlerRespond(*(Client *)(events[i].data.ptr));
+                hresp.respond();
+            }
 			else
 				throw std::runtime_error("how did we get here?");
 		}
@@ -53,8 +51,8 @@ void Server::setup_poll()
 {
 	struct epoll_event	poll_opts;
 
-	_epollfd = epoll_create(1);
-	if (_epollfd == -1)
+	this->_epollfd = epoll_create(1);
+	if (this->_epollfd == -1)
 		throw std::runtime_error("failed to initialize epoll");
 	poll_opts.events = EPOLLIN;
 	poll_opts.data.fd = _master_socket;
@@ -97,9 +95,9 @@ void	Server::setup_master_socket(char *port)
 		freeaddrinfo(server_info);
 		throw std::runtime_error("failed to find working address");
 	}
-	_master_socket_address = *(struct sockaddr_in *)iter;//TODO fix casts
-	_master_socket_address_len = iter->ai_addrlen;
-	_master_socket = sockfd;
+	this->_master_socket_address = *(struct sockaddr_in *)iter;//TODO fix casts
+	this->_master_socket_address_len = iter->ai_addrlen;
+	this->_master_socket = sockfd;
 
 	if (listen(_master_socket, LISTEN_BACKLOG) == -1)
 		throw std::runtime_error("failed to listen");

@@ -2,17 +2,18 @@
 # define HANDLERCONNECTION_HPP
 
 # include <Client.hpp>
+# include <vector>
 
 class HandlerConnection
 {
 	public:
-		HandlerConnection(int master_sock);
+		HandlerConnection(int masterSock);
 		~HandlerConnection();
 
-		Client	accept_connection();
-
+		Client	acceptConnection();
+        void    registerClient(Client& newClient, std::vector<Client>& listClients, int epollfd);
 	private:
-		int	_master_sock;
+		int	_masterSock;
 
 };
 
