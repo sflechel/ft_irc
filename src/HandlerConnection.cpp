@@ -12,7 +12,7 @@ HandlerConnection::HandlerConnection(int master_sock) : _master_sock(master_sock
 Client	HandlerConnection::accept_connection()
 {
 	struct sockaddr	addr;
-	socklen_t		len_addr;
+	socklen_t		len_addr = 0;
 	int				conn_fd;
 
 	conn_fd = accept(_master_sock, &addr, &len_addr);

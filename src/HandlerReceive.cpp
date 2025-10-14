@@ -4,6 +4,7 @@
 #include <cerrno>
 #include <sys/socket.h>
 #include <iostream>
+#include <unistd.h>
 
 void HandlerReceive::read_data_sent()
 {
@@ -35,6 +36,9 @@ void HandlerReceive::read_data_sent()
 			if (cmd.is_valid_cmd())
 			{
 				cmd.parse_cmd();
+				std::string test = ":a 403 edarnand :test dsf sf d\r\n";
+				write(client_fd, test.c_str(), test.size());
+				//write(0, "PRIVMSG edarnand :asdadsasd\r\n", 30);
 			}
 			return ;
 		}

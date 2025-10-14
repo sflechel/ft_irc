@@ -3,6 +3,7 @@
 #include <iostream>
 #include <sstream>
 #include <sys/socket.h>
+#include <unistd.h>
 
 bool Command::is_valid_cmd()
 {
@@ -25,7 +26,8 @@ void Command::parse_params()
 	{
 		if (tmp[0] == ':')
 		{
-			_params.push_back(_cmd_str.substr(1, std::string::npos));
+			//TODO fix last param
+			_params.push_back(tmp.substr(1, std::string::npos));
 			break ;
 		}
 		else if (!tmp.empty())
