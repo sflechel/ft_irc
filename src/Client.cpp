@@ -21,6 +21,11 @@ std::string Client::getNickname(void) const
     return (this->_nickname);
 }
 
+std::string Client::getUsername(void) const
+{
+    return (this->_username);
+}
+
 void    Client::setResponse(std::string response)
 {
     this->_response = response;

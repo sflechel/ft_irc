@@ -15,6 +15,8 @@ class Server
 	public:
 		Server(char *port, char *password);
 		~Server();
+        std::string         getPassword(void) const;
+        std::string         getName(void) const;
 
 	private:
 		int					_master_socket;

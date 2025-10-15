@@ -4,12 +4,12 @@
 #include <string>
 #include <cstdlib>
 
-ResponseBuilder::ResponseBuilder(std::string& servername, e_numeric numeric, Client& target) : _servername(servername), _numeric(numeric), _target(target)
+ResponseBuilder::ResponseBuilder(const std::string& servername, Client& target) : _servername(servername), _target(target)
 {}
 
 ResponseBuilder::~ResponseBuilder(void) {}
 
-std::string enummericToString(e_numeric code)
+std::string ResponseBuilder::enumericToStringNumber(e_numeric code)
 {
     std::stringstream   output;
 
@@ -22,13 +22,30 @@ std::string enummericToString(e_numeric code)
     return (output.str());
 }
 
-std::string ResponseBuilder::buildResponseString(void)
+std::string ResponseBuilder::enumericToMessage(e_numeric code, std::string user_input)
+{
+    std::string response = ":";
+
+    switch (code)
+    {
+        case RPL_WELCOME:
+            response = "Welcome to the Internet Relay Network " + _target.getNickname() + "!" + _target.getUsername() + "@" + _servername;
+            break;
+        case ERR_NEEDMOREPARAMS:
+            response = user_input + "  :Not enough parameters";
+            break;
+    }
+    return (response);
+}
+
+std::string ResponseBuilder::buildResponseString(std::string user_input, e_numeric numeric)
 {
     std::stringstream response;
 
-    response << (":" + this->_servername + " ");
-    response << enummericToString(this->_numeric) << " ";
-    response << this->_target.getNickname();
+    response << (":" + _servername + " ");
+    response << enumericToStringNumber(numeric) << " ";
+    response << this->_target.getNickname() << " ";
+    response << enumericToMessage(numeric, user_input);
     response << "\r\n";
     return (response.str());
 }

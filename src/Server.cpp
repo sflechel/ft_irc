@@ -122,3 +122,13 @@ Server::~Server()
 	close(_master_socket);
 	close(_epollfd);
 }
+
+std::string Server::getPassword(void) const
+{
+    return (this->_password);
+}
+
+std::string Server::getName(void) const
+{
+    return (this->_name);
+}
