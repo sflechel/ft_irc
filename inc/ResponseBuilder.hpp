@@ -8,20 +8,27 @@
 typedef enum    numeric
 {
     RPL_WELCOME = 1,
-    RPL_YOURHOST = 2,
-    RPL_CREATED = 3,
+    ERR_UNKNOWNCOMMAND = 421,
+    ERR_NONICKNAMEGIVEN = 431,
+    ERR_NEEDMOREPARAMS = 461,
+    ERR_ALREADYREGISTERED = 462,
+    ERR_PASSWDMISMATCH = 464,
 }   e_numeric;
 
 class   ResponseBuilder
 {
     public:
-        ResponseBuilder(std::string& servername, e_numeric numeric, Client& target);
+        ResponseBuilder(const std::string& servername, Client& target);
         ~ResponseBuilder(void);
-        std::string     buildResponseString(void);
+
+        std::string     buildResponseString(std::string user_input, e_numeric numeric);
     private:
-        std::string&    _servername;
-        e_numeric       _numeric;
-        Client&         _target;
+
+        std::string         enumericToStringNumber(e_numeric code);
+        std::string         enumericToMessage(e_numeric code, std::string user_input);
+
+		const std::string&  _servername;
+        Client&             _target;
 };
 
 #endif //RESPONSEBUILDER_HPP

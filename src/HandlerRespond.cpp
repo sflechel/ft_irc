@@ -12,7 +12,7 @@ void    HandlerRespond::respond(void)
     std::string response = this->_client.getResponse();
     if (response.size() == 0)
         return ;
-    byte_sent = send(this->_client.get_my_fd(), response.c_str(), response.size(), 0);
+    byte_sent = send(this->_client.getFd(), response.c_str(), response.size(), 0);
     response.erase(0, byte_sent);
     this->_client.setResponse(response);
 }

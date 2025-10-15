@@ -16,6 +16,10 @@ SRC_FILES = \
 	HandlerRespond.cpp\
 	Client.cpp\
 	Command.cpp\
+	ResponseBuilder.cpp\
+	commands/Pass.cpp\
+	commands/UnknownCommand.cpp\
+	commands/Nick.cpp\
 
 SRC = $(addprefix $(SRC_DIR), $(SRC_FILES))
 
@@ -33,6 +37,10 @@ HEADER_FILES = \
 	HandlerRespond.cpp\
 	Client.hpp\
 	Command.hpp\
+	ResponseBuilder.hpp\
+	commands/Pass.hpp\
+	commands/UnknownCommand.hpp\
+	commands/Nick.hpp\
 
 HEADER = $(addprefix $(INC_DIR), $(HEADER_FILES))
 INC = -I $(INC_DIR)

@@ -36,7 +36,7 @@ void    HandlerConnection::registerClient(Client& newClient, std::vector<Client>
 
     listClients.push_back(newClient);
     poll_opts.events = EPOLLIN | EPOLLOUT;
-    int conn_fd = newClient.get_my_fd();
+    int conn_fd = newClient.getFd();
     poll_opts.data.fd = conn_fd;
     poll_opts.data.ptr = &newClient;
     if (epoll_ctl(epollfd, EPOLL_CTL_ADD, conn_fd, &poll_opts) == -1)

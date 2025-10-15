@@ -7,7 +7,7 @@ void HandlerReceive::readClientRequest()
 	std::string new_request;
 	char read_buffer[READ_BUFFER_SIZE + 1];
 	int bytes_read = READ_BUFFER_SIZE;
-	int client_fd = _client.get_my_fd();
+	int client_fd = _client.getFd();
 
 	read_buffer[0] = 0;
 	while (bytes_read == READ_BUFFER_SIZE)

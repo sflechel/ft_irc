@@ -5,15 +5,17 @@
 #include "Command.hpp"
 #include "Server.hpp"
 #include <string>
+#include <vector>
 
 class   Pass : public Command
 {
     public:
-        Pass(Server& server);
+        Pass(Server& server, Client& user, std::string cmd_name, std::vector<std::string> params);
         ~Pass(void);
         void    enactCommand(void);
     private:
         std::string _password;
+        std::string _key;
 };
 
 #endif //PASS_HPP
