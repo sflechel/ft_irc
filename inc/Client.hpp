@@ -10,6 +10,8 @@ class Client
 		~Client(void);
 
 		int				getFd(void) const;
+		void		    setSentPassword(bool state);
+		bool		    getSentPassword(void) const;
 		void		    setIsRegistered(bool state);
 		bool		    getIsRegistered(void) const;
         void            setNickname(std::string nickname);
@@ -28,6 +30,7 @@ class Client
         std::string     _request;
         std::string     _response;
 
+		bool			_sent_password;
 		bool			_is_registered;
 		std::string		_nickname;
 		std::string		_username;

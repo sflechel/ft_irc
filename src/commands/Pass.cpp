@@ -25,7 +25,7 @@ void    Pass::enactCommand(void)
     else if (_key != _password)
         _user.setResponse(respbldr.buildResponseString("", ERR_PASSWDMISMATCH));
     else
-        _user.setIsRegistered(true);
+        _user.setSentPassword(true);
 }
 
 Pass::~Pass(void)

@@ -1,6 +1,15 @@
 #include "Client.hpp"
 #include <string>
 
+bool	Client::getSentPassword(void) const
+{
+	return (this->_sent_password);
+}
+void	Client::setSentPassword(bool state)
+{
+    _sent_password = state;
+}
+
 bool	Client::getIsRegistered(void) const
 {
 	return (this->_is_registered);
@@ -70,6 +79,7 @@ Client::Client(int fd) : _fd(fd)
 	_nickname = std::string();
 	_username = std::string();
 	_is_registered = false;
+	_sent_password = false;
 }
 
 Client::~Client(void) {}
