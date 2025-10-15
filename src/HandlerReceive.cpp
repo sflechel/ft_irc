@@ -1,5 +1,9 @@
 #include "HandlerReceive.hpp"
+#include "Command.hpp"
 #include "Server.hpp"
+#include "commands/Nick.hpp"
+#include <cstddef>
+#include <vector>
 #include <iostream>
 
 void HandlerReceive::readClientRequest()
@@ -40,7 +44,8 @@ void	HandlerReceive::splitResponseToCmds(void)
 	{
 		std::string cmd = full_request.substr(cmd_start, cmd_end - cmd_start);
 		std::cout << "cmd:" << cmd << "\n";
-		_full_cmds.push_back(cmd);
+		if (!cmd.empty())
+			_full_cmds.push_back(cmd);
 		cmd_start = cmd_end + 2;
 		cmd_end = full_request.find("\r\n", cmd_start);
 	}
@@ -51,19 +56,36 @@ void	HandlerReceive::splitResponseToCmds(void)
 
 void	HandlerReceive::execCmds(void)
 {
+	std::vector<std::string> know_cmds_name;
+	know_cmds_name.push_back("NICK");
+	know_cmds_name.push_back("PASS");
+
+	std::vector<std::string> params;
+	params.push_back("name1");
+	params.push_back("name2");
+
+	std::vector<Command*> cmds;
+
 	for (size_t i = 0; i < _full_cmds.size(); i++)
 	{
-		//Command cmd(_full_cmds[i]);
+		for (size_t j = 0; j < know_cmds_name.size(); j++)
+		{
+			if (_full_cmds[i].compare(0, know_cmds_name[j].length(), know_cmds_name[j]) == 0)
+			{
+				if (j == 0)
+				{
+					Nick* n = new Nick(_server, _client, "test", params);
+					cmds.push_back(n);
+				}
+			}
 
+		}
+	}
 
-
-		//if (cmd.is_valid_cmd())
-		//{
-		//	cmd.parse_cmd();
-		//	std::string test = ":a 403 edarnand :test dsf sf d\r\n";
-		//	write(client_fd, test.c_str(), test.size());
-		//	//write(0, "PRIVMSG edarnand :asdadsasd\r\n", 30);
-		//}
+	for (size_t i = 0; i < cmds.size(); i++)
+	{
+		cmds.at(i)->enactCommand();
+		std::cout << _client.getNickname() << "\n";
 	}
 }
 
