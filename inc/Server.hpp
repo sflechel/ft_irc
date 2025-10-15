@@ -23,6 +23,7 @@ class Server
 		struct sockaddr_in	_master_socket_address;
 		unsigned int		_master_socket_address_len;
 		std::vector<Client>	_clients;
+        std::string         _name;
 
 		void				setup_master_socket(char *port);
 		void				setup_poll();

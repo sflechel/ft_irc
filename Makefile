@@ -13,6 +13,7 @@ SRC_FILES = \
 	Server.cpp\
 	HandlerConnection.cpp\
 	HandlerReceive.cpp\
+	HandlerRespond.cpp\
 	Client.cpp\
 	Command.cpp\
 
@@ -29,6 +30,7 @@ HEADER_FILES = \
 	Server.hpp\
 	HandlerConnection.hpp\
 	HandlerReceive.hpp\
+	HandlerRespond.cpp\
 	Client.hpp\
 	Command.hpp\
 

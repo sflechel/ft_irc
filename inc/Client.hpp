@@ -1,6 +1,7 @@
 #ifndef CLIENT_HPP
 # define CLIENT_HPP
 
+#include "Command.hpp"
 # include <string>
 
 class Client
@@ -10,8 +11,11 @@ class Client
 		~Client(void);
 
 		int				get_my_fd(void) const;
+        std::string     getNickname(void) const;
         std::string     getResponse(void) const;
         void            setResponse(std::string response);
+        //COMMANDS
+        void            Pass(Command& command, std::string& password);
 	private:
 		int				_my_fd;
 		bool			_is_registered;

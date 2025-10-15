@@ -55,8 +55,8 @@ void Server::setup_poll()
 	if (this->_epollfd == -1)
 		throw std::runtime_error("failed to initialize epoll");
 	poll_opts.events = EPOLLIN;
-	poll_opts.data.fd = _master_socket;
-	if (epoll_ctl(_epollfd, EPOLL_CTL_ADD, _master_socket, &poll_opts) == -1)
+	poll_opts.data.fd = this->_master_socket;
+	if (epoll_ctl(this->_epollfd, EPOLL_CTL_ADD, this->_master_socket, &poll_opts) == -1)
 		throw std::runtime_error("failed to parametrize epoll");
 }
 
@@ -105,7 +105,7 @@ void	Server::setup_master_socket(char *port)
 		throw  std::runtime_error("failed to change socket to non-blocking");
 }
 
-Server::Server(char *port, char *password)
+Server::Server(char *port, char *password) : _name("IrcTestServer")
 {
 	_password = std::string(password);
 

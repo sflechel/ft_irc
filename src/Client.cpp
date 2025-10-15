@@ -11,6 +11,11 @@ std::string Client::getResponse(void) const
     return (this->_response);
 }
 
+std::string Client::getNickname(void) const
+{
+    return (this->_nickname);
+}
+
 void    Client::setResponse(std::string response)
 {
     this->_response = response;
@@ -24,3 +29,9 @@ Client::Client(int fd) : _my_fd(fd)
 }
 
 Client::~Client(void) {}
+
+//COMMANDS
+void    Client::Pass(Command& command, std::string& password)
+{
+
+}
