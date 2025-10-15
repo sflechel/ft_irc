@@ -118,6 +118,14 @@ Server::Server(char *port, char *password) : _name("IrcTestServer")
 	poll_events();
 }
 
+void    Server::removeClient(int index)
+{
+    std::vector<Client>::iterator   it;
+
+    it = _clients.begin() + index;
+    _clients.erase(it);
+}
+
 Server::~Server()
 {
 	for (size_t i = 0 ; i > _clients.size() ; i++)
@@ -144,4 +152,9 @@ Client* Server::getClient(std::string nickname)
             return &_clients.at(i);
     }
     return NULL;
+}
+
+std::vector<Client>&    Server::getClients(void)
+{
+    return (_clients);
 }

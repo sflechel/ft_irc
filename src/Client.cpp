@@ -25,6 +25,16 @@ std::string Client::getRequest(void) const
     return (this->_request);
 }
 
+void    Client::setRealname(std::string realname)
+{
+    _realname =  realname;
+}
+
+std::string Client::getRealname(void) const
+{
+    return (this->_realname);
+}
+
 void    Client::setNickname(std::string nickname)
 {
     _nickname =  nickname;

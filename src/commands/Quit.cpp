@@ -1,0 +1,22 @@
+#include "commands/Quit.hpp"
+#include "Command.hpp"
+#include <cstddef>
+#include <iterator>
+#include <string>
+#include <vector>
+
+Quit::Quit(Server& server, Client& user, std::string cmd_name, std::vector<std::string> params) : Command(server, user, cmd_name, params)
+{}
+
+void    Quit::enactCommand(void)
+{
+    std::string message = ":" + _server.getName() + " ERROR\r\n";
+
+    _user.setResponse(message);
+
+    std::ptrdiff_t  index = std::distance(_server.getClients().data(), &_user);
+    _server.removeClient(index);
+}
+
+Quit::~Quit(void)
+{}

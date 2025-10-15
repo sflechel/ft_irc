@@ -1,6 +1,7 @@
 #include "commands/Nick.hpp"
 #include "Command.hpp"
 #include "ResponseBuilder.hpp"
+#include <cstddef>
 #include <string>
 #include <vector>
 
@@ -20,6 +21,11 @@ void    Nick::enactCommand(void)
     if (_need_more_params || _params.at(0).empty())
     {
         _user.setResponse(respbldr.buildResponseString(_cmd_name, ERR_NONICKNAMEGIVEN));
+        return ;
+    }
+    if (_server.getClient(_params.at(0)) != NULL)
+    {
+        _user.setResponse(respbldr.buildResponseString(_params.at(0), ERR_NICKNAMEINUSE));
         return ;
     }
     _user.setNickname(_params.at(0));

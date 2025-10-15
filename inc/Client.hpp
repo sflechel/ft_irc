@@ -18,6 +18,8 @@ class Client
         std::string     getUsername(void) const;
         std::string     getRequest(void) const;
         void            setRequest(std::string request);
+        void            setRealname(std::string username);
+        std::string     getRealname(void) const;
         void            setResponse(std::string response);
         std::string     getResponse(void) const;
 
@@ -29,6 +31,7 @@ class Client
 		bool			_is_registered;
 		std::string		_nickname;
 		std::string		_username;
+        std::string     _realname;
 
 		Client(void)	{}
 };

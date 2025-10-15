@@ -37,6 +37,9 @@ std::string ResponseBuilder::enumericToMessage(e_numeric code, std::string user_
         case ERR_NONICKNAMEGIVEN:
             response += ":No nickname given";
             break;
+        case ERR_NICKNAMEINUSE:
+            response += user_input + " :Nickname is already in use";
+            break;
         case ERR_NEEDMOREPARAMS:
             response += user_input + "  :Not enough parameters";
             break;
