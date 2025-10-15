@@ -1,5 +1,5 @@
-#ifndef MESSAGE_HPP
-# define MESSAGE_HPP
+#ifndef COMMAND_HPP
+# define COMMAND_HPP
 
 # include <string>
 # include <vector>
@@ -7,19 +7,20 @@
 class Command
 {
 	public:
-		Command();
 		Command(std::string cmd_str);
-		~Command();
+		~Command(void);
 
-		void	parse_cmd();
-		bool	is_valid_cmd();
-
+		void	parse_cmd(void);
+		bool	is_valid_cmd(void);
+        virtual void    enactCommand(void) = 0;
 	private:
 		std::string					_cmd_str;
 		std::string					_cmd;
 		std::vector<std::string>	_params;
 
-		void parse_params();
+		void parse_params(void);
+
+		Command(void);
 };
 
 #endif

@@ -33,8 +33,9 @@ void	Server::poll_events()
 			}
 			else if (events[i].events & EPOLLIN)
 			{
-				HandlerReceive	hrecv = HandlerReceive(*(Client *)(events[i].data.ptr));
+				HandlerReceive	hrecv = HandlerReceive(*(Client *)(events[i].data.ptr), *this);
 				hrecv.read_data_sent();
+                hrecv.runCommands();
 			}
 			else if (events[i].events & EPOLLOUT)
 			{

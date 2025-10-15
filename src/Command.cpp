@@ -51,7 +51,7 @@ void Command::parse_cmd()
 		return ;
 	}
 	_cmd_str.resize(_cmd_str.size() - 2);
-	std::cout << "cmd receved\n" << _cmd_str << std::endl;
+	std::cout << "cmd received\n" << _cmd_str << std::endl;
 
 	const size_t space_pos = _cmd_str.find(' ');
 	if (space_pos != std::string::npos)

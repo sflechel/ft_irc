@@ -14,14 +14,17 @@ class Client
         std::string     getNickname(void) const;
         std::string     getResponse(void) const;
         void            setResponse(std::string response);
-        //COMMANDS
-        void            Pass(Command& command, std::string& password);
+        std::string     getDataReceived(void) const;
+        void            setDataReceived(std::string data);
 	private:
 		int				_my_fd;
+        std::string     _data_received;
+        std::string     _response;
+
 		bool			_is_registered;
 		std::string		_nickname;
 		std::string		_username;
-        std::string     _response;
+
 		Client(void)	{}
 };
 
