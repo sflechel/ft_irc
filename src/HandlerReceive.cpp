@@ -1,54 +1,70 @@
 #include "HandlerReceive.hpp"
-#include "Command.hpp"
-#include <ostream>
-#include <cerrno>
-#include <string>
-#include <sys/socket.h>
+#include "Server.hpp"
 #include <iostream>
-#include <unistd.h>
 
-void HandlerReceive::read_data_sent()
+void HandlerReceive::readClientRequest()
 {
-	std::string cmd_str;
+	std::string new_request;
 	char read_buffer[READ_BUFFER_SIZE + 1];
 	int bytes_read = READ_BUFFER_SIZE;
+	int client_fd = _client.get_my_fd();
 
-	std::cout << "server read" << std::endl;
 	read_buffer[0] = 0;
 	while (bytes_read == READ_BUFFER_SIZE)
 	{
 		bytes_read = recv(client_fd, read_buffer, READ_BUFFER_SIZE, 0);
 		if (bytes_read < 0)
 		{
-			std::cout << "recv fail" << std::endl;
-			return ;
+			std::cout << "recv fail\n";
+			break ;
 		}
 		if (bytes_read == 0)
 		{
-			std::cout << "and a client deconnected" << std::endl;
-			return ;
+			std::cout << "recv read empty\n";
+			break ;
 		}
 		read_buffer[bytes_read] = 0;
-		cmd_str += read_buffer;
-    }
-    _client.setDataReceived(_client.getDataReceived() + cmd_str);
+		new_request += read_buffer;
+	}
+	_client.setRequest(_client.getRequest() + new_request);
 }
 
-void    HandlerReceive::runCommands(void)
+void	HandlerReceive::splitResponseToCmds(void)
 {
-    std::string cmd_str = _client.getDataReceived();
-	int         client_fd = _client.get_my_fd();
+	std::string full_request = _client.getRequest();
+	size_t cmd_start = 0;
+	size_t cmd_end;
 
-    while (cmd_str.find("\r\n") != std::string::npos)
-    {
-        Command cmd(cmd_str);
-        if (cmd.is_valid_cmd())
-        {
-            cmd.parse_cmd();
-            std::string test = ":a 403 edarnand :test dsf sf d\r\n";
-            write(client_fd, test.c_str(), test.size());
-            //write(0, "PRIVMSG edarnand :asdadsasd\r\n", 30);
-        }
+	cmd_end = full_request.find("\r\n", cmd_start);
+	while (cmd_end != std::string::npos)
+	{
+		std::string cmd = full_request.substr(cmd_start, cmd_end - cmd_start);
+		std::cout << "cmd:" << cmd << "\n";
+		_full_cmds.push_back(cmd);
+		cmd_start = cmd_end + 2;
+		cmd_end = full_request.find("\r\n", cmd_start);
+	}
+	if (cmd_start != 0)
+		_client.setRequest(full_request.substr(cmd_start, std::string::npos));
+	(void)_server;
+}
+
+void	HandlerReceive::execCmds(void)
+{
+	for (size_t i = 0; i < _full_cmds.size(); i++)
+	{
+		//Command cmd(_full_cmds[i]);
+
+
+
+		//if (cmd.is_valid_cmd())
+		//{
+		//	cmd.parse_cmd();
+		//	std::string test = ":a 403 edarnand :test dsf sf d\r\n";
+		//	write(client_fd, test.c_str(), test.size());
+		//	//write(0, "PRIVMSG edarnand :asdadsasd\r\n", 30);
+		//}
+	}
 }
 
 HandlerReceive::HandlerReceive(Client& client, Server& server) : _client(client), _server(server)

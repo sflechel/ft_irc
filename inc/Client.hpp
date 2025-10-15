@@ -14,11 +14,12 @@ class Client
         std::string     getNickname(void) const;
         std::string     getResponse(void) const;
         void            setResponse(std::string response);
-        std::string     getDataReceived(void) const;
-        void            setDataReceived(std::string data);
+        std::string     getRequest(void) const;
+        void            setRequest(std::string request);
+
 	private:
 		int				_my_fd;
-        std::string     _data_received;
+        std::string     _request;
         std::string     _response;
 
 		bool			_is_registered;

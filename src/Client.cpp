@@ -11,9 +11,9 @@ std::string Client::getResponse(void) const
     return (this->_response);
 }
 
-std::string Client::getDataReceived(void) const
+std::string Client::getRequest(void) const
 {
-    return (this->_data_received);
+    return (this->_request);
 }
 
 std::string Client::getNickname(void) const
@@ -26,9 +26,9 @@ void    Client::setResponse(std::string response)
     this->_response = response;
 }
 
-void    Client::setDataReceived(std::string data)
+void    Client::setRequest(std::string request)
 {
-    this->_data_received = data;
+    this->_request = request;
 }
 
 Client::Client(int fd) : _my_fd(fd)
