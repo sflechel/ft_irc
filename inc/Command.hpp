@@ -8,7 +8,7 @@
 class Command
 {
 	public:
-		Command(Server& server, Client& user, std::vector<std::string> params);
+		Command(Server& server, Client& user, std::string cmd_name, std::vector<std::string> params);
 		~Command(void);
 
         virtual void    enactCommand(void) = 0;

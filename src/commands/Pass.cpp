@@ -4,9 +4,8 @@
 #include <string>
 #include <vector>
 
-Pass::Pass(Server& server, Client& user, std::vector<std::string> params) : Command(server, user, params), _password(server.getPassword())
+Pass::Pass(Server& server, Client& user, std::string cmd_name, std::vector<std::string> params) : Command(server, user, cmd_name, params), _password(server.getPassword())
 {
-    _cmd_name = "Pass";
     if (_params.size() < 1)
     {
         _need_more_params = 1;
@@ -20,10 +19,13 @@ void    Pass::enactCommand(void)
     ResponseBuilder respbldr = ResponseBuilder(_server.getName(), _user);
 
     if (this->_need_more_params)
-    {
         _user.setResponse(respbldr.buildResponseString(_cmd_name, ERR_NEEDMOREPARAMS));
-        return ;
-    }
+    else if (_user.getIsRegistered())
+        _user.setResponse(respbldr.buildResponseString("", ERR_ALREADYREGISTERED));
+    else if (_key != _password)
+        _user.setResponse(respbldr.buildResponseString("", ERR_PASSWDMISMATCH));
+    else
+        _user.setIsRegistered(true);
 }
 
 Pass::~Pass(void)

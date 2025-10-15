@@ -1,7 +1,17 @@
 #include "Client.hpp"
 #include <string>
 
-int	Client::get_my_fd(void) const
+bool	Client::getIsRegistered(void) const
+{
+	return (this->_is_registered);
+}
+void	Client::setIsRegistered(bool state)
+{
+    _is_registered = state;
+}
+
+
+int	Client::getMyFd(void) const
 {
 	return (this->_my_fd);
 }

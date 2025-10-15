@@ -8,7 +8,10 @@
 typedef enum    numeric
 {
     RPL_WELCOME = 1,
+    ERR_UNKNOWNCOMMAND = 421,
     ERR_NEEDMOREPARAMS = 461,
+    ERR_ALREADYREGISTERED = 462,
+    ERR_PASSWDMISMATCH = 464,
 }   e_numeric;
 
 class   ResponseBuilder

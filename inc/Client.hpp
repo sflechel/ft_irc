@@ -9,7 +9,9 @@ class Client
 		Client(int fd);
 		~Client(void);
 
-		int				get_my_fd(void) const;
+		int				getMyFd(void) const;
+		void		    setIsRegistered(bool state);
+		bool		    getIsRegistered(void) const;
         std::string     getNickname(void) const;
         std::string     getUsername(void) const;
         std::string     getResponse(void) const;

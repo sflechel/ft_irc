@@ -29,10 +29,18 @@ std::string ResponseBuilder::enumericToMessage(e_numeric code, std::string user_
     switch (code)
     {
         case RPL_WELCOME:
-            response = "Welcome to the Internet Relay Network " + _target.getNickname() + "!" + _target.getUsername() + "@" + _servername;
+            response += "Welcome to the Internet Relay Network " + _target.getNickname() + "!" + _target.getUsername() + "@" + _servername;
             break;
+        case ERR_UNKNOWNCOMMAND:
+            response += user_input + " :Unknown command";
         case ERR_NEEDMOREPARAMS:
-            response = user_input + "  :Not enough parameters";
+            response += user_input + "  :Not enough parameters";
+            break;
+        case ERR_ALREADYREGISTERED:
+            response += ":Unauthorized command (already registered)";
+            break;
+        case ERR_PASSWDMISMATCH:
+            response += ":Password incorrect";
             break;
     }
     return (response);

@@ -10,7 +10,7 @@
 class   Pass : public Command
 {
     public:
-        Pass(Server& server, Client& user, std::vector<std::string> params);
+        Pass(Server& server, Client& user, std::string cmd_name, std::vector<std::string> params);
         ~Pass(void);
         void    enactCommand(void);
     private:
