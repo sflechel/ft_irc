@@ -1,0 +1,29 @@
+#include "commands/Nick.hpp"
+#include "Command.hpp"
+#include "ResponseBuilder.hpp"
+#include <string>
+#include <vector>
+
+Nick::Nick(Server& server, Client& user, std::string cmd_name, std::vector<std::string> params) : Command(server, user, cmd_name, params)
+{
+    if (_params.size() < 1)
+    {
+        _need_more_params = 1;
+        return ;
+    }
+}
+
+void    Nick::enactCommand(void)
+{
+    ResponseBuilder respbldr = ResponseBuilder(_server.getName(), _user);
+
+    if (_need_more_params || _params.at(0).empty())
+    {
+        _user.setResponse(respbldr.buildResponseString(_cmd_name, ERR_NONICKNAMEGIVEN));
+        return ;
+    }
+    _user.setNickname(_params.at(0));
+}
+
+Nick::~Nick(void)
+{}

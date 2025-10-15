@@ -26,9 +26,19 @@ std::string Client::getDataReceived(void) const
     return (this->_data_received);
 }
 
+void    Client::setNickname(std::string nickname)
+{
+    _nickname =  nickname;
+}
+
 std::string Client::getNickname(void) const
 {
     return (this->_nickname);
+}
+
+void    Client::setUsername(std::string username)
+{
+    _username = username;
 }
 
 std::string Client::getUsername(void) const

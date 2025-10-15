@@ -12,12 +12,14 @@ class Client
 		int				getMyFd(void) const;
 		void		    setIsRegistered(bool state);
 		bool		    getIsRegistered(void) const;
+        void            setNickname(std::string nickname);
         std::string     getNickname(void) const;
+        void            setUsername(std::string username);
         std::string     getUsername(void) const;
-        std::string     getResponse(void) const;
         void            setResponse(std::string response);
-        std::string     getDataReceived(void) const;
+        std::string     getResponse(void) const;
         void            setDataReceived(std::string data);
+        std::string     getDataReceived(void) const;
 	private:
 		int				_my_fd;
         std::string     _data_received;

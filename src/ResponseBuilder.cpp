@@ -33,6 +33,10 @@ std::string ResponseBuilder::enumericToMessage(e_numeric code, std::string user_
             break;
         case ERR_UNKNOWNCOMMAND:
             response += user_input + " :Unknown command";
+            break;
+        case ERR_NONICKNAMEGIVEN:
+            response += ":No nickname given";
+            break;
         case ERR_NEEDMOREPARAMS:
             response += user_input + "  :Not enough parameters";
             break;

@@ -1,5 +1,6 @@
 #include "Server.hpp"
 #include <asm-generic/socket.h>
+#include <cstddef>
 #include <stdexcept>
 #include <sys/socket.h>
 #include <sys/types.h>
@@ -8,6 +9,7 @@
 #include <netdb.h>
 #include <fcntl.h>
 #include <sys/epoll.h>
+#include "Client.hpp"
 #include "HandlerConnection.hpp"
 #include "HandlerReceive.hpp"
 #include "HandlerRespond.hpp"
@@ -118,7 +120,7 @@ Server::Server(char *port, char *password) : _name("IrcTestServer")
 Server::~Server()
 {
 	for (size_t i = 0 ; i > _clients.size() ; i++)
-		close(_clients[i].get_my_fd());
+		close(_clients[i].getMyFd());
 	close(_master_socket);
 	close(_epollfd);
 }
@@ -131,4 +133,14 @@ std::string Server::getPassword(void) const
 std::string Server::getName(void) const
 {
     return (this->_name);
+}
+
+Client* Server::getClient(std::string nickname)
+{
+    for (size_t i = 0 ; i < _clients.size() ; i++)
+    {
+        if (_clients.at(i).getNickname() == nickname)
+            return &_clients.at(i);
+    }
+    return NULL;
 }

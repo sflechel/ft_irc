@@ -17,6 +17,7 @@ class Server
 		~Server();
         std::string         getPassword(void) const;
         std::string         getName(void) const;
+        Client*             getClient(std::string nickname);
 
 	private:
 		int					_master_socket;
