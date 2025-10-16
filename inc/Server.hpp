@@ -1,9 +1,11 @@
 #ifndef SERVER_HPP
+
 # define SERVER_HPP
 
 # define LISTEN_BACKLOG 5
 # define MAX_EVENTS 10
 
+# include "Channel.hpp"
 # include <sys/socket.h>
 # include <netinet/in.h>
 # include <string>
@@ -28,6 +30,7 @@ class Server
 		struct sockaddr_in	    _master_socket_address;
 		unsigned int		    _master_socket_address_len;
 		std::vector<Client>	    _clients;
+        std::vector<Channel>    _channels;
         std::string             _name;
 
 		void				    setup_master_socket(char *port);

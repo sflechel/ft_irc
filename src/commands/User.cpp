@@ -5,13 +5,7 @@
 #include <vector>
 
 User::User(Server& server, Client& user, std::string cmd_name, std::vector<std::string> params) : Command(server, user, cmd_name, params)
-{
-    if (_params.size() < 4)
-    {
-        _need_more_params = 1;
-        return ;
-    }
-}
+{}
 
 void    User::enactCommand(void)
 {
@@ -19,7 +13,7 @@ void    User::enactCommand(void)
 
     if (!_user.getSentPassword())
         _user.setResponse(respbldr.buildResponseString("", ERR_PASSWDMISMATCH));
-    else if (_need_more_params)
+    else if (_params.size() < 4)
         _user.setResponse(respbldr.buildResponseString(_cmd_name, ERR_NEEDMOREPARAMS));
     else if (_user.getIsRegistered())
         _user.setResponse(respbldr.buildResponseString("", ERR_ALREADYREGISTERED));

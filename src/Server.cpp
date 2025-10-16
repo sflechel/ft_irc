@@ -128,8 +128,6 @@ void    Server::removeClient(int index)
 
 Server::~Server()
 {
-	for (size_t i = 0 ; i > _clients.size() ; i++)
-		close(_clients[i].getFd());
 	close(_master_socket);
 	close(_epollfd);
 }

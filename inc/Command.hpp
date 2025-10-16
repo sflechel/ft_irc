@@ -17,7 +17,6 @@ class Command
         Client&                     _user;
         std::string                 _cmd_name;
 		std::vector<std::string>	_params;
-        bool                        _need_more_params;
 };
 
 #endif

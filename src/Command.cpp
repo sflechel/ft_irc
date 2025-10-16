@@ -8,8 +8,7 @@ Command::Command(Server& server, Client& user, std::string cmd_name, std::vector
 	_server(server),
 	_user(user),
 	_cmd_name(cmd_name),
-	_params(params),
-	_need_more_params(0)
+	_params(params)
 {}
 
 Command::~Command()

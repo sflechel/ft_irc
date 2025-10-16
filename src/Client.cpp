@@ -1,5 +1,6 @@
 #include "Client.hpp"
 #include <string>
+#include <unistd.h>
 
 bool	Client::getSentPassword(void) const
 {
@@ -82,4 +83,7 @@ Client::Client(int fd) : _fd(fd)
 	_sent_password = false;
 }
 
-Client::~Client(void) {}
+Client::~Client(void) 
+{
+    close(_fd);
+}
