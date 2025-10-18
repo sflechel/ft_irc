@@ -15,6 +15,7 @@ class HandlerReceive
 
 		void	readClientRequest(void);
 		void	splitResponseToCmds(void);
+		void	parseCmdParam(std::string &input, std::vector<std::string>& vec);
 		void	execCmds(void);
 
 	private:

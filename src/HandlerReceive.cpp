@@ -3,8 +3,10 @@
 #include "Server.hpp"
 #include "commands/Nick.hpp"
 #include <cstddef>
+#include <string>
 #include <vector>
 #include <iostream>
+#include <sstream>
 
 void HandlerReceive::readClientRequest()
 {
@@ -54,15 +56,24 @@ void	HandlerReceive::splitResponseToCmds(void)
 	(void)_server;
 }
 
+void	HandlerReceive::parseCmdParam(std::string &input, std::vector<std::string>& vec)
+{
+	std::stringstream ss(input);
+	std::string param;
+
+	while (getline(ss, param,  ' '))
+		if (!param.empty())
+			vec.push_back(param);
+}
+
 void	HandlerReceive::execCmds(void)
 {
 	std::vector<std::string> know_cmds_name;
 	know_cmds_name.push_back("NICK");
 	know_cmds_name.push_back("PASS");
+	know_cmds_name.push_back("QUIT");
+	know_cmds_name.push_back("USER");
 
-	std::vector<std::string> params;
-	params.push_back("name1");
-	params.push_back("name2");
 
 	std::vector<Command*> cmds;
 
@@ -70,13 +81,29 @@ void	HandlerReceive::execCmds(void)
 	{
 		for (size_t j = 0; j < know_cmds_name.size(); j++)
 		{
-			if (_full_cmds[i].compare(0, know_cmds_name[j].length(), know_cmds_name[j]) == 0)
+			std::vector<std::string> params;
+			parseCmdParam(_full_cmds[i], params);
+
+			std::string curr_cmd_name = params.at(0);
+			params.erase(params.begin());
+
+			//if (_full_cmds[i].compare(0, know_cmds_name[j].length(), know_cmds_name[j]) == 0)
+			if (curr_cmd_name.compare(know_cmds_name[j]) == 0)
 			{
+				Command* curr_cmd = NULL;
 				if (j == 0)
+					curr_cmd = new Nick(_server, _client, curr_cmd_name, params);
+				else if (j == 1)
 				{
-					Nick* n = new Nick(_server, _client, "test", params);
-					cmds.push_back(n);
 				}
+				else if (j == 2)
+				{
+				}
+				else if (j == 3)
+				{
+				}
+				if (curr_cmd != NULL)
+					cmds.push_back(curr_cmd);
 			}
 
 		}
@@ -84,8 +111,8 @@ void	HandlerReceive::execCmds(void)
 
 	for (size_t i = 0; i < cmds.size(); i++)
 	{
-		cmds.at(i)->enactCommand();
-		std::cout << _client.getNickname() << "\n";
+		//cmds.at(i)->enactCommand();
+		//std::cout << _client.getNickname() << "\n";
 	}
 }
 
