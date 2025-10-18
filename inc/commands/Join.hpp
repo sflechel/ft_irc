@@ -11,6 +11,7 @@ class   Join : public Command
         Join(Server& server, Client& user, std::string cmd_name, std::vector<std::string> params);
         ~Join(void);
         void    joinChannel(std::string name);
+        void    joinChannel(std::string name, std::string key);
         void    enactCommand(void);
 };
 

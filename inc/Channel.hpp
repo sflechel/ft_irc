@@ -9,8 +9,11 @@
 class   Channel
 {
     public:
-        Channel(Client& user);
+        Channel(std::string name, Client& user);
         ~Channel(void);
+        void        addUser(std::string nickname);
+        void        leave(std::string nickname);
+        std::string getKey(void);
     private:
         std::string             _name;
         std::set<std::string>   _users;

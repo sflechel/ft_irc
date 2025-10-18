@@ -13,6 +13,7 @@
 #include <fcntl.h>
 #include <sys/epoll.h>
 #include <utility>
+#include "Channel.hpp"
 #include "Client.hpp"
 #include "HandlerConnection.hpp"
 #include "HandlerReceive.hpp"
@@ -146,6 +147,13 @@ void    Server::registerClient(Client* client, std::string nickname)
         _clients.insert(pair);
 }
 
+void    Server::createChannel(std::string name, Client& user)
+{
+    Channel *new_channel = new Channel(name, user);
+    std::pair<std::string, Channel*>    pair(name, new_channel);
+    _channels.insert(pair);
+}
+
 void    Server::updateNickname(Client* client, std::string new_nickname)
 {
     _clients.erase(client->getNickname());
@@ -189,9 +197,20 @@ Client* Server::getClient(std::string nickname)
     return client;
 }
 
-std::vector<Channel>&    Server::getChannels(void)
+std::map<std::string, Channel*>&    Server::getChannels(void)
 {
     return _channels;
+}
+
+Channel*    Server::getChannel(std::string name)
+{
+    Channel*    channel;
+    try {channel = _channels.at(name);}
+    catch (std::out_of_range)
+    {
+        return NULL;
+    }
+    return _channels.at(name);
 }
 
 std::vector<Client*>&    Server::getNewClients(void)

@@ -31,6 +31,9 @@ std::string ResponseBuilder::enumericToMessage(e_numeric code, std::string user_
         case RPL_WELCOME:
             response += "Welcome to the Internet Relay Network " + _target.getNickname() + "!" + _target.getUsername() + "@" + _servername;
             break;
+        case ERR_NOSUCHCHANNEL:
+            response += user_input + " :No such channel";
+            break;
         case ERR_UNKNOWNCOMMAND:
             response += user_input + " :Unknown command";
             break;
@@ -49,6 +52,9 @@ std::string ResponseBuilder::enumericToMessage(e_numeric code, std::string user_
         case ERR_PASSWDMISMATCH:
             response += ":Password incorrect";
             break;
+        case ERR_BADCHANNELKEY:
+            response += user_input + " :Cannot join channel (+k)";
+            break;
     }
     return (response);
 }
@@ -63,4 +69,12 @@ std::string ResponseBuilder::buildResponseString(std::string user_input, e_numer
     response << enumericToMessage(numeric, user_input);
     response << "\r\n";
     return (response.str());
+}
+
+std::string ResponseBuilder::buildChanResponse(std::string command, std::string param)
+{
+    std::string response =  ":" + _target.getNickname() + " ";
+    response += command + " ";
+    response += param;
+    return response;
 }
