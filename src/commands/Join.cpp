@@ -61,6 +61,8 @@ void    Join::enactCommand(void)
     ResponseBuilder respbldr = ResponseBuilder(_server.getName(), _user);
 
     int size = _params.size();
+    if (!_user.getIsRegistered())
+        _user.setResponse(respbldr.buildResponseString("", ERR_PASSWDMISMATCH));
     if (size < 1 || size > 2)
         _user.setResponse(respbldr.buildResponseNum(_cmd_name, ERR_NEEDMOREPARAMS));
     else if (_params.at(0) == "0")
