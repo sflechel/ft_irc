@@ -17,16 +17,18 @@ void    Nick::enactCommand(void)
         _user.setResponse(respbldr.buildResponseString(_cmd_name, ERR_NONICKNAMEGIVEN));
     else if (_server.getClient(_params.at(0)) != NULL)
         _user.setResponse(respbldr.buildResponseString(_params.at(0), ERR_NICKNAMEINUSE));
-    else
+    else if (_user.getNickname().empty())
     {
         _server.registerClient(&_user, _params.at(0));
 
-        if (!_user.getUsername().empty() && !_user.getIsRegistered())
+        if (!_user.getUsername().empty())
         {
             _user.setResponse(respbldr.buildResponseString("", RPL_WELCOME));
             _user.setIsRegistered(true);
         }
     }
+    else
+        _server.updateNickname(&_user, _params.at(0));
 }
 
 Nick::~Nick(void)

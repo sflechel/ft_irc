@@ -144,6 +144,14 @@ void    Server::registerClient(Client* client, std::string nickname)
         _clients.insert(pair);
 }
 
+void    Server::updateNickname(Client* client, std::string new_nickname)
+{
+    _clients.erase(client->getNickname());
+    client->setNickname(new_nickname);
+    std::pair<std::string, Client*> pair(new_nickname, client);
+    _clients.insert(pair);
+}
+
 Server::~Server()
 {
     for (size_t i = 0 ; i < _new_clients.size() ; i++)
