@@ -27,7 +27,9 @@ class Server
         void                            removeClient(std::string nickname);
         void                            registerClient(Client* client, std::string nickname);
         void                            updateNickname(Client* client, std::string new_nickname);
-        std::vector<Channel>&           getChannels(void);
+        std::map<std::string, Channel*>&    getChannels(void);
+        Channel*                        getChannel(std::string name);
+        void                            createChannel(std::string name, Client& user);
 
 	private:
 		int                             _master_socket;
@@ -37,7 +39,7 @@ class Server
 		unsigned int                    _master_socket_address_len;
 		std::vector<Client*>            _new_clients;
 		std::map<std::string, Client*>  _clients;
-        std::vector<Channel>            _channels;
+        std::map<std::string, Channel*> _channels;
         std::string                     _name;
 
 		void	                        setup_master_socket(char *port);
