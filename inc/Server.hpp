@@ -20,7 +20,7 @@ class Server
         std::string             getPassword(void) const;
         std::string             getName(void) const;
         Client*                 getClient(std::string nickname);
-        std::vector<Client>&    getClients(void);
+        std::vector<Client*>&   getClients(void);
         void                    removeClient(int index);
 
 	private:
@@ -29,7 +29,7 @@ class Server
 		std::string			    _password;
 		struct sockaddr_in	    _master_socket_address;
 		unsigned int		    _master_socket_address_len;
-		std::vector<Client>	    _clients;
+		std::vector<Client*>	_clients;
         std::vector<Channel>    _channels;
         std::string             _name;
 

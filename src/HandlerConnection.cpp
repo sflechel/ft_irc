@@ -11,7 +11,7 @@ HandlerConnection::HandlerConnection(int masterSock) : _masterSock(masterSock)
 {
 }
 
-Client	HandlerConnection::acceptConnection()
+Client*	HandlerConnection::acceptConnection()
 {
 	struct sockaddr	addr;
 	socklen_t		len_addr = 0;
@@ -27,18 +27,21 @@ Client	HandlerConnection::acceptConnection()
 	std::cout << "Server connected to a client!" << std::endl;
 
     Client* output = new Client(conn_fd);
-	return (*output);
+    std::cout << output << std::endl;
+	return (output);
 }
 
-void    HandlerConnection::registerClient(Client& newClient, std::vector<Client>& listClients, int epollfd)
+void    HandlerConnection::registerClient(Client* newClient, std::vector<Client*>& listClients, int epollfd)
 {
     struct epoll_event  poll_opts;
 
+    std::cout << newClient << std::endl;  
+
     listClients.push_back(newClient);
     poll_opts.events = EPOLLIN | EPOLLOUT;
-    int conn_fd = newClient.getFd();
+    int conn_fd = newClient->getFd();
     poll_opts.data.fd = conn_fd;
-    poll_opts.data.ptr = &newClient;
+    poll_opts.data.ptr = newClient;
     if (epoll_ctl(epollfd, EPOLL_CTL_ADD, conn_fd, &poll_opts) == -1)
         throw std::runtime_error("failed to add connection to epoll");
 }
