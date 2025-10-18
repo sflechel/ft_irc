@@ -30,7 +30,7 @@ void	Server::poll_events()
 			if (events[i].data.fd == _master_socket)
 			{
 				HandlerConnection hconn = HandlerConnection(_master_socket);
-				Client	newClient = hconn.acceptConnection();
+				Client*	newClient = hconn.acceptConnection();
                 hconn.registerClient(newClient, this->_clients, this->_epollfd);
 			}
 			else if (events[i].events & EPOLLIN)
@@ -120,14 +120,17 @@ Server::Server(char *port, char *password) : _name("IrcTestServer")
 
 void    Server::removeClient(int index)
 {
-    std::vector<Client>::iterator   it;
+    std::vector<Client*>::iterator   it;
 
     it = _clients.begin() + index;
+    delete _clients.at(index);
     _clients.erase(it);
 }
 
 Server::~Server()
 {
+    for (int i = 0 ; i < _clients.size() ; i++)
+        delete _clients.at(i);
 	close(_master_socket);
 	close(_epollfd);
 }
@@ -146,13 +149,13 @@ Client* Server::getClient(std::string nickname)
 {
     for (size_t i = 0 ; i < _clients.size() ; i++)
     {
-        if (_clients.at(i).getNickname() == nickname)
-            return &_clients.at(i);
+        if (_clients.at(i)->getNickname() == nickname)
+            return _clients.at(i);
     }
     return NULL;
 }
 
-std::vector<Client>&    Server::getClients(void)
+std::vector<Client*>&    Server::getClients(void)
 {
     return (_clients);
 }

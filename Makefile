@@ -17,6 +17,7 @@ SRC_FILES = \
 	Client.cpp\
 	Command.cpp\
 	ResponseBuilder.cpp\
+	Channel.cpp\
 	commands/Pass.cpp\
 	commands/UnknownCommand.cpp\
 	commands/Nick.cpp\
@@ -40,6 +41,7 @@ HEADER_FILES = \
 	Client.hpp\
 	Command.hpp\
 	ResponseBuilder.hpp\
+	Channel.hpp\
 	commands/Pass.hpp\
 	commands/UnknownCommand.hpp\
 	commands/Nick.hpp\
