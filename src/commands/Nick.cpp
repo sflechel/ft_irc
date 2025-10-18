@@ -19,7 +19,7 @@ void    Nick::enactCommand(void)
         _user.setResponse(respbldr.buildResponseString(_params.at(0), ERR_NICKNAMEINUSE));
     else
     {
-        _user.setNickname(_params.at(0));
+        _server.registerClient(&_user, _params.at(0));
 
         if (!_user.getUsername().empty() && !_user.getIsRegistered())
         {

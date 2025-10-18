@@ -14,8 +14,13 @@ void    Quit::enactCommand(void)
 
     _user.setResponse(message);
 
-    std::ptrdiff_t  index = std::distance(_server.getClients().data(), &_user);
-    _server.removeClient(index);
+    if (_user.getNickname().empty())
+    {
+        std::ptrdiff_t  index = std::distance(*_server.getNewClients().data(), &_user);
+        _server.removeNewClient(index);
+    }
+    else 
+        _server.removeClient(_user.getNickname());
 }
 
 Quit::~Quit(void)
