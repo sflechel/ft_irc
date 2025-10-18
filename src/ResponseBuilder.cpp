@@ -13,9 +13,9 @@ std::string ResponseBuilder::enumericToStringNumber(e_numeric code)
 {
     std::stringstream   output;
 
-    if (code / 10 < 10)
+    if (code / 10 < 1)
         output << "00" << (int)code;
-    else if (code / 100 < 10)
+    else if (code / 100 < 1)
         output << "0" << (int)code;
     else
         output << (int)code;

@@ -22,5 +22,6 @@ void    Join::enactCommand(void)
     if (_params.empty())
         _user.setResponse(respbldr.buildResponseString(_cmd_name, ERR_NEEDMOREPARAMS));
     else if (_params.at(0) == "0")
-    {}
+    {       
+    }
 }

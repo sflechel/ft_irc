@@ -1,7 +1,9 @@
 #include "Server.hpp"
 #include <asm-generic/socket.h>
 #include <cstddef>
+#include <map>
 #include <stdexcept>
+#include <string>
 #include <sys/socket.h>
 #include <sys/types.h>
 #include <unistd.h>
@@ -9,6 +11,7 @@
 #include <netdb.h>
 #include <fcntl.h>
 #include <sys/epoll.h>
+#include <utility>
 #include "Client.hpp"
 #include "HandlerConnection.hpp"
 #include "HandlerReceive.hpp"
@@ -31,7 +34,7 @@ void	Server::poll_events()
 			{
 				HandlerConnection hconn = HandlerConnection(_master_socket);
 				Client*	newClient = hconn.acceptConnection();
-                hconn.registerClient(newClient, this->_clients, this->_epollfd);
+                hconn.registerClient(newClient, this->_new_clients, this->_epollfd);
 			}
 			else if (events[i].events & EPOLLIN)
 			{
@@ -118,20 +121,47 @@ Server::Server(char *port, char *password) : _name("IrcTestServer")
 	poll_events();
 }
 
-void    Server::removeClient(int index)
+void    Server::removeNewClient(int index)
 {
     std::vector<Client*>::iterator   it;
 
-    it = _clients.begin() + index;
-    delete _clients.at(index);
-    _clients.erase(it);
+    it = _new_clients.begin() + index;
+    delete _new_clients.at(index);
+    _new_clients.erase(it);
+}
+
+void    Server::removeClient(std::string nickname)
+{
+    delete _clients.at(nickname);
+    _clients.erase(nickname);
+}
+
+void    Server::registerClient(Client* client, std::string nickname)
+{
+        std::pair<std::string, Client*> pair(nickname, client);
+        client->setNickname(nickname);
+        this->removeNewClient(std::distance(*_new_clients.data(), client));
+        _clients.insert(pair);
+}
+
+void    Server::updateNickname(Client* client, std::string new_nickname)
+{
+    _clients.erase(client->getNickname());
+    client->setNickname(new_nickname);
+    std::pair<std::string, Client*> pair(new_nickname, client);
+    _clients.insert(pair);
 }
 
 Server::~Server()
 {
-    for (size_t i = 0 ; i < _clients.size() ; i++)
-		delete _clients.at(i);
-
+    for (size_t i = 0 ; i < _new_clients.size() ; i++)
+    {
+        delete _new_clients.at(i);
+    }
+    for (std::map<std::string, Client*>::iterator it = _clients.begin(); it != _clients.end(); it++)
+    {
+        delete it->second;
+    }
 	close(_master_socket);
 	close(_epollfd);
 }
@@ -148,15 +178,16 @@ std::string Server::getName(void) const
 
 Client* Server::getClient(std::string nickname)
 {
-    for (size_t i = 0 ; i < _clients.size() ; i++)
+    Client* client;
+    try {client = _clients.at(nickname);}
+    catch (std::out_of_range)
     {
-        if (_clients.at(i)->getNickname() == nickname)
-            return _clients.at(i);
+        return NULL;
     }
-    return NULL;
+    return client;
 }
 
-std::vector<Client*>&    Server::getClients(void)
+std::vector<Client*>&    Server::getNewClients(void)
 {
-    return (_clients);
+    return (_new_clients);
 }
