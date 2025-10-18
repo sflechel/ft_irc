@@ -1,6 +1,7 @@
 #include "Server.hpp"
 #include <asm-generic/socket.h>
 #include <cstddef>
+#include <iterator>
 #include <map>
 #include <stdexcept>
 #include <string>
@@ -140,7 +141,8 @@ void    Server::registerClient(Client* client, std::string nickname)
 {
         std::pair<std::string, Client*> pair(nickname, client);
         client->setNickname(nickname);
-        this->removeNewClient(std::distance(*_new_clients.data(), client));
+        std::vector<Client*>::iterator it = _new_clients.begin() + std::distance(*_new_clients.data(), client);
+        _new_clients.erase(it);
         _clients.insert(pair);
 }
 
