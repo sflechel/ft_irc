@@ -61,7 +61,10 @@ std::string ResponseBuilder::enumericToMessage(e_numeric code, std::string user_
         case ERR_BADCHANNELKEY:
             response += user_input + " :Cannot join channel (+k)";
             break;
-    }
+		case ERR_NOPRIVILEGES:
+			response += ":Permission Denied- You're not an IRC operator";
+            break;
+	}
     return (response);
 }
 

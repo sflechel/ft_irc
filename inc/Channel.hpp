@@ -16,6 +16,7 @@ class   Channel
         void        addUser(std::string nickname);
         void        leave(std::string nickname);
         std::string getKey(void);
+		bool		isUserOperator(const std::string &username) const;
 		void		sendChannelMessage(const std::string& message, const Client& sender) const;
     private:
         std::string             _name;

@@ -18,6 +18,7 @@ typedef enum    numeric
     ERR_ALREADYREGISTERED = 462,
     ERR_PASSWDMISMATCH = 464,
     ERR_BADCHANNELKEY = 475,
+	ERR_NOPRIVILEGES = 481,
 }   e_numeric;
 
 class   ResponseBuilder

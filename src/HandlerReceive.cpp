@@ -7,6 +7,7 @@
 #include "commands/Quit.hpp"
 #include "commands/User.hpp"
 #include "commands/Join.hpp"
+#include "commands/Mode.hpp"
 #include "commands/UnknownCommand.hpp"
 #include <cstddef>
 #include <string>
@@ -114,6 +115,8 @@ void	HandlerReceive::execCmds(void)
 			cmd = new PrivMsg(_server, _client, cmd_name, params);
 		else if (cmd_name == "JOIN")
 			cmd = new Join(_server, _client, cmd_name, params);
+		else if (cmd_name == "MODE")
+			cmd = new Mode(_server, _client, cmd_name, params);
 		else
 			cmd = new UnknownCommand(_server, _client, cmd_name, params);
 		_cmds.push_back(cmd);

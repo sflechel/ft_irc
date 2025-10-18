@@ -35,6 +35,15 @@ void	Channel::sendChannelMessage(const std::string& message, const Client& sende
 	}
 }
 
+bool Channel::isUserOperator(const std::string &username) const
+{
+	std::set<std::string>::iterator	it;
+	for (it = _operators.begin() ; it != _operators.end() ; it++)
+		if (username.compare(*it) == 0)
+			return (true);
+	return (false);
+}
+
 std::string Channel::getKey(void)
 {
     return _key;
