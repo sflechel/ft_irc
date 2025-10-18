@@ -3,6 +3,7 @@
 #include "Server.hpp"
 #include "commands/Nick.hpp"
 #include "commands/Pass.hpp"
+#include "commands/PrivMsg.hpp"
 #include "commands/Quit.hpp"
 #include "commands/User.hpp"
 #include "commands/UnknownCommand.hpp"
@@ -109,6 +110,8 @@ void	HandlerReceive::execCmds(void)
 			cmd = new Quit(_server, _client, cmd_name, params);
 		else if (cmd_name == "USER")
 			cmd = new User(_server, _client, cmd_name, params);
+		else if (cmd_name == "PRIVMSG")
+			cmd = new PrivMsg(_server, _client, cmd_name, params);
 		else
 			cmd = new UnknownCommand(_server, _client, cmd_name, params);
 		_cmds.push_back(cmd);

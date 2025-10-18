@@ -41,13 +41,16 @@ std::string ResponseBuilder::enumericToMessage(e_numeric code, std::string user_
             response += user_input + " :Nickname is already in use";
             break;
         case ERR_NEEDMOREPARAMS:
-            response += user_input + "  :Not enough parameters";
+            response += user_input + " :Not enough parameters";
             break;
         case ERR_ALREADYREGISTERED:
             response += ":Unauthorized command (already registered)";
             break;
         case ERR_PASSWDMISMATCH:
             response += ":Password incorrect";
+            break;
+		case ERR_NOSUCHNICK:
+            response += user_input + " :No such nick";
             break;
     }
     return (response);

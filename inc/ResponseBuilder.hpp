@@ -8,6 +8,7 @@
 typedef enum    numeric
 {
     RPL_WELCOME = 1,
+	ERR_NOSUCHNICK = 401,
     ERR_UNKNOWNCOMMAND = 421,
     ERR_NONICKNAMEGIVEN = 431,
     ERR_NICKNAMEINUSE = 433,
