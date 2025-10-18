@@ -27,6 +27,7 @@ class Server
         void                            removeClient(std::string nickname);
         void                            registerClient(Client* client, std::string nickname);
         void                            updateNickname(Client* client, std::string new_nickname);
+        std::vector<Channel>&           getChannels(void);
 
 	private:
 		int                             _master_socket;

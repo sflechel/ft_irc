@@ -187,6 +187,11 @@ Client* Server::getClient(std::string nickname)
     return client;
 }
 
+std::vector<Channel>&    Server::getChannels(void)
+{
+    return _channels;
+}
+
 std::vector<Client*>&    Server::getNewClients(void)
 {
     return (_new_clients);
