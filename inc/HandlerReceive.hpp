@@ -5,6 +5,7 @@
 # define READ_BUFFER_SIZE 1024
 
 # include "Client.hpp"
+# include "Command.hpp"
 # include "Server.hpp"
 
 class HandlerReceive
@@ -21,7 +22,9 @@ class HandlerReceive
 	private:
 		Client&	_client;
 		Server& _server;
-		std::vector<std::string> _full_cmds;
+		std::vector<std::string>	_full_cmds;
+		std::vector<Command*>		_cmds;
+
 };
 
 #endif // !HANDLER_RECEIVE_HPP

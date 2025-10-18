@@ -27,15 +27,12 @@ Client*	HandlerConnection::acceptConnection()
 	std::cout << "Server connected to a client!" << std::endl;
 
     Client* output = new Client(conn_fd);
-    std::cout << output << std::endl;
 	return (output);
 }
 
 void    HandlerConnection::registerClient(Client* newClient, std::vector<Client*>& listClients, int epollfd)
 {
     struct epoll_event  poll_opts;
-
-    std::cout << newClient << std::endl;  
 
     listClients.push_back(newClient);
     poll_opts.events = EPOLLIN | EPOLLOUT;

@@ -129,8 +129,9 @@ void    Server::removeClient(int index)
 
 Server::~Server()
 {
-    for (int i = 0 ; i < _clients.size() ; i++)
-        delete _clients.at(i);
+    for (size_t i = 0 ; i < _clients.size() ; i++)
+		delete _clients.at(i);
+
 	close(_master_socket);
 	close(_epollfd);
 }
