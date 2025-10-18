@@ -31,6 +31,9 @@ std::string ResponseBuilder::enumericToMessage(e_numeric code, std::string user_
         case RPL_WELCOME:
             response += "Welcome to the Internet Relay Network " + _target.getNickname() + "!" + _target.getUsername() + "@" + _servername;
             break;
+		case ERR_NOSUCHNICK:
+            response += user_input + " :No such nick";
+            break;
         case ERR_NOSUCHCHANNEL:
             response += user_input + " :No such channel";
             break;
@@ -42,6 +45,9 @@ std::string ResponseBuilder::enumericToMessage(e_numeric code, std::string user_
             break;
         case ERR_NICKNAMEINUSE:
             response += user_input + " :Nickname is already in use";
+            break;
+		case ERR_NOTREGISTERED:
+            response += ":You have not registered";
             break;
         case ERR_NEEDMOREPARAMS:
             response += user_input + " :Not enough parameters";
@@ -55,14 +61,11 @@ std::string ResponseBuilder::enumericToMessage(e_numeric code, std::string user_
         case ERR_BADCHANNELKEY:
             response += user_input + " :Cannot join channel (+k)";
             break;
-		case ERR_NOSUCHNICK:
-            response += user_input + " :No such nick";
-            break;
     }
     return (response);
 }
 
-std::string ResponseBuilder::buildResponseString(std::string user_input, e_numeric numeric)
+std::string ResponseBuilder::buildResponseNum(std::string user_input, e_numeric numeric)
 {
     std::stringstream response;
 
@@ -74,10 +77,11 @@ std::string ResponseBuilder::buildResponseString(std::string user_input, e_numer
     return (response.str());
 }
 
-std::string ResponseBuilder::buildChanResponse(std::string command, std::string param)
+std::string ResponseBuilder::buildResponse(std::string command, std::string param)
 {
     std::string response =  ":" + _target.getNickname() + " ";
     response += command + " ";
     response += param;
-    return response;
+	response += "\r\n";
+    return (response);
 }

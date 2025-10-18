@@ -6,6 +6,7 @@
 #include "commands/PrivMsg.hpp"
 #include "commands/Quit.hpp"
 #include "commands/User.hpp"
+#include "commands/Join.hpp"
 #include "commands/UnknownCommand.hpp"
 #include <cstddef>
 #include <string>
@@ -57,7 +58,6 @@ void	HandlerReceive::splitResponseToCmds(void)
 	}
 	if (cmd_start != 0)
 		_client.setRequest(full_request.substr(cmd_start, std::string::npos));
-	(void)_server;
 }
 
 void	HandlerReceive::parseCmdParam(std::string &input, std::vector<std::string>& vec)
@@ -112,16 +112,15 @@ void	HandlerReceive::execCmds(void)
 			cmd = new User(_server, _client, cmd_name, params);
 		else if (cmd_name == "PRIVMSG")
 			cmd = new PrivMsg(_server, _client, cmd_name, params);
+		else if (cmd_name == "JOIN")
+			cmd = new Join(_server, _client, cmd_name, params);
 		else
 			cmd = new UnknownCommand(_server, _client, cmd_name, params);
 		_cmds.push_back(cmd);
 	}
 
 	for (size_t i = 0; i < _cmds.size(); i++)
-	{
 		_cmds.at(i)->enactCommand();
-		std::cout << _client.getNickname() << "aaaaaaa\n";
-	}
 }
 
 HandlerReceive::HandlerReceive(Client& client, Server& server) : _client(client), _server(server)

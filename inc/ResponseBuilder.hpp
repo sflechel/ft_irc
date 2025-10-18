@@ -13,10 +13,11 @@ typedef enum    numeric
     ERR_UNKNOWNCOMMAND = 421,
     ERR_NONICKNAMEGIVEN = 431,
     ERR_NICKNAMEINUSE = 433,
+	ERR_NOTREGISTERED = 451,
     ERR_NEEDMOREPARAMS = 461,
     ERR_ALREADYREGISTERED = 462,
     ERR_PASSWDMISMATCH = 464,
-    ERR_BADCHANNELKEY = 475
+    ERR_BADCHANNELKEY = 475,
 }   e_numeric;
 
 class   ResponseBuilder
@@ -25,8 +26,8 @@ class   ResponseBuilder
         ResponseBuilder(const std::string& servername, Client& target);
         ~ResponseBuilder(void);
 
-        std::string     buildResponseString(std::string user_input, e_numeric numeric);
-        std::string     buildChanResponse(std::string command, std::string param);
+        std::string     buildResponseNum(std::string user_input, e_numeric numeric);
+        std::string     buildResponse(std::string command, std::string param);
     private:
 
         std::string         enumericToStringNumber(e_numeric code);

@@ -12,18 +12,18 @@ void    Nick::enactCommand(void)
 {
     ResponseBuilder respbldr = ResponseBuilder(_server.getName(), _user);
     if (!_user.getSentPassword())
-        _user.setResponse(respbldr.buildResponseString("", ERR_PASSWDMISMATCH));
+        _user.setResponse(respbldr.buildResponseNum("", ERR_PASSWDMISMATCH));
     else if (_params.empty() || _params.at(0).empty())
-        _user.setResponse(respbldr.buildResponseString(_cmd_name, ERR_NONICKNAMEGIVEN));
+        _user.setResponse(respbldr.buildResponseNum(_cmd_name, ERR_NONICKNAMEGIVEN));
     else if (_server.getClient(_params.at(0)) != NULL)
-        _user.setResponse(respbldr.buildResponseString(_params.at(0), ERR_NICKNAMEINUSE));
+        _user.setResponse(respbldr.buildResponseNum(_params.at(0), ERR_NICKNAMEINUSE));
     else if (_user.getNickname().empty())
     {
         _server.registerClient(&_user, _params.at(0));
 
         if (!_user.getUsername().empty())
         {
-            _user.setResponse(respbldr.buildResponseString("", RPL_WELCOME));
+            _user.setResponse(respbldr.buildResponseNum("", RPL_WELCOME));
             _user.setIsRegistered(true);
         }
     }

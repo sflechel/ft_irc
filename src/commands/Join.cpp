@@ -20,7 +20,7 @@ void    Join::joinChannel(std::string name)
 
     if (name.size() < 2 || name.at(0) != '#')
     {
-        _user.setResponse(respbldr.buildResponseString(name, ERR_NOSUCHCHANNEL));
+        _user.setResponse(respbldr.buildResponseNum(name, ERR_NOSUCHCHANNEL));
         return ;
     }
     Channel*    channel = _server.getChannel(name);
@@ -28,7 +28,7 @@ void    Join::joinChannel(std::string name)
         _server.createChannel(name, _user);
     else
         channel->addUser(_user.getNickname());
-    _user.setResponse(respbldr.buildChanResponse("JOIN", name));
+    _user.setResponse(respbldr.buildResponse("JOIN", name));
 }
 
 void    Join::joinChannel(std::string name, std::string key)
@@ -37,23 +37,23 @@ void    Join::joinChannel(std::string name, std::string key)
 
     if (name.size() < 2 || name.at(0) != '#')
     {
-        _user.setResponse(respbldr.buildResponseString(name, ERR_NOSUCHCHANNEL));
+        _user.setResponse(respbldr.buildResponseNum(name, ERR_NOSUCHCHANNEL));
         return ;
     }
     Channel*    channel = _server.getChannel(name);
     if (channel == NULL)
     {
         _server.createChannel(name, _user);
-        _user.setResponse(respbldr.buildChanResponse("JOIN", name));
+        _user.setResponse(respbldr.buildResponse("JOIN", name));
         return ;
     }
     if (key == channel->getKey())
     {
         channel->addUser(_user.getNickname());
-        _user.setResponse(respbldr.buildChanResponse("JOIN", name));
+        _user.setResponse(respbldr.buildResponse("JOIN", name));
     }
     else
-        _user.setResponse(respbldr.buildResponseString(name, ERR_BADCHANNELKEY));
+        _user.setResponse(respbldr.buildResponseNum(name, ERR_BADCHANNELKEY));
 }
 
 void    Join::enactCommand(void)
@@ -62,7 +62,7 @@ void    Join::enactCommand(void)
 
     int size = _params.size();
     if (size < 1 || size > 2)
-        _user.setResponse(respbldr.buildResponseString(_cmd_name, ERR_NEEDMOREPARAMS));
+        _user.setResponse(respbldr.buildResponseNum(_cmd_name, ERR_NEEDMOREPARAMS));
     else if (_params.at(0) == "0")
     {
         std::map<std::string, Channel*>  channels = _server.getChannels();

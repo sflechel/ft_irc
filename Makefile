@@ -24,6 +24,7 @@ SRC_FILES = \
 	commands/Nick.cpp\
 	commands/User.cpp\
 	commands/Quit.cpp\
+	commands/Join.cpp\
 
 SRC = $(addprefix $(SRC_DIR), $(SRC_FILES))
 
@@ -49,6 +50,7 @@ HEADER_FILES = \
 	commands/Nick.hpp\
 	commands/User.hpp\
 	commands/Quit.hpp\
+	commands/Join.hpp\
 
 HEADER = $(addprefix $(INC_DIR), $(HEADER_FILES))
 INC = -I $(INC_DIR)

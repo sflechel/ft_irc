@@ -12,11 +12,11 @@ void    User::enactCommand(void)
     ResponseBuilder respbldr = ResponseBuilder(_server.getName(), _user);
 
     if (!_user.getSentPassword())
-        _user.setResponse(respbldr.buildResponseString("", ERR_PASSWDMISMATCH));
+        _user.setResponse(respbldr.buildResponseNum("", ERR_PASSWDMISMATCH));
     else if (_params.size() < 4)
-        _user.setResponse(respbldr.buildResponseString(_cmd_name, ERR_NEEDMOREPARAMS));
+        _user.setResponse(respbldr.buildResponseNum(_cmd_name, ERR_NEEDMOREPARAMS));
     else if (_user.getIsRegistered())
-        _user.setResponse(respbldr.buildResponseString("", ERR_ALREADYREGISTERED));
+        _user.setResponse(respbldr.buildResponseNum("", ERR_ALREADYREGISTERED));
     else
     {
         _user.setUsername(_params.at(0));
@@ -24,7 +24,7 @@ void    User::enactCommand(void)
 
         if (!_user.getNickname().empty())
         {
-            _user.setResponse(respbldr.buildResponseString("", RPL_WELCOME));
+            _user.setResponse(respbldr.buildResponseNum("", RPL_WELCOME));
             _user.setIsRegistered(true);
         }
     }

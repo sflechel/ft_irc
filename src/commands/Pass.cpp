@@ -14,11 +14,11 @@ void    Pass::enactCommand(void)
     ResponseBuilder respbldr = ResponseBuilder(_server.getName(), _user);
 
     if (_params.empty())
-        _user.setResponse(respbldr.buildResponseString(_cmd_name, ERR_NEEDMOREPARAMS));
+        _user.setResponse(respbldr.buildResponseNum(_cmd_name, ERR_NEEDMOREPARAMS));
     else if (_user.getIsRegistered())
-        _user.setResponse(respbldr.buildResponseString("", ERR_ALREADYREGISTERED));
+        _user.setResponse(respbldr.buildResponseNum("", ERR_ALREADYREGISTERED));
     else if (_key != _password)
-        _user.setResponse(respbldr.buildResponseString("", ERR_PASSWDMISMATCH));
+        _user.setResponse(respbldr.buildResponseNum("", ERR_PASSWDMISMATCH));
     else
         _user.setSentPassword(true);
 }

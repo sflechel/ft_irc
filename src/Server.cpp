@@ -1,4 +1,5 @@
 #include "Server.hpp"
+#include <algorithm>
 #include <asm-generic/socket.h>
 #include <cstddef>
 #include <iterator>
@@ -13,6 +14,7 @@
 #include <fcntl.h>
 #include <sys/epoll.h>
 #include <utility>
+#include <vector>
 #include "Channel.hpp"
 #include "Client.hpp"
 #include "HandlerConnection.hpp"
@@ -137,19 +139,18 @@ void    Server::removeClient(std::string nickname)
     delete _clients.at(nickname);
     _clients.erase(nickname);
 }
-
 void    Server::registerClient(Client* client, std::string nickname)
 {
         std::pair<std::string, Client*> pair(nickname, client);
         client->setNickname(nickname);
-        std::vector<Client*>::iterator it = _new_clients.begin() + std::distance(*_new_clients.data(), client);
+		std::vector<Client*>::iterator it = std::find(_new_clients.begin(), _new_clients.end(), client);
         _new_clients.erase(it);
         _clients.insert(pair);
 }
 
 void    Server::createChannel(std::string name, Client& user)
 {
-    Channel *new_channel = new Channel(name, user);
+    Channel *new_channel = new Channel(*this, name, user);
     std::pair<std::string, Channel*>    pair(name, new_channel);
     _channels.insert(pair);
 }

@@ -1,8 +1,10 @@
 #include "Channel.hpp"
 #include "Client.hpp"
+#include "Server.hpp"
+#include <set>
 #include <string>
 
-Channel::Channel(std::string name, Client& user) : _name(name), _user_limit(-1), _is_invite_only(0), _is_topic_restricted(0)
+Channel::Channel(Server& server, std::string name, Client& user) : _name(name), _server(server), _user_limit(-1), _is_invite_only(0), _is_topic_restricted(0)
 {
     _users.insert(user.getNickname());
     _operators.insert(user.getNickname());
@@ -20,6 +22,17 @@ void    Channel::leave(std::string nickname)
 {
     _users.erase(nickname);
     _operators.erase(nickname);
+}
+
+void	Channel::sendChannelMessage(const std::string& message, const Client& sender) const
+{
+	std::set<std::string>::iterator	it;
+	for (it = _users.begin() ; it != _users.end() ; it++)
+	{
+		Client* target = _server.getClient(*it);
+		if (target != NULL && target != &sender)
+			target->setResponse(message);
+	}
 }
 
 std::string Channel::getKey(void)
