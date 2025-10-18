@@ -2,12 +2,16 @@
 
 # define RESPONSEBUILDER_HPP
 
+#include "Channel.hpp"
 #include "Client.hpp"
 # include <string>
 
 typedef enum    numeric
 {
     RPL_WELCOME = 1,
+    RPL_NOTOPIC = 331,
+    RPL_TOPIC = 332,
+    RPL_NAMREPLY = 353,
 	ERR_NOSUCHNICK = 401,
     ERR_NOSUCHCHANNEL = 403,
     ERR_UNKNOWNCOMMAND = 421,
@@ -17,6 +21,8 @@ typedef enum    numeric
     ERR_NEEDMOREPARAMS = 461,
     ERR_ALREADYREGISTERED = 462,
     ERR_PASSWDMISMATCH = 464,
+    ERR_CHANNELISFULL = 471,
+    ERR_INVITEONLYCHAN = 473,
     ERR_BADCHANNELKEY = 475,
 	ERR_NOPRIVILEGES = 481,
 }   e_numeric;
@@ -29,6 +35,7 @@ class   ResponseBuilder
 
         std::string     buildResponseNum(std::string user_input, e_numeric numeric);
         std::string     buildResponse(std::string command, std::string param);
+        std::string     buildNamReply(Channel& channel);
     private:
 
         std::string         enumericToStringNumber(e_numeric code);

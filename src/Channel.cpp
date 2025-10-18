@@ -44,9 +44,34 @@ bool Channel::isUserOperator(const std::string &username) const
 	return (false);
 }
 
+bool    Channel::getIsInviteOnly(void)
+{
+    return _is_invite_only;
+}
+
+int Channel::getUserLimit(void)
+{
+    return _user_limit;
+}
+
+std::set<std::string>&  Channel::getUsers(void)
+{
+    return _users;
+}
+
+std::string    Channel::getTopic(void) const
+{
+    return _topic;
+}
+
 std::string Channel::getKey(void)
 {
     return _key;
+}
+
+std::string Channel::getName(void) const
+{
+    return _name;
 }
 
 Channel::~Channel(void)

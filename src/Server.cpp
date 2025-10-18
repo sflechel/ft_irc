@@ -2,7 +2,6 @@
 #include <algorithm>
 #include <asm-generic/socket.h>
 #include <cstddef>
-#include <iterator>
 #include <map>
 #include <stdexcept>
 #include <string>

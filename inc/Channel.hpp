@@ -18,6 +18,11 @@ class   Channel
         std::string getKey(void);
 		bool		isUserOperator(const std::string &username) const;
 		void		sendChannelMessage(const std::string& message, const Client& sender) const;
+        std::string getTopic(void) const; 
+        std::string getName(void) const;
+        std::set<std::string>&  getUsers(void);
+        bool                    getIsInviteOnly(void);
+        int                     getUserLimit(void);
     private:
         std::string             _name;
         std::set<std::string>   _users;

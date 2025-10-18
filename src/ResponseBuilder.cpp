@@ -1,5 +1,7 @@
 #include "ResponseBuilder.hpp"
+#include "Channel.hpp"
 #include "Client.hpp"
+#include <set>
 #include <sstream>
 #include <string>
 #include <cstdlib>
@@ -31,6 +33,14 @@ std::string ResponseBuilder::enumericToMessage(e_numeric code, std::string user_
         case RPL_WELCOME:
             response += "Welcome to the Internet Relay Network " + _target.getNickname() + "!" + _target.getUsername() + "@" + _servername;
             break;
+        case RPL_NAMREPLY:
+            break;
+        case RPL_NOTOPIC:
+            response += user_input + " :No topic is set";
+            break;
+        case RPL_TOPIC:
+            response += user_input;
+            break;
 		case ERR_NOSUCHNICK:
             response += user_input + " :No such nick";
             break;
@@ -57,6 +67,12 @@ std::string ResponseBuilder::enumericToMessage(e_numeric code, std::string user_
             break;
         case ERR_PASSWDMISMATCH:
             response += ":Password incorrect";
+            break;
+        case ERR_CHANNELISFULL:
+            response += user_input + " :Cannot join channel (+l)";
+            break;
+        case ERR_INVITEONLYCHAN:
+            response += user_input + " :Cannot join channel (+i)";
             break;
         case ERR_BADCHANNELKEY:
             response += user_input + " :Cannot join channel (+k)";
@@ -87,4 +103,21 @@ std::string ResponseBuilder::buildResponse(std::string command, std::string para
     response += param;
 	response += "\r\n";
     return (response);
+}
+
+std::string ResponseBuilder::buildNamReply(Channel& channel)
+{
+    std::string response;
+
+    response += ":" + _servername + " ";
+    response += enumericToStringNumber(RPL_NAMREPLY) + " ";
+    response += "= " + channel.getName() + " ";
+    response += ":";
+    std::set<std::string>   users;
+    std::set<std::string>::iterator it;
+    for (it = users.begin() ; it != users.end() ; it++)
+    {
+        response + *it + " ";
+    }
+    return response;
 }
