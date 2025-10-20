@@ -45,7 +45,7 @@ void    Kick::enactCommand(void)
 	else if (!channel->getIsUser(kicking))
 		_user.setResponse(respbldr.buildResponseNum(channel_name, ERR_NOTONCHANNEL));
 	else if (channel->getIsUser(is_kicked))
-		_user.setResponse(respbldr.buildResponseNum(is_kicked + " " + channel_name, ERR_NOTONCHANNEL));
+		_user.setResponse(respbldr.buildResponseNum(is_kicked + " " + channel_name, ERR_USERNOTINCHANNEL));
 	else if (!channel->getIsOp(kicking))
 		_user.setResponse(respbldr.buildResponseNum(channel_name, ERR_CHANOPRIVSNEEDED));
 	else
