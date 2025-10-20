@@ -48,9 +48,7 @@ void	Kick::enactCommand(void)
 	else if (!channel->isUserOp(kicking))
 		_user.setResponse(respbldr.buildResponseNum(channel_name, ERR_CHANOPRIVSNEEDED));
 	else
-	{
 		this->kick(*channel, is_kicked);
-	}
 }
 
 Kick::~Kick(void)

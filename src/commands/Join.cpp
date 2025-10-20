@@ -15,72 +15,61 @@ Join::Join(Server& server, Client& user, std::string cmd_name, std::vector<std::
 Join::~Join(void)
 {}
 
-void	Join::joinMessage(Channel* channel)
+void	Join::joinMessage(Channel& channel)
 {
-	std::string		name = channel->getName();
+	std::string		name = channel.getName();
 	ResponseBuilder	respbldr = ResponseBuilder(_server.getName(), _user);
 	std::string		msg = respbldr.buildResponse("JOIN", name);
 
 	_user.setResponse(msg);
-	channel->sendChannelMessage(msg, _user);
-	if (!channel->getTopic().empty())
-		_user.setResponse(respbldr.buildResponseNum(name + " :" + channel->getTopic(), RPL_TOPIC));
+	channel.sendChannelMessage(msg, _user);
+	if (!channel.getTopic().empty())
+		_user.setResponse(respbldr.buildResponseNum(name + " :" + channel.getTopic(), RPL_TOPIC));
 	else
 		_user.setResponse(respbldr.buildResponseNum(name, RPL_NOTOPIC));
-	_user.setResponse(respbldr.buildNamReply(*channel));
+	_user.setResponse(respbldr.buildNamReply(channel));
 }
 
-void	Join::joinChannel(std::string name)
+void	Join::joinChannel(Channel& channel, std::string name)
 {
 	ResponseBuilder respbldr = ResponseBuilder(_server.getName(), _user);
 
-	if (name.size() < 2 || name.at(0) != '#')
-	{
-		_user.setResponse(respbldr.buildResponseNum(name, ERR_NOSUCHCHANNEL));
-		return ;
-	}
-	Channel*	channel = _server.getChannel(name);
-	if (channel == NULL)
-		_server.createChannel(name, _user);
-	else
-		channel->addUser(_user.getNickname());
-	this->joinMessage(channel);
+	channel.addUser(_user.getNickname());
 }
 
-void	Join::joinChannel(std::string name, std::string key)
+void	Join::joinChannel(Channel& channel, std::string name, std::string key)
 {
 	ResponseBuilder respbldr = ResponseBuilder(_server.getName(), _user);
 
-	if (name.size() < 2 || name.at(0) != '#')
+	if (key == channel.getKey())
 	{
-		_user.setResponse(respbldr.buildResponseNum(name, ERR_NOSUCHCHANNEL));
-		return ;
+		channel.addUser(_user.getNickname());
+		this->joinMessage(channel);
 	}
-	Channel*	channel = _server.getChannel(name);
-	if (channel == NULL)
-	{
-		_server.createChannel(name, _user);
-		this->joinMessage(_server.getChannel(name));
-		return ;
-	}
-	if (channel->getIsInviteOnly())
-	{
-		_user.setResponse(respbldr.buildResponseNum(name, ERR_INVITEONLYCHAN));
-		return ;
-	}
-	if ((long)channel->getUsers().size() >= channel->getUserLimit())
-	{
-		_user.setResponse(respbldr.buildResponseNum(name, ERR_CHANNELISFULL));
-		return ;
-	}
-	if (key == channel->getKey())
-	{
-		channel->addUser(_user.getNickname());
-		this->joinMessage(_server.getChannel(name));
-	}
-
 	else
 		_user.setResponse(respbldr.buildResponseNum(name, ERR_BADCHANNELKEY));
+}
+
+void	Join::leaveAllChannels(void)
+{
+	std::map<std::string, Channel*>  channels = _server.getChannels();
+	std::map<std::string, Channel*>::iterator   it;
+	ResponseBuilder	respbldr = ResponseBuilder(_server.getName(), _user);
+
+	for (it = channels.begin() ; it != channels.end() ; it++)
+	{
+		std::string		name = it->second->getName();
+		std::string		msg = ":" + _user.getNickname() + " PART " + name + "\r\n";
+		_user.setResponse(msg);
+		it->second->sendChannelMessage(msg, _user);
+		it->second->leave(_user.getNickname());
+	}
+}
+
+void	Join::createChannel(std::string name)
+{
+	_server.createChannel(name, _user);
+	this->joinMessage(*_server.getChannel(name));
 }
 
 void	Join::enactCommand(void)
@@ -93,18 +82,28 @@ void	Join::enactCommand(void)
 	else if ((size < 1 || size > 2) || _params.at(0).empty())
 		_user.setResponse(respbldr.buildResponseNum(_cmd_name, ERR_NEEDMOREPARAMS));
 	else if (size == 1 && _params.at(0) == "0")
-	{
-		std::map<std::string, Channel*>  channels = _server.getChannels();
-		std::map<std::string, Channel*>::iterator   it;
-		for (it = channels.begin() ; it != channels.end() ; it++)
-			it->second->leave(_user.getNickname());
-	}
+		this->leaveAllChannels();
 	else
 	{
-		if (size == 1)
-			joinChannel(_params.at(0));
+		std::string	name = _params.at(0);
+		if (name.size() < 2 || name.at(0) != '#')
+			_user.setResponse(respbldr.buildResponseNum(name, ERR_NOSUCHCHANNEL));
 		else
-			joinChannel(_params.at(0), _params.at(1));
+		{
+			Channel*	channel = _server.getChannel(name);
+			if (channel == NULL)
+				this->createChannel(name);
+			else if (channel->getIsInviteOnly())
+				_user.setResponse(respbldr.buildResponseNum(name, ERR_INVITEONLYCHAN));
+			else if ((long)channel->getUsers().size() >= channel->getUserLimit())
+				_user.setResponse(respbldr.buildResponseNum(name, ERR_CHANNELISFULL));
+			else
+			{
+				if (size == 1)
+					this->joinChannel(*channel, name);
+				else
+					this->joinChannel(*channel, name, _params.at(1));
+			}
+		}
 	}
-
 }

@@ -24,7 +24,13 @@ void	Quit::enactCommand(void)
 		std::map<std::string, Channel*>  channels = _server.getChannels();
 		std::map<std::string, Channel*>::iterator   it;
 		for (it = channels.begin() ; it != channels.end() ; it++)
+		{
+			std::string		name = it->second->getName();
+			std::string		msg = ":" + _user.getNickname() + " PART " + name + "\r\n";
+			_user.setResponse(msg);
+			it->second->sendChannelMessage(msg, _user);
 			it->second->leave(_user.getNickname());
+		}
 		_server.removeClient(_user.getNickname());
 	}
 }
