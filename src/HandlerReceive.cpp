@@ -9,6 +9,8 @@
 #include "commands/Join.hpp"
 #include "commands/Mode.hpp"
 #include "commands/UnknownCommand.hpp"
+#include "commands/Topic.hpp"
+#include "commands/Invite.hpp"
 #include <cstddef>
 #include <string>
 #include <vector>
@@ -114,6 +116,10 @@ void	HandlerReceive::execCmds(void)
 			cmd = new Join(_server, _client, cmd_name, params);
 		else if (cmd_name == "MODE")
 			cmd = new Mode(_server, _client, cmd_name, params);
+        else if (cmd_name == "TOPIC")
+            cmd = new Topic(_server, _client, cmd_name, params);
+        else if (cmd_name == "INVITE")
+            cmd = new Invite(_server, _client, cmd_name, params);
 		else
 			cmd = new UnknownCommand(_server, _client, cmd_name, params);
 		_cmds.push_back(cmd);

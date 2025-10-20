@@ -41,6 +41,9 @@ std::string ResponseBuilder::enumericToMessage(e_numeric code, std::string user_
         case RPL_TOPIC:
             response += user_input;
             break;
+        case RPL_INVITING:
+            response += user_input;
+            break;
 		case ERR_NOSUCHNICK:
             response += user_input + " :No such nick";
             break;
@@ -55,6 +58,12 @@ std::string ResponseBuilder::enumericToMessage(e_numeric code, std::string user_
             break;
         case ERR_NICKNAMEINUSE:
             response += user_input + " :Nickname is already in use";
+            break;
+        case ERR_NOTONCHANNEL:
+            response += user_input + "  :You're not on that channel";
+            break;
+        case ERR_USERONCHANNEL:
+            response += user_input + " :is already on channel";
             break;
 		case ERR_NOTREGISTERED:
             response += ":You have not registered";
@@ -80,7 +89,10 @@ std::string ResponseBuilder::enumericToMessage(e_numeric code, std::string user_
 		case ERR_NOPRIVILEGES:
 			response += ":Permission Denied- You're not an IRC operator";
             break;
-	}
+        case ERR_CHANOPRIVSNEEDED:
+            response += user_input + " :You're not channel operator";
+            break;
+    }
     return (response);
 }
 

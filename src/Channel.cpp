@@ -69,6 +69,11 @@ void	Channel::setIsTopicRestricted(const bool flag)
 	_is_topic_restricted = flag;
 }
 
+bool    Channel::getIsTopicRestricted(void)
+{
+    return _is_topic_restricted;
+}
+
 int Channel::getUserLimit(void) const
 {
     return _user_limit;
@@ -79,9 +84,28 @@ std::set<std::string>&  Channel::getUsers(void)
     return _users;
 }
 
+bool    Channel::getIsUser(std::string nickname)
+{
+    if (_users.find(nickname) == _users.end())
+        return false;
+    return true;
+}
+
+bool    Channel::getIsOp(std::string nickname)
+{
+    if (_operators.find(nickname) == _operators.end())
+        return false;
+    return true;
+}
+
 std::string    Channel::getTopic(void) const
 {
     return _topic;
+}
+
+void    Channel::setTopic(std::string topic)
+{
+    _topic = topic;
 }
 
 std::string Channel::getKey(void) const
