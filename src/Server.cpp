@@ -19,13 +19,16 @@
 #include "HandlerConnection.hpp"
 #include "HandlerReceive.hpp"
 #include "HandlerRespond.hpp"
+#include <csignal>
+
+extern volatile sig_atomic_t	g_signum;
 
 void	Server::poll_events()
 {
 	struct epoll_event	events[MAX_EVENTS];
 	int					nb_fds;
 
-	while (true)
+	while (g_signum != SIGINT)
 	{
 		nb_fds = epoll_wait(_epollfd, events, MAX_EVENTS, 0);
 		if (nb_fds == -1)
@@ -109,6 +112,7 @@ void	Server::setup_master_socket(char *port)
 	this->_master_socket_address_len = iter->ai_addrlen;
 	this->_master_socket = sockfd;
 
+	freeaddrinfo(server_info);
 	if (listen(_master_socket, LISTEN_BACKLOG) == -1)
 		throw std::runtime_error("failed to listen");
 	if (fcntl(_master_socket, F_SETFL, O_NONBLOCK) == -1)

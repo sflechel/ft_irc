@@ -30,10 +30,8 @@ void	Join::joinMessage(Channel& channel)
 	_user.setResponse(respbldr.buildNamReply(channel));
 }
 
-void	Join::joinChannel(Channel& channel, std::string name)
+void	Join::joinChannel(Channel& channel)
 {
-	ResponseBuilder respbldr = ResponseBuilder(_server.getName(), _user);
-
 	channel.addUser(_user.getNickname());
 }
 
@@ -100,7 +98,7 @@ void	Join::enactCommand(void)
 			else
 			{
 				if (size == 1)
-					this->joinChannel(*channel, name);
+					this->joinChannel(*channel);
 				else
 					this->joinChannel(*channel, name, _params.at(1));
 			}
