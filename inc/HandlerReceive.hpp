@@ -14,7 +14,7 @@ class HandlerReceive
 		HandlerReceive(Client& client, Server& server);
 		~HandlerReceive(void);
 
-		void	readClientRequest(void);
+		int		readClientRequest(void);
 		void	splitResponseToCmds(void);
 		void	parseCmdParam(std::string &input, std::vector<std::string>& vec);
 		void	execCmds(void);

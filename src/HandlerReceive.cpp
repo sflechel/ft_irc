@@ -18,7 +18,7 @@
 #include <iostream>
 #include <sstream>
 
-void HandlerReceive::readClientRequest()
+int HandlerReceive::readClientRequest()
 {
 	std::string new_request;
 	char read_buffer[READ_BUFFER_SIZE + 1];
@@ -30,19 +30,14 @@ void HandlerReceive::readClientRequest()
 	{
 		bytes_read = recv(client_fd, read_buffer, READ_BUFFER_SIZE, 0);
 		if (bytes_read < 0)
-		{
-			std::cout << "recv fail\n";
-			break ;
-		}
+			return -1;
 		if (bytes_read == 0)
-		{
-			std::cout << "recv read empty\n";
-			break ;
-		}
+			return 0;
 		read_buffer[bytes_read] = 0;
 		new_request += read_buffer;
 	}
 	_client.setRequest(_client.getRequest() + new_request);
+	return 1;
 }
 
 void	HandlerReceive::splitResponseToCmds(void)

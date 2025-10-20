@@ -45,7 +45,11 @@ void	Server::poll_events()
 			else if (events[i].events & EPOLLIN)
 			{
 				HandlerReceive	hrecv = HandlerReceive(*(Client *)(events[i].data.ptr), *this);
-				hrecv.readClientRequest();
+				if (hrecv.readClientRequest() <= 0)
+				{
+					this->removeClient((*(Client*)(events[i].data.ptr)).getNickname());
+					continue;
+				}
 				hrecv.splitResponseToCmds();
 				hrecv.execCmds();
 			}

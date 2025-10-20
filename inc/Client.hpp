@@ -10,7 +10,7 @@ class Client
 		~Client(void);
 
 		int				getFd(void) const;
-		void				setSentPassword(bool state);
+		void			setSentPassword(bool state);
 		bool			getSentPassword(void) const;
 		void			setIsRegistered(bool state);
 		bool			getIsRegistered(void) const;
