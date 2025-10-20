@@ -41,11 +41,11 @@ void	Kick::enactCommand(void)
 
 	if (channel == NULL)
 		_user.setResponse(respbldr.buildResponseNum(channel_name, ERR_NOSUCHCHANNEL));
-	else if (!channel->getIsUser(kicking))
+	else if (!channel->isUserInChannel(kicking))
 		_user.setResponse(respbldr.buildResponseNum(channel_name, ERR_NOTONCHANNEL));
-	else if (channel->getIsUser(is_kicked))
+	else if (!channel->isUserInChannel(is_kicked))
 		_user.setResponse(respbldr.buildResponseNum(is_kicked + " " + channel_name, ERR_USERNOTINCHANNEL));
-	else if (!channel->getIsOp(kicking))
+	else if (!channel->isUserOp(kicking))
 		_user.setResponse(respbldr.buildResponseNum(channel_name, ERR_CHANOPRIVSNEEDED));
 	else
 	{

@@ -35,13 +35,14 @@ void	Channel::sendChannelMessage(const std::string& message, const Client& sende
 	}
 }
 
-bool Channel::isUserOperator(const std::string &username) const
+void	Channel::removeOp(const std::string& nickname)
 {
-	std::set<std::string>::iterator	it;
-	for (it = _operators.begin() ; it != _operators.end() ; it++)
-		if (username.compare(*it) == 0)
-			return (true);
-	return (false);
+	_operators.erase(nickname);
+}
+
+void	Channel::addOp(const std::string& nickname)
+{
+	_operators.insert(nickname);
 }
 
 bool	Channel::getIsInviteOnly(void) const
@@ -84,14 +85,14 @@ std::set<std::string>&  Channel::getUsers(void)
 	return _users;
 }
 
-bool	Channel::getIsUser(std::string nickname)
+bool	Channel::isUserInChannel(std::string nickname)
 {
 	if (_users.find(nickname) == _users.end())
 		return false;
 	return true;
 }
 
-bool	Channel::getIsOp(std::string nickname)
+bool	Channel::isUserOp(std::string nickname)
 {
 	if (_operators.find(nickname) == _operators.end())
 		return false;

@@ -39,11 +39,11 @@ void	Invite::enactCommand(void)
 	std::string inviting = _user.getNickname();
 	if (channel == NULL)
 		_user.setResponse(respbldr.buildResponseNum(_params.at(1), ERR_NOSUCHCHANNEL));
-	else if (!channel->getIsUser(inviting))
+	else if (!channel->isUserInChannel(inviting))
 		_user.setResponse(respbldr.buildResponseNum(channel_name, ERR_NOTONCHANNEL));
-	else if (channel->getIsUser(to_invite))
+	else if (channel->isUserInChannel(to_invite))
 		_user.setResponse(respbldr.buildResponseNum(to_invite + " " + channel_name, ERR_USERONCHANNEL));
-	else if (channel->getIsInviteOnly() && !channel->getIsOp(inviting))
+	else if (channel->getIsInviteOnly() && !channel->isUserOp(inviting))
 		_user.setResponse(respbldr.buildResponseNum(channel_name, ERR_CHANOPRIVSNEEDED));
 	else
 		this->invite(channel, to_invite);

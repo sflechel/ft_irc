@@ -16,8 +16,11 @@ class Channel
 
 		void	addUser(std::string nickname);
 		void	leave(std::string nickname);
-		bool	isUserOperator(const std::string &username) const;
 		void	sendChannelMessage(const std::string& message, const Client& sender) const;
+		bool	isUserInChannel(std::string nickname);
+		bool	isUserOp(std::string nickname);
+		void	removeOp(const std::string& nickname);
+		void	addOp(const std::string& nickname);
 
 		void					setIsInviteOnly(const bool flag);
 		void					setIsTopicRestricted(const bool flag);
@@ -31,12 +34,10 @@ class Channel
 		std::string				getName(void) const;
 		int						getUserLimit(void) const;
 		std::set<std::string>&	getUsers(void);
-		bool					getIsUser(std::string nickname);
-		bool					getIsOp(std::string nickname);
 		bool					getIsTopicRestricted(void);
 
 	private:
-		std::string			 _name;
+		std::string				_name;
 		std::set<std::string>	_users;
 		std::set<std::string>	_operators;
 		std::string				_key;
