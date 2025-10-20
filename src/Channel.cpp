@@ -44,12 +44,32 @@ bool Channel::isUserOperator(const std::string &username) const
 	return (false);
 }
 
-bool    Channel::getIsInviteOnly(void)
+bool    Channel::getIsInviteOnly(void) const
 {
     return _is_invite_only;
 }
 
-int Channel::getUserLimit(void)
+void	Channel::setUserLimit(const int limit)
+{
+	_user_limit = limit;
+}
+
+void	Channel::setKey(const std::string& str)
+{
+	_key = str;
+}
+
+void	Channel::setIsInviteOnly(const bool flag)
+{
+	_is_invite_only = flag;
+}
+
+void	Channel::setIsTopicRestricted(const bool flag)
+{
+	_is_topic_restricted = flag;
+}
+
+int Channel::getUserLimit(void) const
 {
     return _user_limit;
 }
@@ -64,7 +84,7 @@ std::string    Channel::getTopic(void) const
     return _topic;
 }
 
-std::string Channel::getKey(void)
+std::string Channel::getKey(void) const
 {
     return _key;
 }

@@ -12,7 +12,7 @@ void    Pass::enactCommand(void)
 {
     ResponseBuilder respbldr = ResponseBuilder(_server.getName(), _user);
 
-    if (_params.empty())
+    if (_params.size() != 1)
         _user.setResponse(respbldr.buildResponseNum(_cmd_name, ERR_NEEDMOREPARAMS));
     else if (_user.getIsRegistered())
         _user.setResponse(respbldr.buildResponseNum("", ERR_ALREADYREGISTERED));

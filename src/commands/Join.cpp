@@ -90,9 +90,9 @@ void    Join::enactCommand(void)
     int size = _params.size();
     if (!_user.getIsRegistered())
         _user.setResponse(respbldr.buildResponseNum("", ERR_NOTREGISTERED));
-    else if (size < 1 || size > 2)
+    else if ((size < 1 || size > 2) || _params.at(0).empty())
         _user.setResponse(respbldr.buildResponseNum(_cmd_name, ERR_NEEDMOREPARAMS));
-    else if (_params.at(0) == "0")
+    else if (size == 1 && _params.at(0) == "0")
     {
         std::map<std::string, Channel*>  channels = _server.getChannels();
         std::map<std::string, Channel*>::iterator   it;

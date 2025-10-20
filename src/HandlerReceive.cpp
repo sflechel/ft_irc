@@ -83,12 +83,9 @@ void	HandlerReceive::parseCmdParam(std::string &input, std::vector<std::string>&
 	std::string param;
 
 	while (getline(ss, param,  ' '))
-	{
 		if (!param.empty())
 			vec.push_back(param);
-	}
-	if (!last_param.empty())
-		vec.push_back(last_param);
+	vec.push_back(last_param);
 }
 
 void	HandlerReceive::execCmds(void)

@@ -1,5 +1,6 @@
 #include "commands/Mode.hpp"
 #include "Channel.hpp"
+#include "Client.hpp"
 #include "ResponseBuilder.hpp"
 #include "Server.hpp"
 
@@ -11,7 +12,7 @@ void    Mode::enactCommand(void)
     ResponseBuilder respbldr = ResponseBuilder(_server.getName(), _user);
 	if (!_user.getIsRegistered())
 		_user.setResponse(respbldr.buildResponseNum("", ERR_NOTREGISTERED));
-	else if (_params.size() < 2 || _params.size() > 3)
+	else if (_params.size() < 2 || _params.size() > 3 || (_params.size() == 3 && _params.at(1).empty()))
         _user.setResponse(respbldr.buildResponseNum(_cmd_name, ERR_NEEDMOREPARAMS));
 	else
 	{
@@ -24,10 +25,37 @@ void    Mode::enactCommand(void)
 		else
 		{
 			const std::string mode = _params.at(1);
-			if (mode.length() != 2 || mode[0] != '-' || mode[0] != '+')//is a know mode
-				_user.setResponse(":" + _server.getName() + " 472 " + _user.getNickname() + " " + mode + " :is unknown mode char to me for " + target + "\r\n" );
-			else
-			{}
+			if (mode.length() != 2 || mode[0] != '-' || mode[0] != '+')
+				_user.setResponse(":" + _server.getName() + " 472 " + _user.getNickname() + " " + mode + " :is invalid/unknown mode char to me for " + target + "\r\n" );
+			else if (mode[1] == 'i')
+				channel->setIsInviteOnly(mode[0] == '+');
+			else if (mode[1] == 't')
+				channel->setIsTopicRestricted(mode[0] == '+');
+			else if (mode[1] == 'k')
+			{
+				if (mode[0] == '-')
+					channel->setKey("");
+				else if (_params.size() == 3)
+					channel->setKey(_params.at(1));
+			}
+			else if (mode[1] == 'o')
+			{
+				//Client *client;
+				if (mode[0] == '-')
+				{
+				}
+			}
+			else if (mode[1] == 'l')
+			{
+				if (mode[0] == '-')
+					channel->setUserLimit(-1);
+				else if (_params.size() == 3)
+				{
+					const int limit = std::atoi(_params.at(1).c_str());
+					if (limit > 0)
+						channel->setUserLimit(limit);
+				}
+			}
 		}
 	}
 }

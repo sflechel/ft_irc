@@ -13,16 +13,23 @@ class   Channel
     public:
         Channel(Server& server, std::string name, Client& user);
         ~Channel(void);
-        void        addUser(std::string nickname);
-        void        leave(std::string nickname);
-        std::string getKey(void);
-		bool		isUserOperator(const std::string &username) const;
-		void		sendChannelMessage(const std::string& message, const Client& sender) const;
-        std::string getTopic(void) const; 
-        std::string getName(void) const;
+
+        void	addUser(std::string nickname);
+        void	leave(std::string nickname);
+		bool	isUserOperator(const std::string &username) const;
+		void	sendChannelMessage(const std::string& message, const Client& sender) const;
+
+		void    				setIsInviteOnly(const bool flag);
+		void    				setIsTopicRestricted(const bool flag);
+		void    				setKey(const std::string& str);
+		void    				setUserLimit(const int limit);
+        bool                    getIsInviteOnly(void) const;
+        std::string 			getTopic(void) const;
+        std::string 			getKey(void) const;
+        std::string 			getName(void) const;
+        int                     getUserLimit(void) const;
         std::set<std::string>&  getUsers(void);
-        bool                    getIsInviteOnly(void);
-        int                     getUserLimit(void);
+
     private:
         std::string             _name;
         std::set<std::string>   _users;

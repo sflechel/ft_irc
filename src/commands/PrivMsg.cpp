@@ -12,7 +12,7 @@ void    PrivMsg::enactCommand(void)
     ResponseBuilder respbldr = ResponseBuilder(_server.getName(), _user);
 	if (!_user.getIsRegistered())
 		_user.setResponse(respbldr.buildResponseNum("", ERR_NOTREGISTERED));
-	else if (_params.size() != 2)
+	else if (_params.size() != 2 || _params.at(1).empty())
         _user.setResponse(respbldr.buildResponseNum(_cmd_name, ERR_NEEDMOREPARAMS));
 	else
 	{

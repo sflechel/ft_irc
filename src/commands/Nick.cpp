@@ -13,7 +13,7 @@ void    Nick::enactCommand(void)
     ResponseBuilder respbldr = ResponseBuilder(_server.getName(), _user);
     if (!_user.getSentPassword())
         _user.setResponse(respbldr.buildResponseNum("", ERR_PASSWDMISMATCH));
-    else if (_params.empty() || _params.at(0).empty())
+    else if (_params.size() != 1 || _params.at(0).empty())
         _user.setResponse(respbldr.buildResponseNum(_cmd_name, ERR_NONICKNAMEGIVEN));
     else if (_server.getClient(_params.at(0)) != NULL)
         _user.setResponse(respbldr.buildResponseNum(_params.at(0), ERR_NICKNAMEINUSE));
