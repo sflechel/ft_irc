@@ -66,7 +66,7 @@ void	Mode::enactCommand(void)
 		else if (!_channel->isUserInChannel(op_nick))
 			_user.setResponse(respbldr.buildResponseNum(target_chan, ERR_NOTONCHANNEL));
 		else if (!_channel->isUserOp(op_nick))
-			_user.setResponse(respbldr.buildResponseNum(target_chan, ERR_NOPRIVILEGES));//TODO a tester
+			_user.setResponse(respbldr.buildResponseNum(target_chan, ERR_NOPRIVILEGES));
 		else
 		{
 			const std::string mode = _params.at(1);

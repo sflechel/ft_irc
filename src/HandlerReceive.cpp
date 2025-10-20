@@ -75,11 +75,13 @@ void	HandlerReceive::parseCmdParam(std::string &input, std::vector<std::string>&
 	}
 
 	std::string last_param;
+	bool		has_last_param = false;
 	size_t		colon_pos = input.find(':');
 	if (colon_pos != std::string::npos)
 	{
 		last_param = input.substr(colon_pos + 1, std::string::npos);
 		input = input.substr(0, colon_pos);
+		has_last_param = true;
 	}
 
 	std::stringstream ss(input);
@@ -88,7 +90,8 @@ void	HandlerReceive::parseCmdParam(std::string &input, std::vector<std::string>&
 	while (getline(ss, param,  ' '))
 		if (!param.empty())
 			vec.push_back(param);
-	vec.push_back(last_param);
+	if (has_last_param)
+		vec.push_back(last_param);
 }
 
 void	HandlerReceive::execCmds(void)
