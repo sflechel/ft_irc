@@ -3,6 +3,7 @@
 #include "Client.hpp"
 #include "ResponseBuilder.hpp"
 #include "Server.hpp"
+#include <sstream>
 
 Mode::Mode(Server& server, Client& user, std::string cmd_name, std::vector<std::string> params) : Command(server, user, cmd_name, params)
 {}
@@ -51,7 +52,9 @@ void    Mode::enactCommand(void)
 					channel->setUserLimit(-1);
 				else if (_params.size() == 3)
 				{
-					const int limit = std::atoi(_params.at(1).c_str());
+					std::istringstream ss(_params.at(1));
+					int limit = -1;
+					ss >> limit;
 					if (limit > 0)
 						channel->setUserLimit(limit);
 				}
