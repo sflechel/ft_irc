@@ -26,21 +26,21 @@ Client*	HandlerConnection::acceptConnection()
 
 	std::cout << "Server connected to a client!" << std::endl;
 
-    Client* output = new Client(conn_fd);
+	Client* output = new Client(conn_fd);
 	return (output);
 }
 
-void    HandlerConnection::registerClient(Client* newClient, std::vector<Client*>& listClients, int epollfd)
+void	HandlerConnection::registerClient(Client* newClient, std::vector<Client*>& listClients, int epollfd)
 {
-    struct epoll_event  poll_opts;
+	struct epoll_event  poll_opts;
 
-    listClients.push_back(newClient);
-    poll_opts.events = EPOLLIN | EPOLLOUT;
-    int conn_fd = newClient->getFd();
-    poll_opts.data.fd = conn_fd;
-    poll_opts.data.ptr = newClient;
-    if (epoll_ctl(epollfd, EPOLL_CTL_ADD, conn_fd, &poll_opts) == -1)
-        throw std::runtime_error("failed to add connection to epoll");
+	listClients.push_back(newClient);
+	poll_opts.events = EPOLLIN | EPOLLOUT;
+	int conn_fd = newClient->getFd();
+	poll_opts.data.fd = conn_fd;
+	poll_opts.data.ptr = newClient;
+	if (epoll_ctl(epollfd, EPOLL_CTL_ADD, conn_fd, &poll_opts) == -1)
+		throw std::runtime_error("failed to add connection to epoll");
 }
 
 HandlerConnection::~HandlerConnection()

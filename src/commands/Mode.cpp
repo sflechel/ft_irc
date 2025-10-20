@@ -8,13 +8,13 @@
 Mode::Mode(Server& server, Client& user, std::string cmd_name, std::vector<std::string> params) : Command(server, user, cmd_name, params)
 {}
 
-void    Mode::enactCommand(void)
+void	Mode::enactCommand(void)
 {
-    ResponseBuilder respbldr = ResponseBuilder(_server.getName(), _user);
+	ResponseBuilder respbldr = ResponseBuilder(_server.getName(), _user);
 	if (!_user.getIsRegistered())
 		_user.setResponse(respbldr.buildResponseNum("", ERR_NOTREGISTERED));
 	else if (_params.size() < 2 || _params.size() > 3 || (_params.size() == 3 && _params.at(1).empty()))
-        _user.setResponse(respbldr.buildResponseNum(_cmd_name, ERR_NEEDMOREPARAMS));
+		_user.setResponse(respbldr.buildResponseNum(_cmd_name, ERR_NEEDMOREPARAMS));
 	else
 	{
 		std::string& target = _params.at(0);

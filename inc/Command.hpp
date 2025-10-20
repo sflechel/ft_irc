@@ -11,11 +11,11 @@ class Command
 		Command(Server& server, Client& user, std::string cmd_name, std::vector<std::string> params);
 		virtual ~Command(void);
 
-        virtual void    enactCommand(void) = 0;
+		virtual void	enactCommand(void) = 0;
 	protected:
-        Server&                     _server;
-        Client&                     _user;
-        std::string                 _cmd_name;
+		Server&						_server;
+		Client&						_user;
+		std::string					_cmd_name;
 		std::vector<std::string>	_params;
 };
 

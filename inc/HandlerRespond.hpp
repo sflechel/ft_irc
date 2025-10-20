@@ -10,7 +10,9 @@ class HandlerRespond
 	public:
 		HandlerRespond(Client& client);
 		~HandlerRespond();
-        void    respond(void);
+
+		void	respond(void);
+
 	private:
 		Client& _client;
 };

@@ -4,12 +4,13 @@
 #include "Command.hpp"
 #include "Server.hpp"
 
-class   Mode : public Command
+class Mode : public Command
 {
-    public:
-        Mode(Server& server, Client& user, std::string cmd_name, std::vector<std::string> params);
-        ~Mode(void);
-        void    enactCommand(void);
+	public:
+		Mode(Server& server, Client& user, std::string cmd_name, std::vector<std::string> params);
+		~Mode(void);
+
+		void	enactCommand(void);
 };
 
 #endif //MODE_HPP

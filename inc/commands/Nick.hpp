@@ -7,12 +7,13 @@
 #include <string>
 #include <vector>
 
-class   Nick : public Command
+class Nick : public Command
 {
-    public:
-        Nick(Server& server, Client& user, std::string cmd_name, std::vector<std::string> params);
-        ~Nick(void);
-        void    enactCommand(void);
+	public:
+		Nick(Server& server, Client& user, std::string cmd_name, std::vector<std::string> params);
+		~Nick(void);
+
+		void	enactCommand(void);
 };
 
 #endif //NICK_HPP

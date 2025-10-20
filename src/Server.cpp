@@ -37,20 +37,20 @@ void	Server::poll_events()
 			{
 				HandlerConnection hconn = HandlerConnection(_master_socket);
 				Client*	newClient = hconn.acceptConnection();
-                hconn.registerClient(newClient, this->_new_clients, this->_epollfd);
+				hconn.registerClient(newClient, this->_new_clients, this->_epollfd);
 			}
 			else if (events[i].events & EPOLLIN)
 			{
 				HandlerReceive	hrecv = HandlerReceive(*(Client *)(events[i].data.ptr), *this);
 				hrecv.readClientRequest();
-                hrecv.splitResponseToCmds();
-                hrecv.execCmds();
+				hrecv.splitResponseToCmds();
+				hrecv.execCmds();
 			}
 			else if (events[i].events & EPOLLOUT)
 			{
-                HandlerRespond  hresp = HandlerRespond(*(Client *)(events[i].data.ptr));
-                hresp.respond();
-            }
+				HandlerRespond  hresp = HandlerRespond(*(Client *)(events[i].data.ptr));
+				hresp.respond();
+			}
 			else
 				throw std::runtime_error("how did we get here?");
 		}
@@ -124,96 +124,96 @@ Server::Server(char *port, char *password) : _name("IrcTestServer")
 	poll_events();
 }
 
-void    Server::removeNewClient(int index)
+void	Server::removeNewClient(int index)
 {
-    std::vector<Client*>::iterator   it;
+	std::vector<Client*>::iterator   it;
 
-    it = _new_clients.begin() + index;
-    delete _new_clients.at(index);
-    _new_clients.erase(it);
+	it = _new_clients.begin() + index;
+	delete _new_clients.at(index);
+	_new_clients.erase(it);
 }
 
-void    Server::removeClient(std::string nickname)
+void	Server::removeClient(std::string nickname)
 {
-    delete _clients.at(nickname);
-    _clients.erase(nickname);
+	delete _clients.at(nickname);
+	_clients.erase(nickname);
 }
-void    Server::registerClient(Client* client, std::string nickname)
+void	Server::registerClient(Client* client, std::string nickname)
 {
-        std::pair<std::string, Client*> pair(nickname, client);
-        client->setNickname(nickname);
+		std::pair<std::string, Client*> pair(nickname, client);
+		client->setNickname(nickname);
 		std::vector<Client*>::iterator it = std::find(_new_clients.begin(), _new_clients.end(), client);
-        _new_clients.erase(it);
-        _clients.insert(pair);
+		_new_clients.erase(it);
+		_clients.insert(pair);
 }
 
-void    Server::createChannel(std::string name, Client& user)
+void	Server::createChannel(std::string name, Client& user)
 {
-    Channel *new_channel = new Channel(*this, name, user);
-    std::pair<std::string, Channel*>    pair(name, new_channel);
-    _channels.insert(pair);
+	Channel *new_channel = new Channel(*this, name, user);
+	std::pair<std::string, Channel*>	pair(name, new_channel);
+	_channels.insert(pair);
 }
 
-void    Server::updateNickname(Client* client, std::string new_nickname)
+void	Server::updateNickname(Client* client, std::string new_nickname)
 {
-    _clients.erase(client->getNickname());
-    client->setNickname(new_nickname);
-    std::pair<std::string, Client*> pair(new_nickname, client);
-    _clients.insert(pair);
+	_clients.erase(client->getNickname());
+	client->setNickname(new_nickname);
+	std::pair<std::string, Client*> pair(new_nickname, client);
+	_clients.insert(pair);
 }
 
 Server::~Server()
 {
-    for (size_t i = 0 ; i < _new_clients.size() ; i++)
-    {
-        delete _new_clients.at(i);
-    }
-    for (std::map<std::string, Client*>::iterator it = _clients.begin(); it != _clients.end(); it++)
-    {
-        delete it->second;
-    }
+	for (size_t i = 0 ; i < _new_clients.size() ; i++)
+	{
+		delete _new_clients.at(i);
+	}
+	for (std::map<std::string, Client*>::iterator it = _clients.begin(); it != _clients.end(); it++)
+	{
+		delete it->second;
+	}
 	close(_master_socket);
 	close(_epollfd);
 }
 
 std::string Server::getPassword(void) const
 {
-    return (this->_password);
+	return (this->_password);
 }
 
 std::string Server::getName(void) const
 {
-    return (this->_name);
+	return (this->_name);
 }
 
 Client* Server::getClient(std::string nickname)
 {
-    Client* client;
-    try {client = _clients.at(nickname);}
-    catch (std::out_of_range)
-    {
-        return NULL;
-    }
-    return client;
+	Client* client;
+	try {client = _clients.at(nickname);}
+	catch (std::out_of_range)
+	{
+		return NULL;
+	}
+	return client;
 }
 
-std::map<std::string, Channel*>&    Server::getChannels(void)
+std::map<std::string, Channel*>&	Server::getChannels(void)
 {
-    return _channels;
+	return _channels;
 }
 
-Channel*    Server::getChannel(std::string name)
+Channel*	Server::getChannel(std::string name)
 {
-    Channel*    channel;
-    try {channel = _channels.at(name);}
-    catch (std::out_of_range)
-    {
-        return NULL;
-    }
-    return _channels.at(name);
+	Channel*	channel;
+	try {channel = _channels.at(name);}
+	catch (std::out_of_range)
+	{
+		return NULL;
+	}
+	return _channels.at(name);
 }
 
-std::vector<Client*>&    Server::getNewClients(void)
+std::vector<Client*>&	Server::getNewClients(void)
 {
-    return (_new_clients);
+	return (_new_clients);
 }

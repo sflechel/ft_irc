@@ -8,7 +8,7 @@ bool	Client::getSentPassword(void) const
 }
 void	Client::setSentPassword(bool state)
 {
-    _sent_password = state;
+	_sent_password = state;
 }
 
 bool	Client::getIsRegistered(void) const
@@ -17,7 +17,7 @@ bool	Client::getIsRegistered(void) const
 }
 void	Client::setIsRegistered(bool state)
 {
-    _is_registered = state;
+	_is_registered = state;
 }
 
 int	Client::getFd(void) const
@@ -27,52 +27,52 @@ int	Client::getFd(void) const
 
 std::string Client::getResponse(void) const
 {
-    return (this->_response);
+	return (this->_response);
 }
 
 std::string Client::getRequest(void) const
 {
-    return (this->_request);
+	return (this->_request);
 }
 
-void    Client::setRealname(std::string realname)
+void	Client::setRealname(std::string realname)
 {
-    _realname =  realname;
+	_realname =  realname;
 }
 
 std::string Client::getRealname(void) const
 {
-    return (this->_realname);
+	return (this->_realname);
 }
 
-void    Client::setNickname(std::string nickname)
+void	Client::setNickname(std::string nickname)
 {
-    _nickname =  nickname;
+	_nickname =  nickname;
 }
 
 std::string Client::getNickname(void) const
 {
-    return (this->_nickname);
+	return (this->_nickname);
 }
 
-void    Client::setUsername(std::string username)
+void	Client::setUsername(std::string username)
 {
-    _username = username;
+	_username = username;
 }
 
 std::string Client::getUsername(void) const
 {
-    return (this->_username);
+	return (this->_username);
 }
 
-void    Client::setResponse(std::string response)
+void	Client::setResponse(std::string response)
 {
-    this->_response = response;
+	this->_response = response;
 }
 
-void    Client::setRequest(std::string request)
+void	Client::setRequest(std::string request)
 {
-    this->_request = request;
+	this->_request = request;
 }
 
 Client::Client(int fd) : _fd(fd)
@@ -83,7 +83,7 @@ Client::Client(int fd) : _fd(fd)
 	_sent_password = false;
 }
 
-Client::~Client(void) 
+Client::~Client(void)
 {
-    close(_fd);
+	close(_fd);
 }

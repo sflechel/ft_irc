@@ -118,9 +118,9 @@ void	HandlerReceive::execCmds(void)
 		else if (cmd_name == "MODE")
 			cmd = new Mode(_server, _client, cmd_name, params);
 		else if (cmd_name == "TOPIC")
-            cmd = new Topic(_server, _client, cmd_name, params);
+			cmd = new Topic(_server, _client, cmd_name, params);
 		else if (cmd_name == "INVITE")
-            cmd = new Invite(_server, _client, cmd_name, params);
+			cmd = new Invite(_server, _client, cmd_name, params);
 		else if (cmd_name == "KICK")
 			cmd = new Kick(_server, _client, cmd_name, params);
 		else

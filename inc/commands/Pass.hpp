@@ -7,12 +7,13 @@
 #include <string>
 #include <vector>
 
-class   Pass : public Command
+class Pass : public Command
 {
-    public:
-        Pass(Server& server, Client& user, std::string cmd_name, std::vector<std::string> params);
-        ~Pass(void);
-        void    enactCommand(void);
+	public:
+		Pass(Server& server, Client& user, std::string cmd_name, std::vector<std::string> params);
+		~Pass(void);
+
+		void	enactCommand(void);
 };
 
 #endif //PASS_HPP

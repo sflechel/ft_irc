@@ -6,22 +6,22 @@
 
 Channel::Channel(Server& server, std::string name, Client& user) : _name(name), _server(server), _user_limit(-1), _is_invite_only(0), _is_topic_restricted(0)
 {
-    _users.insert(user.getNickname());
-    _operators.insert(user.getNickname());
-    (void)_user_limit;
-    (void)_is_invite_only;
-    (void)_is_topic_restricted;
+	_users.insert(user.getNickname());
+	_operators.insert(user.getNickname());
+	(void)_user_limit;
+	(void)_is_invite_only;
+	(void)_is_topic_restricted;
 }
 
-void    Channel::addUser(std::string nickname)
+void	Channel::addUser(std::string nickname)
 {
-    _users.insert(nickname);
+	_users.insert(nickname);
 }
 
-void    Channel::leave(std::string nickname)
+void	Channel::leave(std::string nickname)
 {
-    _users.erase(nickname);
-    _operators.erase(nickname);
+	_users.erase(nickname);
+	_operators.erase(nickname);
 }
 
 void	Channel::sendChannelMessage(const std::string& message, const Client& sender) const
@@ -44,9 +44,9 @@ bool Channel::isUserOperator(const std::string &username) const
 	return (false);
 }
 
-bool    Channel::getIsInviteOnly(void) const
+bool	Channel::getIsInviteOnly(void) const
 {
-    return _is_invite_only;
+	return _is_invite_only;
 }
 
 void	Channel::setUserLimit(const int limit)
@@ -69,53 +69,53 @@ void	Channel::setIsTopicRestricted(const bool flag)
 	_is_topic_restricted = flag;
 }
 
-bool    Channel::getIsTopicRestricted(void)
+bool	Channel::getIsTopicRestricted(void)
 {
-    return _is_topic_restricted;
+	return _is_topic_restricted;
 }
 
 int Channel::getUserLimit(void) const
 {
-    return _user_limit;
+	return _user_limit;
 }
 
 std::set<std::string>&  Channel::getUsers(void)
 {
-    return _users;
+	return _users;
 }
 
-bool    Channel::getIsUser(std::string nickname)
+bool	Channel::getIsUser(std::string nickname)
 {
-    if (_users.find(nickname) == _users.end())
-        return false;
-    return true;
+	if (_users.find(nickname) == _users.end())
+		return false;
+	return true;
 }
 
-bool    Channel::getIsOp(std::string nickname)
+bool	Channel::getIsOp(std::string nickname)
 {
-    if (_operators.find(nickname) == _operators.end())
-        return false;
-    return true;
+	if (_operators.find(nickname) == _operators.end())
+		return false;
+	return true;
 }
 
-std::string    Channel::getTopic(void) const
+std::string	Channel::getTopic(void) const
 {
-    return _topic;
+	return _topic;
 }
 
-void    Channel::setTopic(std::string topic)
+void	Channel::setTopic(std::string topic)
 {
-    _topic = topic;
+	_topic = topic;
 }
 
 std::string Channel::getKey(void) const
 {
-    return _key;
+	return _key;
 }
 
 std::string Channel::getName(void) const
 {
-    return _name;
+	return _name;
 }
 
 Channel::~Channel(void)

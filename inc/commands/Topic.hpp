@@ -7,12 +7,12 @@
 #include <string>
 #include <vector>
 
-class   Topic : public Command
+class Topic : public Command
 {
-    public:
-        Topic(Server& server, Client& user, std::string cmd_name, std::vector<std::string> params);
-        ~Topic(void);
-        void    enactCommand(void);
+	public:
+		Topic(Server& server, Client& user, std::string cmd_name, std::vector<std::string> params);
+		~Topic(void);
+		void	enactCommand(void);
 };
 
 #endif //TOPIC_HPP

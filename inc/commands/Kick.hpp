@@ -8,13 +8,14 @@
 #include <string>
 #include <vector>
 
-class   Kick : public Command
+class Kick : public Command
 {
-    public:
-        Kick(Server& server, Client& user, std::string cmd_name, std::vector<std::string> params);
-        ~Kick(void);
-void	kick(Channel& channel, std::string to_kick);
-        void    enactCommand(void);
+	public:
+		Kick(Server& server, Client& user, std::string cmd_name, std::vector<std::string> params);
+		~Kick(void);
+
+		void	kick(Channel& channel, std::string to_kick);
+		void	enactCommand(void);
 };
 
 #endif //KICK_HPP

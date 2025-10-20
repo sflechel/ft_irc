@@ -10,32 +10,31 @@ Kick::Kick(Server& server, Client& user, std::string cmd_name, std::vector<std::
 
 void	Kick::kick(Channel& channel, std::string to_kick)
 {
-	
-    std::string		channel_name = channel.getName();
-    ResponseBuilder respbldr = ResponseBuilder(_server.getName(), _user);
-    std::string		msg = respbldr.buildResponse("KICK", channel_name + " " + to_kick);
+	std::string		channel_name = channel.getName();
+	ResponseBuilder respbldr = ResponseBuilder(_server.getName(), _user);
+	std::string		msg = respbldr.buildResponse("KICK", channel_name + " " + to_kick);
 
-    _user.setResponse(msg);
-    channel.sendChannelMessage(msg, _user);
+	_user.setResponse(msg);
+	channel.sendChannelMessage(msg, _user);
 	channel.leave(to_kick);
 }
 
-void    Kick::enactCommand(void)
+void	Kick::enactCommand(void)
 {
-    ResponseBuilder respbldr = ResponseBuilder(_server.getName(), _user);
+	ResponseBuilder respbldr = ResponseBuilder(_server.getName(), _user);
 
-    int size = _params.size();
-    if (size != 2)
+	int size = _params.size();
+	if (size != 2)
 	{
-        _user.setResponse(respbldr.buildResponseNum(_cmd_name, ERR_NEEDMOREPARAMS));
+		_user.setResponse(respbldr.buildResponseNum(_cmd_name, ERR_NEEDMOREPARAMS));
 		return;
 	}
-    else if (!_user.getIsRegistered())
+	else if (!_user.getIsRegistered())
 	{
-        _user.setResponse(respbldr.buildResponseNum("", ERR_NOTREGISTERED));
+		_user.setResponse(respbldr.buildResponseNum("", ERR_NOTREGISTERED));
 		return;
 	}
-	Channel*    channel = _server.getChannel(_params.at(0));
+	Channel*	channel = _server.getChannel(_params.at(0));
 	std::string	channel_name = _params.at(0);
 	std::string	is_kicked = _params.at(1);
 	std::string	kicking = _user.getNickname();
