@@ -3,6 +3,7 @@
 
 #include "Command.hpp"
 #include "Server.hpp"
+#include "ResponseBuilder.hpp"
 
 class Mode : public Command
 {
@@ -11,6 +12,14 @@ class Mode : public Command
 		~Mode(void);
 
 		void	enactCommand(void);
+
+	private:
+		void	setMode();
+
+		char				_sign;
+		char				_mode;
+		Channel*			_channel;
+		ResponseBuilder*	_respbldr;
 };
 
 #endif //MODE_HPP
