@@ -17,9 +17,9 @@ Join::~Join(void)
 
 void    Join::joinMessage(Channel* channel)
 {
-    std::string name = channel->getName();
-    ResponseBuilder respbldr = ResponseBuilder(_server.getName(), _user);
-    std::string msg = respbldr.buildResponse("JOIN", name);
+    std::string		name = channel->getName();
+    ResponseBuilder	respbldr = ResponseBuilder(_server.getName(), _user);
+    std::string		msg = respbldr.buildResponse("JOIN", name);
 
     _user.setResponse(msg);
     channel->sendChannelMessage(msg, _user);
@@ -97,9 +97,7 @@ void    Join::enactCommand(void)
         std::map<std::string, Channel*>  channels = _server.getChannels();
         std::map<std::string, Channel*>::iterator   it;
         for (it = channels.begin() ; it != channels.end() ; it++)
-        {
             it->second->leave(_user.getNickname());
-        }
     }
     else
     {
