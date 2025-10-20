@@ -59,6 +59,9 @@ std::string ResponseBuilder::enumericToMessage(e_numeric code, std::string user_
 		case ERR_NICKNAMEINUSE:
 			response += user_input + " :Nickname is already in use";
 			break;
+		case ERR_USERNOTINCHANNEL:
+			response += user_input + " :They aren't on that channel";
+			break;
 		case ERR_NOTONCHANNEL:
 			response += user_input + "  :You're not on that channel";
 			break;
