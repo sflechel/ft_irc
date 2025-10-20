@@ -11,6 +11,7 @@ Mode::Mode(Server& server, Client& user, std::string cmd_name, std::vector<std::
 void	Mode::enactCommand(void)
 {
 	ResponseBuilder respbldr = ResponseBuilder(_server.getName(), _user);
+
 	if (!_user.getIsRegistered())
 		_user.setResponse(respbldr.buildResponseNum("", ERR_NOTREGISTERED));
 	else if (_params.size() < 2 || _params.size() > 3 || (_params.size() == 3 && _params.at(2).empty()))
@@ -28,8 +29,8 @@ void	Mode::enactCommand(void)
 			_user.setResponse(respbldr.buildResponseNum(target_chan, ERR_NOPRIVILEGES));//TODO a tester
 		else
 		{
-			const std::string custom_err = ":" + _server.getName() + " 472 " + _user.getNickname() + " " + mode + " :is invalid/unknown mode char to me for " + target_chan + "\r\n";
 			const std::string mode = _params.at(1);
+			const std::string custom_err = ":" + _server.getName() + " 472 " + _user.getNickname() + " " + mode + " :is invalid/unknown mode char to me for " + target_chan + "\r\n";
 			if (mode.length() != 2 || mode[0] != '-' || mode[0] != '+')
 				_user.setResponse(custom_err);
 			else if (mode[1] == 'i')
