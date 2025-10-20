@@ -21,9 +21,11 @@ void    Topic::enactCommand(void)
     {
         Channel*    channel = _server.getChannel(_params.at(0));
         if (channel == NULL)
-            _user.setResponse(respbldr.buildResponseNum("", RPL_NOTOPIC));
-        else if (channel->getIsTopicRestricted())
+            _user.setResponse(respbldr.buildResponseNum(channel->getName(), ERR_NOSUCHCHANNEL)); 
+		else if (channel->getIsTopicRestricted())
             _user.setResponse(respbldr.buildResponseNum(channel->getName(), ERR_CHANOPRIVSNEEDED));
+		else if (channel->getTopic().empty())
+			_user.setResponse(respbldr.buildResponseNum(channel->getName(), RPL_NOTOPIC));
         else
             _user.setResponse(respbldr.buildResponseNum(channel->getName() + " :" + channel->getTopic(), RPL_TOPIC));
     }

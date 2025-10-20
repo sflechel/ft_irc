@@ -20,7 +20,13 @@ void    Quit::enactCommand(void)
         _server.removeNewClient(index);
     }
     else
-        _server.removeClient(_user.getNickname());
+	{
+        std::map<std::string, Channel*>  channels = _server.getChannels();
+        std::map<std::string, Channel*>::iterator   it;
+        for (it = channels.begin() ; it != channels.end() ; it++)
+            it->second->leave(_user.getNickname());
+		_server.removeClient(_user.getNickname());
+	}
 }
 
 Quit::~Quit(void)
