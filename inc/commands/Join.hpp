@@ -12,7 +12,7 @@ class Join : public Command
 		~Join(void);
 
 		void	joinMessage(Channel& channel);
-		void	joinChannel(Channel& channel, std::string name);
+		void	joinChannel(Channel& channel);
 		void	joinChannel(Channel& channel, std::string name, std::string key);
 		void	leaveAllChannels(void);
 		void	createChannel(std::string name);

@@ -10,20 +10,19 @@ Nick::Nick(Server& server, Client& user, std::string cmd_name, std::vector<std::
 
 void	Nick::enactCommand(void)
 {
-	ResponseBuilder respbldr = ResponseBuilder(_server.getName(), _user);
 	if (!_user.getSentPassword())
-		_user.setResponse(respbldr.buildResponseNum("", ERR_PASSWDMISMATCH));
+		_user.setResponse(_respbldr.buildResponseNum("", ERR_PASSWDMISMATCH));
 	else if (_params.size() != 1 || _params.at(0).empty())
-		_user.setResponse(respbldr.buildResponseNum(_cmd_name, ERR_NONICKNAMEGIVEN));
+		_user.setResponse(_respbldr.buildResponseNum(_cmd_name, ERR_NONICKNAMEGIVEN));
 	else if (_server.getClient(_params.at(0)) != NULL)
-		_user.setResponse(respbldr.buildResponseNum(_params.at(0), ERR_NICKNAMEINUSE));
+		_user.setResponse(_respbldr.buildResponseNum(_params.at(0), ERR_NICKNAMEINUSE));
 	else if (_user.getNickname().empty())
 	{
 		_server.registerClient(&_user, _params.at(0));
 
 		if (!_user.getUsername().empty())
 		{
-			_user.setResponse(respbldr.buildResponseNum("", RPL_WELCOME));
+			_user.setResponse(_respbldr.buildResponseNum("", RPL_WELCOME));
 			_user.setIsRegistered(true);
 		}
 	}

@@ -9,8 +9,7 @@ UnknownCommand::UnknownCommand(Server& server, Client& user, std::string cmd_nam
 
 void	UnknownCommand::enactCommand(void)
 {
-	ResponseBuilder respbldr = ResponseBuilder(_server.getName(), _user);
-	_user.setResponse(respbldr.buildResponseNum(_cmd_name, ERR_UNKNOWNCOMMAND));
+	_user.setResponse(_respbldr.buildResponseNum(_cmd_name, ERR_UNKNOWNCOMMAND));
 }
 
 UnknownCommand::~UnknownCommand(void)

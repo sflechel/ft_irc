@@ -2,6 +2,7 @@
 # define COMMAND_HPP
 
 #include "Server.hpp"
+#include "ResponseBuilder.hpp"
 # include <string>
 # include <vector>
 
@@ -17,6 +18,7 @@ class Command
 		Client&						_user;
 		std::string					_cmd_name;
 		std::vector<std::string>	_params;
+		ResponseBuilder				_respbldr;
 };
 
 #endif
