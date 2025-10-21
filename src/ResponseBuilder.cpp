@@ -9,7 +9,6 @@
 
 ResponseBuilder::ResponseBuilder(std::string servername, Client& target) : _servername(servername), _target(target)
 {
-	std::cout << _servername << target.getNickname() << "\n";
 }
 
 ResponseBuilder::~ResponseBuilder(void) {}

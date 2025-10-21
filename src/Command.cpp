@@ -12,14 +12,18 @@ Command::Command(Server& server, Client& user, std::string cmd_name, std::vector
 	_respbldr(_server.getName(), user)
 {
 
-	std::cout << "cmd: " << cmd_name << "\nparam: ";
-	for (size_t i = 0; i < params.size(); i++)
+	std::cout << "cmd: " << cmd_name;
+	if (!params.empty())
 	{
-		std::cout << params[i];
-		if (i != params.size() - 1)
+		std::cout << " param: ";
+		for (size_t i = 0; i < params.size(); i++)
+		{
+			std::cout << params[i];
+			if (i != params.size() - 1)
 			std::cout << "|";
+		}
 	}
-	std::cout << "\n" + _server.getName() + "\n";
+	std::cout << "\n";
 }
 
 Command::~Command()
