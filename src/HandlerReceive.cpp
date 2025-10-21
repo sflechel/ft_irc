@@ -11,6 +11,7 @@
 #include "commands/Kick.hpp"
 #include "commands/UnknownCommand.hpp"
 #include "commands/Topic.hpp"
+#include "commands/Part.hpp"
 #include "commands/Invite.hpp"
 #include <cstddef>
 #include <string>
@@ -120,6 +121,8 @@ void	HandlerReceive::execCmds(void)
 			cmd = new Invite(_server, _client, cmd_name, params);
 		else if (cmd_name == "KICK")
 			cmd = new Kick(_server, _client, cmd_name, params);
+		else if (cmd_name == "PART")
+			cmd = new Part(_server, _client, cmd_name, params);
 		else
 			cmd = new UnknownCommand(_server, _client, cmd_name, params);
 		_cmds.push_back(cmd);
