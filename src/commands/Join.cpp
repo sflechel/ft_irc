@@ -96,10 +96,12 @@ void	Join::enactCommand(void)
 			else
 			{
 				std::cout << "testtsetst\n";
-				if (size == 1)
+				if (channel->getKey().empty())
 					this->joinChannel(*channel);
-				else
+				else if (size == 2)
 					this->joinChannel(*channel, name, _params.at(1));
+				else
+					_user.addResponse(_respbldr.buildResponseNum(name, ERR_BADCHANNELKEY));
 			}
 		}
 	}
