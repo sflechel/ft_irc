@@ -13,8 +13,12 @@ class Mode : public Command
 		void	enactCommand(void);
 
 	private:
-		void	choseMode();
-
+		void	choseMode(void);
+		void	ModeI(void);
+		void	ModeO(void);
+		void	ModeK(void);
+		void	ModeL(void);
+		void	ModeT(void);
 		char				_sign;
 		char				_mode;
 		Channel*			_channel;

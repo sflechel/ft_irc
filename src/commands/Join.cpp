@@ -89,17 +89,19 @@ void	Join::enactCommand(void)
 			Channel*	channel = _server.getChannel(name);
 			if (channel == NULL)
 				this->createChannel(name);
-			else if (channel->getIsInviteOnly())
+			else if (channel->getIsInviteOnly() && !channel->isUserInvited(_user.getNickname()))
 				_user.addResponse(_respbldr.buildResponseNum(name, ERR_INVITEONLYCHAN));
 			else if (channel->getUserLimit() != -1 && (long)channel->getUsers().size() >= channel->getUserLimit())
 				_user.addResponse(_respbldr.buildResponseNum(name, ERR_CHANNELISFULL));
 			else
 			{
 				std::cout << "testtsetst\n";
-				if (size == 1)
+				if (channel->getKey().empty())
 					this->joinChannel(*channel);
-				else
+				else if (size == 2)
 					this->joinChannel(*channel, name, _params.at(1));
+				else
+					_user.addResponse(_respbldr.buildResponseNum(name, ERR_BADCHANNELKEY));
 			}
 		}
 	}

@@ -13,6 +13,7 @@ Channel::Channel(Server& server, std::string name, Client& user) : _name(name), 
 
 void	Channel::addUser(std::string nickname)
 {
+	_invited.erase(nickname);
 	_users.insert(nickname);
 }
 
@@ -20,6 +21,7 @@ void	Channel::leave(std::string nickname)
 {
 	_users.erase(nickname);
 	_operators.erase(nickname);
+	_invited.erase(nickname);
 }
 
 void	Channel::sendChannelMessage(const std::string& message, const Client& sender) const
@@ -41,6 +43,11 @@ void	Channel::removeOp(const std::string& nickname)
 void	Channel::addOp(const std::string& nickname)
 {
 	_operators.insert(nickname);
+}
+
+void	Channel::addInvited(const std::string& nickname)
+{
+	_invited.insert(nickname);
 }
 
 bool	Channel::getIsInviteOnly(void) const
@@ -93,6 +100,13 @@ bool	Channel::isUserInChannel(std::string nickname)
 bool	Channel::isUserOp(std::string nickname)
 {
 	if (_operators.find(nickname) == _operators.end())
+		return false;
+	return true;
+}
+
+bool	Channel::isUserInvited(std::string nickname)
+{
+	if (_invited.find(nickname) == _invited.end())
 		return false;
 	return true;
 }

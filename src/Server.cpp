@@ -78,7 +78,7 @@ void Server::setup_poll()
 		throw std::runtime_error("failed to parametrize epoll");
 }
 
-void	Server::setup_master_socket(char *port)
+void	Server::setup_master_socket(std::string port)
 {
 	struct addrinfo	hints = {};
 	struct addrinfo	*server_info, *iter;
@@ -89,7 +89,7 @@ void	Server::setup_master_socket(char *port)
 	hints.ai_socktype = SOCK_STREAM;
 	hints.ai_flags = AI_PASSIVE;
 
-	if (getaddrinfo(NULL, port, &hints, &server_info) != 0)//TODO fix port/service TODO be more error specific
+	if (getaddrinfo(NULL, port.c_str(), &hints, &server_info) != 0)//TODO fix port/service TODO be more error specific
 		throw std::runtime_error("could not get addr info");
 
 	for (iter = server_info ; iter != NULL ; iter = iter->ai_next)
@@ -124,13 +124,10 @@ void	Server::setup_master_socket(char *port)
 		throw  std::runtime_error("failed to change socket to non-blocking");
 }
 
-Server::Server(char *port, char *password) : _name("IrcTestServer")
+Server::Server(std::string port, std::string password) : _password(password), _name("IrcTestServer")
 {
-	_password = std::string(password);
-
 	setup_master_socket(port);
 	setup_poll();
-	poll_events();
 }
 
 void	Server::forceQuitClient(Client* client)
@@ -204,6 +201,8 @@ Server::~Server()
 	for (size_t i = 0 ; i < _new_clients.size() ; i++)
 		delete _new_clients.at(i);
 	for (std::map<std::string, Client*>::iterator it = _clients.begin(); it != _clients.end(); it++)
+		delete it->second;
+	for (std::map<std::string, Channel*>::iterator it = _channels.begin(); it != _channels.end(); it++)
 		delete it->second;
 	close(_master_socket);
 	close(_epollfd);
