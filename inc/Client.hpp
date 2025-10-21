@@ -9,21 +9,21 @@ class Client
 		Client(int fd);
 		~Client(void);
 
-		int				getFd(void) const;
-		void			setSentPassword(bool state);
-		bool			getSentPassword(void) const;
-		void			setIsRegistered(bool state);
-		bool			getIsRegistered(void) const;
-		void			setNickname(std::string nickname);
-		std::string		getNickname(void) const;
-		void			setUsername(std::string username);
-		std::string		getUsername(void) const;
-		std::string		getRequest(void) const;
-		void			setRequest(std::string request);
-		void			setRealname(std::string username);
-		std::string		getRealname(void) const;
-		void			setResponse(std::string response);
-		std::string		getResponse(void) const;
+		int			getFd(void) const;
+		void		setSentPassword(bool state);
+		bool		getSentPassword(void) const;
+		void		setIsRegistered(bool state);
+		bool		getIsRegistered(void) const;
+		void		setNickname(std::string nickname);
+		std::string	getNickname(void) const;
+		void		setUsername(std::string username);
+		std::string	getUsername(void) const;
+		void		setRequest(std::string request);
+		std::string	getRequest(void) const;
+		void		setRealname(std::string username);
+		std::string	getRealname(void) const;
+		void		setResponse(std::string response);
+		std::string	getResponse(void) const;
 
 	private:
 		int				_fd;

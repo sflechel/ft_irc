@@ -18,13 +18,14 @@ class Server
 	public:
 		Server(char *port, char *password);
 		~Server();
+
 		std::string	getPassword(void) const;
 		void		updateNickname(Client* client, std::string new_nickname);
 		void		createChannel(std::string name, Client& user);
 		void		registerClient(Client* client, std::string nickname);
 		void		removeClient(std::string nickname);
 		void		removeNewClient(int index);
-		void		forceQuitClient(Client* Client); 
+		void		forceQuitClient(Client* Client);
 
 		std::string							getName(void) const;
 		Client*								getClient(std::string nickname);
@@ -44,11 +45,11 @@ class Server
 		std::map<std::string, Channel*>	_channels;
 		std::string						_name;
 
-		void							setup_master_socket(char *port);
-		void							setup_poll();
-		void							poll_events();
+		void	setup_master_socket(char *port);
+		void	setup_poll();
+		void	poll_events();
 
-		Server(void)					{}
+		Server(void){}
 };
 
 #endif //SERVER_HPP

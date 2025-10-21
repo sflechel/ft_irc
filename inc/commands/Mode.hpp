@@ -13,7 +13,7 @@ class Mode : public Command
 		void	enactCommand(void);
 
 	private:
-		void	setMode();
+		void	choseMode();
 
 		char				_sign;
 		char				_mode;

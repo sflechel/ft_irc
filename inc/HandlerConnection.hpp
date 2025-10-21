@@ -12,6 +12,7 @@ class HandlerConnection
 
 		Client*	acceptConnection();
 		void	registerClient(Client* newClient, std::vector<Client*>& listClients, int epollfd);
+
 	private:
 		int	_masterSock;
 

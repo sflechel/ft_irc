@@ -8,7 +8,7 @@
 Mode::Mode(Server& server, Client& user, std::string cmd_name, std::vector<std::string> params) : Command(server, user, cmd_name, params)
 {}
 
-void	Mode::setMode(void)
+void	Mode::choseMode(void)
 {
 	const std::string target_chan = _params.at(0);
 
@@ -77,7 +77,7 @@ void	Mode::enactCommand(void)
 			{
 				_sign = mode[0];
 				_mode = mode[1];
-				setMode();
+				choseMode();
 			}
 		}
 	}

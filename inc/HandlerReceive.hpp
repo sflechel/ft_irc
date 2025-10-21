@@ -20,8 +20,8 @@ class HandlerReceive
 		void	execCmds(void);
 
 	private:
-		Client&	_client;
-		Server& _server;
+		Client&						_client;
+		Server&						_server;
 		std::vector<std::string>	_full_cmds;
 		std::vector<Command*>		_cmds;
 
