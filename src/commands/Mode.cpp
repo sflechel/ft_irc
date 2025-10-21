@@ -3,60 +3,106 @@
 #include "Client.hpp"
 #include "Server.hpp"
 #include <sstream>
+#include <string>
 
 Mode::Mode(Server& server, Client& user, std::string cmd_name, std::vector<std::string> params) : Command(server, user, cmd_name, params)
 {}
 
-void	Mode::choseMode(void)
+std::string	Mode::messageMode(void)
+{
+	std::string	msg = ":" + _user.getNickname() + " ";
+	msg += "MODE " + _params.at(0);
+	msg += " " + _params.at(1);
+	if (_params.size() == 3)
+		msg += " " + _params.at(2);
+	msg += "\r\n";
+	return msg;
+}
+
+bool	Mode::modeI(void)
+{
+	_channel->setIsInviteOnly(_sign == '+');
+	return true;
+}
+
+bool	Mode::modeT(void)
+{
+	_channel->setIsTopicRestricted(_sign == '+');
+	return true;
+}
+
+bool	Mode::modeK(void)
+{
+	if (_sign == '-')
+		_channel->setKey("");
+	else if (_params.size() == 3 && !_params.at(2).empty())
+		_channel->setKey(_params.at(2));
+	else
+	{
+		_user.addResponse(_respbldr.buildResponseNum(_cmd_name, ERR_NEEDMOREPARAMS));
+		return false;
+	}
+	return true;
+}
+
+bool	Mode::modeO(void)
 {
 	const std::string target_chan = _params.at(0);
 
-	if (_mode == 'i')
-		_channel->setIsInviteOnly(_sign == '+');
-	else if (_mode == 't')
-		_channel->setIsTopicRestricted(_sign == '+');
-	else if (_mode == 'k')
+	if (_params.size() != 3)
+	{
+		_user.addResponse(_respbldr.buildResponseNum(_cmd_name, ERR_NEEDMOREPARAMS));
+		return false;
+	}
+	const std::string& target_user = _params.at(2);
+	if (!_server.getClient(target_user))
+		_user.addResponse(_respbldr.buildResponseNum(target_user, ERR_NOSUCHNICK));
+	else if (!_channel->isUserInChannel(target_user))
+		_user.addResponse(_respbldr.buildResponseNum(target_user + " " + target_chan, ERR_USERNOTINCHANNEL));
+	else
 	{
 		if (_sign == '-')
-			_channel->setKey("");
-		else if (_params.size() == 3)
-			_channel->setKey(_params.at(2));
-		else
-			_user.addResponse(_respbldr.buildResponseNum(_cmd_name, ERR_NEEDMOREPARAMS));
-
-	}
-	else if (_mode == 'o')
-	{
-		if (_params.size() != 3)
-		{
-			_user.addResponse(_respbldr.buildResponseNum(_cmd_name, ERR_NEEDMOREPARAMS));
-			return ;
-		}
-		const std::string& target_user = _params.at(2);
-		if (!_server.getClient(target_user))
-			_user.addResponse(_respbldr.buildResponseNum(target_user, ERR_NOSUCHNICK));
-		else if (!_channel->isUserInChannel(target_user))
-			_user.addResponse(_respbldr.buildResponseNum(target_user + " " + target_chan, ERR_USERNOTINCHANNEL));
-		else if (_sign == '-')
 			_channel->removeOp(target_user);
 		else
 			_channel->addOp(target_user);
+		return true;
 	}
-	else if (_mode == 'l')
+	return false;
+}
+
+bool	Mode::modeL(void)
+{
+	if (_sign == '-')
+		_channel->setUserLimit(-1);
+	else if (_params.size() == 3)
 	{
-		if (_sign == '-')
-			_channel->setUserLimit(-1);
-		else if (_params.size() == 3)
-		{
-			std::istringstream ss(_params.at(2));
-			int limit = -1;
-			ss >> limit;
-			if (limit > 0)
-				_channel->setUserLimit(limit);
-		}
-		else
-			_user.addResponse(_respbldr.buildResponseNum(_cmd_name, ERR_NEEDMOREPARAMS));
+		std::istringstream ss(_params.at(2));
+		int limit = -1;
+		ss >> limit;
+		if (limit > 0)
+			_channel->setUserLimit(limit);
 	}
+	else
+	{
+		_user.addResponse(_respbldr.buildResponseNum(_cmd_name, ERR_NEEDMOREPARAMS));
+		return false;
+	}
+	return true;
+}
+
+bool	Mode::choseMode(void)
+{
+	if (_mode == 'i')
+		return (this->modeI());
+	else if (_mode == 't')
+		return (this->modeT());
+	else if (_mode == 'k')
+		return (this->modeK());
+	else if (_mode == 'o')
+		return (this->modeO());
+	else if (_mode == 'l')
+		return (this->modeL());
+	return false;
 }
 
 void	Mode::enactCommand(void)
@@ -88,7 +134,12 @@ void	Mode::enactCommand(void)
 			{
 				_sign = mode[0];
 				_mode = mode[1];
-				choseMode();
+				if (choseMode())
+				{
+					std::string	msg = this->messageMode();
+					_user.addResponse(msg);
+					_channel->sendChannelMessage(msg, _user);
+				}
 			}
 		}
 	}

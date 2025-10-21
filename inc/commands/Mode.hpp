@@ -3,6 +3,7 @@
 
 #include "Command.hpp"
 #include "Server.hpp"
+#include <string>
 
 class Mode : public Command
 {
@@ -13,12 +14,13 @@ class Mode : public Command
 		void	enactCommand(void);
 
 	private:
-		void	choseMode(void);
-		void	ModeI(void);
-		void	ModeO(void);
-		void	ModeK(void);
-		void	ModeL(void);
-		void	ModeT(void);
+		bool	choseMode(void);
+		bool	modeI(void);
+		bool	modeO(void);
+		bool	modeK(void);
+		bool	modeL(void);
+		bool	modeT(void);
+		std::string			messageMode(void);
 		char				_sign;
 		char				_mode;
 		Channel*			_channel;
