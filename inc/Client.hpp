@@ -23,6 +23,8 @@ class Client
 		void		setRealname(std::string username);
 		std::string	getRealname(void) const;
 		void		setResponse(std::string response);
+		void		addResponse(std::string response);
+
 		std::string	getResponse(void) const;
 
 	private:

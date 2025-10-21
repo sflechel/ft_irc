@@ -28,7 +28,7 @@ std::string ResponseBuilder::enumericToStringNumber(e_numeric code)
 
 std::string ResponseBuilder::enumericToMessage(e_numeric code, std::string user_input)
 {
-	std::string response = ":";
+	std::string response = "";
 
 	switch (code)
 	{
@@ -36,6 +36,9 @@ std::string ResponseBuilder::enumericToMessage(e_numeric code, std::string user_
 			response += "Welcome to the Internet Relay Network " + _target.getNickname() + "!" + _target.getUsername() + "@" + _servername;
 			break;
 		case RPL_NAMREPLY:
+			break;
+		case RPL_ENDOFNAMES:
+			response += user_input + " :End of /WHO list.";
 			break;
 		case RPL_NOTOPIC:
 			response += user_input + " :No topic is set";
@@ -91,6 +94,9 @@ std::string ResponseBuilder::enumericToMessage(e_numeric code, std::string user_
 		case ERR_BADCHANNELKEY:
 			response += user_input + " :Cannot join channel (+k)";
 			break;
+		case ERR_NOPASSWD:
+			response += user_input + " :Password missing, use PASS to authenticate";
+			break;
 		case ERR_NOPRIVILEGES:
 			response += ":Permission Denied- You're not an IRC operator";
 			break;
@@ -127,12 +133,15 @@ std::string ResponseBuilder::buildNamReply(Channel& channel)
 	std::string response;
 
 	response += ":" + _servername + " ";
-	response += enumericToStringNumber(RPL_NAMREPLY) + " ";
-	response += "= " + channel.getName() + " ";
+	response += enumericToStringNumber(RPL_NAMREPLY);
+	response += " " + _target.getNickname() + " = " + channel.getName() + " ";
 	response += ":";
-	std::set<std::string>   users;
-	std::set<std::string>::iterator it;
+
+	std::set<std::string>			users = channel.getUsers();
+	std::set<std::string>::iterator	it;
+
 	for (it = users.begin() ; it != users.end() ; it++)
-		response + *it + " ";
-	return response;
+		response += (channel.isUserOp(*it) ? "@" : "") + *it + " ";
+	response += "\r\n";
+	return (response);
 }

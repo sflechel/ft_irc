@@ -166,7 +166,7 @@ void	Server::removeClient(std::string nickname)
 	{
 		std::string		name = it->second->getName();
 		std::string		msg = ":" + nickname + " PART " + name + "\r\n";
-		client->setResponse(msg);
+		client->addResponse(msg);
 		it->second->sendChannelMessage(msg, *client);
 		it->second->leave(client->getNickname());
 	}
@@ -221,13 +221,10 @@ std::string Server::getName(void) const
 
 Client* Server::getClient(std::string nickname)
 {
-	Client* client;
-	try {client = _clients.at(nickname);}
-	catch (std::out_of_range)
-	{
-		return NULL;
-	}
-	return client;
+	std::map<std::string, Client*>::iterator it = _clients.find(nickname);
+	if (it == _clients.end())
+		return (NULL);
+	return (it->second);
 }
 
 std::map<std::string, Channel*>&	Server::getChannels(void)
@@ -237,13 +234,10 @@ std::map<std::string, Channel*>&	Server::getChannels(void)
 
 Channel*	Server::getChannel(std::string name)
 {
-	Channel*	channel;
-	try {channel = _channels.at(name);}
-	catch (std::out_of_range)
-	{
-		return NULL;
-	}
-	return _channels.at(name);
+	std::map<std::string, Channel*>::iterator it = _channels.find(name);
+	if (it == _channels.end())
+		return (NULL);
+	return (it->second);
 }
 
 std::vector<Client*>&	Server::getNewClients(void)

@@ -10,11 +10,11 @@ Pass::Pass(Server& server, Client& user, std::string cmd_name, std::vector<std::
 void	Pass::enactCommand(void)
 {
 	if (_params.size() != 1)
-		_user.setResponse(_respbldr.buildResponseNum(_cmd_name, ERR_NEEDMOREPARAMS));
+		_user.addResponse(_respbldr.buildResponseNum(_cmd_name, ERR_NEEDMOREPARAMS));
 	else if (_user.getIsRegistered())
-		_user.setResponse(_respbldr.buildResponseNum("", ERR_ALREADYREGISTERED));
+		_user.addResponse(_respbldr.buildResponseNum("", ERR_ALREADYREGISTERED));
 	else if (_params.at(0) != _server.getPassword())
-		_user.setResponse(_respbldr.buildResponseNum("", ERR_PASSWDMISMATCH));
+		_user.addResponse(_respbldr.buildResponseNum( "", ERR_PASSWDMISMATCH));
 	else
 		_user.setSentPassword(true);
 }

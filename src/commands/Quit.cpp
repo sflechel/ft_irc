@@ -12,7 +12,7 @@ void	Quit::enactCommand(void)
 {
 	std::string message = ":" + _server.getName() + " ERROR\r\n";
 
-	_user.setResponse(message);
+	_user.addResponse(message);
 
 	if (_user.getNickname().empty())
 	{

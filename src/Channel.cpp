@@ -6,11 +6,9 @@
 
 Channel::Channel(Server& server, std::string name, Client& user) : _name(name), _server(server), _user_limit(-1), _is_invite_only(0), _is_topic_restricted(0)
 {
-	_users.insert(user.getNickname());
-	_operators.insert(user.getNickname());
-	(void)_user_limit;
-	(void)_is_invite_only;
-	(void)_is_topic_restricted;
+	std::string nickname = user.getNickname();
+	_users.insert(nickname);
+	_operators.insert(nickname);
 }
 
 void	Channel::addUser(std::string nickname)
@@ -31,7 +29,7 @@ void	Channel::sendChannelMessage(const std::string& message, const Client& sende
 	{
 		Client* target = _server.getClient(*it);
 		if (target != NULL && target != &sender)
-			target->setResponse(message);
+			target->addResponse(message);
 	}
 }
 
