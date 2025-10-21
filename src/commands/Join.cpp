@@ -89,7 +89,7 @@ void	Join::enactCommand(void)
 			Channel*	channel = _server.getChannel(name);
 			if (channel == NULL)
 				this->createChannel(name);
-			else if (channel->getIsInviteOnly())
+			else if (channel->getIsInviteOnly() && !channel->isUserInvited(_user.getNickname()))
 				_user.addResponse(_respbldr.buildResponseNum(name, ERR_INVITEONLYCHAN));
 			else if (channel->getUserLimit() != -1 && (long)channel->getUsers().size() >= channel->getUserLimit())
 				_user.addResponse(_respbldr.buildResponseNum(name, ERR_CHANNELISFULL));

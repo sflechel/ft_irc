@@ -15,7 +15,7 @@ void	Invite::invite(Channel* channel, std::string to_invite)
 	std::string channel_name = channel->getName();
 	std::string sender = _user.getNickname();
 
-	channel->addUser(to_invite);
+	channel->addInvited(to_invite);
 	_server.getClient(to_invite)->addResponse(":" + sender + " INVITE " + to_invite + " " + channel_name + "\r\n");
 	_user.addResponse(_respbldr.buildResponseNum(channel_name + " " + to_invite, RPL_INVITING));
 }
