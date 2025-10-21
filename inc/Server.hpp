@@ -18,6 +18,7 @@ class Server
 	public:
 		Server(std::string port, std::string password);
 		~Server();
+		void		poll_events(void);
 
 		std::string	getPassword(void) const;
 		void		updateNickname(Client* client, std::string new_nickname);
@@ -46,8 +47,7 @@ class Server
 		std::string						_name;
 
 		void	setup_master_socket(std::string port);
-		void	setup_poll();
-		void	poll_events();
+		void	setup_poll(void);
 
 		Server(void){}
 };

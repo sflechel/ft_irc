@@ -128,7 +128,6 @@ Server::Server(std::string port, std::string password) : _password(password), _n
 {
 	setup_master_socket(port);
 	setup_poll();
-	poll_events();
 }
 
 void	Server::forceQuitClient(Client* client)
