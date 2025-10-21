@@ -47,7 +47,7 @@ void	Server::poll_events()
 				HandlerReceive	hrecv = HandlerReceive(*(Client *)(events[i].data.ptr), *this);
 				if (hrecv.readClientRequest() <= 0)
 				{
-					this->removeClient((*(Client*)(events[i].data.ptr)).getNickname());
+					this->forceQuitClient((Client*)events[i].data.ptr);
 					continue;
 				}
 				hrecv.splitResponseToCmds();
@@ -132,6 +132,20 @@ Server::Server(char *port, char *password) : _name("IrcTestServer")
 	poll_events();
 }
 
+void	Server::forceQuitClient(Client* client)
+{
+	if (client == NULL)
+		return;
+	std::string	nickname = client->getNickname();
+	if (nickname.empty())
+	{
+		std::ptrdiff_t  index = std::distance(*this->getNewClients().data(), client);
+		removeNewClient(index);
+	}
+	else
+		removeClient(nickname);
+}
+
 void	Server::removeNewClient(int index)
 {
 	std::vector<Client*>::iterator   it;
@@ -143,9 +157,21 @@ void	Server::removeNewClient(int index)
 
 void	Server::removeClient(std::string nickname)
 {
+	std::map<std::string, Channel*>  channels = this->getChannels();
+	std::map<std::string, Channel*>::iterator   it;
+	Client*	client = this->getClient(nickname);
+	for (it = channels.begin() ; it != channels.end() ; it++)
+	{
+		std::string		name = it->second->getName();
+		std::string		msg = ":" + nickname + " PART " + name + "\r\n";
+		client->setResponse(msg);
+		it->second->sendChannelMessage(msg, *client);
+		it->second->leave(client->getNickname());
+	}
 	delete _clients.at(nickname);
 	_clients.erase(nickname);
 }
+
 void	Server::registerClient(Client* client, std::string nickname)
 {
 		std::pair<std::string, Client*> pair(nickname, client);

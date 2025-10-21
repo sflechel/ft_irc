@@ -12,7 +12,7 @@ void	Kick::kick(Channel& channel, std::string to_kick)
 {
 	std::string		channel_name = channel.getName();
 	ResponseBuilder respbldr = ResponseBuilder(_server.getName(), _user);
-	std::string		msg = respbldr.buildResponse("KICK", channel_name + " " + to_kick);
+	std::string		msg = respbldr.buildResponse("KICK ", channel_name + " " + to_kick);
 
 	_user.setResponse(msg);
 	channel.sendChannelMessage(msg, _user);
