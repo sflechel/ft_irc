@@ -3,7 +3,8 @@
 #include <string>
 #include <vector>
 
-UnknownCommand::UnknownCommand(Server& server, Client& user, std::string cmd_name, std::vector<std::string> params) : Command(server, user, cmd_name, params)
+UnknownCommand::UnknownCommand(Server& server, Client& user, std::string cmd_name, std::vector<std::string> params) :
+	Command(server, user, cmd_name, params)
 {}
 
 void	UnknownCommand::enactCommand(void)

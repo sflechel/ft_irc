@@ -69,13 +69,11 @@ std::string Client::getUsername(void) const
 void	Client::setResponse(std::string response)
 {
 	this->_response = response;
-	std::cout << "set response: " << this->_response << std::endl;
 }
 
 void	Client::addResponse(std::string response)
 {
 	this->_response += response;
-	std::cout << "add response: " << this->_response << std::endl;
 }
 
 void	Client::setRequest(std::string request)

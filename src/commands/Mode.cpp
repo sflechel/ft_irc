@@ -21,11 +21,21 @@ void	Mode::choseMode(void)
 			_channel->setKey("");
 		else if (_params.size() == 3)
 			_channel->setKey(_params.at(2));
+		else
+			_user.addResponse(_respbldr.buildResponseNum(_cmd_name, ERR_NEEDMOREPARAMS));
+
 	}
-	else if (_mode == 'o' && _params.size() == 3)
+	else if (_mode == 'o')
 	{
+		if (_params.size() != 3)
+		{
+			_user.addResponse(_respbldr.buildResponseNum(_cmd_name, ERR_NEEDMOREPARAMS));
+			return ;
+		}
 		const std::string& target_user = _params.at(2);
-		if (!_channel->isUserInChannel(target_user))
+		if (!_server.getClient(target_user))
+			_user.addResponse(_respbldr.buildResponseNum(target_user, ERR_NOSUCHNICK));
+		else if (!_channel->isUserInChannel(target_user))
 			_user.addResponse(_respbldr.buildResponseNum(target_user + " " + target_chan, ERR_USERNOTINCHANNEL));
 		else if (_sign == '-')
 			_channel->removeOp(target_user);
@@ -44,6 +54,8 @@ void	Mode::choseMode(void)
 			if (limit > 0)
 				_channel->setUserLimit(limit);
 		}
+		else
+			_user.addResponse(_respbldr.buildResponseNum(_cmd_name, ERR_NEEDMOREPARAMS));
 	}
 }
 
@@ -67,7 +79,7 @@ void	Mode::enactCommand(void)
 		else
 		{
 			const std::string mode = _params.at(1);
-			const std::string custom_err = ":" + _server.getName() + " 472 " + _user.getNickname() + " " + mode + " :is invalid/unknown mode char to me for " + target_chan + "\r\n";
+			const std::string custom_err = ":" + _server.getName() + " 472 " + _user.getNickname() + " :" + mode + " :is invalid/unknown mode char to me for " + target_chan + "\r\n";
 
 			if (mode.length() != 2 || (mode[0] != '-' && mode[0] != '+')
 				|| (mode[1] != 'i' && mode[1] != 't' && mode[1] != 'k' && mode[1] != 'o' && mode[1] != 'l'))

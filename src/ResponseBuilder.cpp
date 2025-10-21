@@ -113,7 +113,10 @@ std::string ResponseBuilder::buildResponseNum(std::string user_input, e_numeric 
 
 	response += (":" + _servername + " ");
 	response += enumericToStringNumber(numeric) + " ";
-	response += this->_target.getNickname() + " ";
+	if (this->_target.getNickname().empty())
+		response += "default ";
+	else
+		response += this->_target.getNickname() + " ";
 	response += enumericToMessage(numeric, user_input);
 	response += "\r\n";
 	return (response);
