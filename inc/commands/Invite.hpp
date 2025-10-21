@@ -13,8 +13,9 @@ class Invite : public Command
 		Invite(Server& server, Client& user, std::string cmd_name, std::vector<std::string> params);
 		~Invite(void);
 
-		void	invite(Channel* channel, std::string to_invite);
 		void	enactCommand(void);
+	private:
+		void	invite(Channel* channel, std::string to_invite);
 };
 
 #endif //INVITE_HPP

@@ -13,8 +13,9 @@ class Part : public Command
 	public:
 		Part(Server& server, Client& user, std::string cmd_name, std::vector<std::string> params);
 		~Part(void);
-		void	part(Channel& channel);
 		void	enactCommand(void);
+	private:
+		void	part(Channel& channel);
 };
 
 #endif //PART_HPP
