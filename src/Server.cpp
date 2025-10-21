@@ -19,13 +19,16 @@
 #include "HandlerConnection.hpp"
 #include "HandlerReceive.hpp"
 #include "HandlerRespond.hpp"
+#include <csignal>
+
+extern volatile sig_atomic_t	g_signum;
 
 void	Server::poll_events()
 {
 	struct epoll_event	events[MAX_EVENTS];
 	int					nb_fds;
 
-	while (true)
+	while (g_signum != SIGINT)
 	{
 		nb_fds = epoll_wait(_epollfd, events, MAX_EVENTS, 0);
 		if (nb_fds == -1)
@@ -42,7 +45,11 @@ void	Server::poll_events()
 			else if (events[i].events & EPOLLIN)
 			{
 				HandlerReceive	hrecv = HandlerReceive(*(Client *)(events[i].data.ptr), *this);
-				hrecv.readClientRequest();
+				if (hrecv.readClientRequest() <= 0)
+				{
+					this->forceQuitClient((Client*)events[i].data.ptr);
+					continue;
+				}
 				hrecv.splitResponseToCmds();
 				hrecv.execCmds();
 			}
@@ -109,6 +116,7 @@ void	Server::setup_master_socket(char *port)
 	this->_master_socket_address_len = iter->ai_addrlen;
 	this->_master_socket = sockfd;
 
+	freeaddrinfo(server_info);
 	if (listen(_master_socket, LISTEN_BACKLOG) == -1)
 		throw std::runtime_error("failed to listen");
 	if (fcntl(_master_socket, F_SETFL, O_NONBLOCK) == -1)
@@ -124,6 +132,20 @@ Server::Server(char *port, char *password) : _name("IrcTestServer")
 	poll_events();
 }
 
+void	Server::forceQuitClient(Client* client)
+{
+	if (client == NULL)
+		return;
+	std::string	nickname = client->getNickname();
+	if (nickname.empty())
+	{
+		std::ptrdiff_t  index = std::distance(*this->getNewClients().data(), client);
+		removeNewClient(index);
+	}
+	else
+		removeClient(nickname);
+}
+
 void	Server::removeNewClient(int index)
 {
 	std::vector<Client*>::iterator   it;
@@ -135,9 +157,21 @@ void	Server::removeNewClient(int index)
 
 void	Server::removeClient(std::string nickname)
 {
+	std::map<std::string, Channel*>  channels = this->getChannels();
+	std::map<std::string, Channel*>::iterator   it;
+	Client*	client = this->getClient(nickname);
+	for (it = channels.begin() ; it != channels.end() ; it++)
+	{
+		std::string		name = it->second->getName();
+		std::string		msg = ":" + nickname + " PART " + name + "\r\n";
+		client->setResponse(msg);
+		it->second->sendChannelMessage(msg, *client);
+		it->second->leave(client->getNickname());
+	}
 	delete _clients.at(nickname);
 	_clients.erase(nickname);
 }
+
 void	Server::registerClient(Client* client, std::string nickname)
 {
 		std::pair<std::string, Client*> pair(nickname, client);

@@ -24,6 +24,7 @@ class Server
 		void		registerClient(Client* client, std::string nickname);
 		void		removeClient(std::string nickname);
 		void		removeNewClient(int index);
+		void		forceQuitClient(Client* Client); 
 
 		std::string							getName(void) const;
 		Client*								getClient(std::string nickname);
