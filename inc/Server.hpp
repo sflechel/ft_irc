@@ -16,7 +16,7 @@
 class Server
 {
 	public:
-		Server(char *port, char *password);
+		Server(std::string port, std::string password);
 		~Server();
 
 		std::string	getPassword(void) const;
@@ -45,7 +45,7 @@ class Server
 		std::map<std::string, Channel*>	_channels;
 		std::string						_name;
 
-		void	setup_master_socket(char *port);
+		void	setup_master_socket(std::string port);
 		void	setup_poll();
 		void	poll_events();
 

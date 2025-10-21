@@ -4,6 +4,7 @@
 #include <stdexcept>
 #include <iostream>
 #include <signal.h>
+#include <string>
 
 volatile sig_atomic_t	g_signum = 0;
 
@@ -25,16 +26,22 @@ void	setSignalHandler(void)
 	sigaction(SIGINT, &sigset, 0);
 }
 
+
+
 int	main(int ac, char **av)
 {
-	char	*port = av[1];
-	char	*password = av[2];
-
 	if (ac != 3)
 	{
 		std::cerr << "Expected command: /ircserv <port> <password>" << std::endl;
 		return (1);
-	}//TODO: protect port from non-ints
+	}
+	std::string	port = std::string(av[1]);
+	std::string	password = std::string(av[2]);
+	if (password.empty() || port.empty() || port.find_first_not_of("0123456789") != std::string::npos)
+	{
+		std::cerr << "Expected command: /ircserv <port> <password>" << std::endl;
+		return (1);
+	}
 	try {
 		setSignalHandler();
 		Server server = Server(port, password);
