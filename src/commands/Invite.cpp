@@ -3,7 +3,6 @@
 #include "Command.hpp"
 #include <string>
 #include <vector>
-#include "ResponseBuilder.hpp"
 
 Invite::Invite(Server& server, Client& user, std::string cmd_name, std::vector<std::string> params) : Command(server, user, cmd_name, params)
 {

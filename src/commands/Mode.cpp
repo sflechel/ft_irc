@@ -1,7 +1,6 @@
 #include "commands/Mode.hpp"
 #include "Channel.hpp"
 #include "Client.hpp"
-#include "ResponseBuilder.hpp"
 #include "Server.hpp"
 #include <sstream>
 

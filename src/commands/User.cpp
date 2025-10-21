@@ -1,6 +1,5 @@
 #include "commands/User.hpp"
 #include "Command.hpp"
-#include "ResponseBuilder.hpp"
 #include <string>
 #include <vector>
 

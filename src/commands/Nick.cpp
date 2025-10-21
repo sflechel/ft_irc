@@ -1,6 +1,5 @@
 #include "commands/Nick.hpp"
 #include "Command.hpp"
-#include "ResponseBuilder.hpp"
 #include <cstddef>
 #include <string>
 #include <vector>

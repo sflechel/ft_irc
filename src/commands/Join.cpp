@@ -2,7 +2,6 @@
 #include "Channel.hpp"
 #include "Client.hpp"
 #include "Command.hpp"
-#include "ResponseBuilder.hpp"
 #include "Server.hpp"
 #include <cstddef>
 #include <map>

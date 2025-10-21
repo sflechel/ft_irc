@@ -5,9 +5,12 @@
 #include <sstream>
 #include <string>
 #include <cstdlib>
+#include <iostream>
 
-ResponseBuilder::ResponseBuilder(const std::string& servername, Client& target) : _servername(servername), _target(target)
-{}
+ResponseBuilder::ResponseBuilder(std::string servername, Client& target) : _servername(servername), _target(target)
+{
+	std::cout << _servername << target.getNickname() << "\n";
+}
 
 ResponseBuilder::~ResponseBuilder(void) {}
 
@@ -101,14 +104,14 @@ std::string ResponseBuilder::enumericToMessage(e_numeric code, std::string user_
 
 std::string ResponseBuilder::buildResponseNum(std::string user_input, e_numeric numeric)
 {
-	std::stringstream response;
+	std::string response;
 
-	response << (":" + _servername + " ");
-	response << enumericToStringNumber(numeric) << " ";
-	response << this->_target.getNickname() << " ";
-	response << enumericToMessage(numeric, user_input);
-	response << "\r\n";
-	return (response.str());
+	response += (":" + _servername + " ");
+	response += enumericToStringNumber(numeric) + " ";
+	response += this->_target.getNickname() + " ";
+	response += enumericToMessage(numeric, user_input);
+	response += "\r\n";
+	return (response);
 }
 
 std::string ResponseBuilder::buildResponse(std::string command, std::string param)

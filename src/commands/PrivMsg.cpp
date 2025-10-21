@@ -1,7 +1,6 @@
 #include "commands/PrivMsg.hpp"
 #include "Channel.hpp"
 #include "Client.hpp"
-#include "ResponseBuilder.hpp"
 #include <unistd.h>
 
 PrivMsg::PrivMsg(Server& server, Client& user, std::string cmd_name, std::vector<std::string> params) : Command(server, user, cmd_name, params)

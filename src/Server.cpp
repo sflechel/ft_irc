@@ -20,6 +20,7 @@
 #include "HandlerReceive.hpp"
 #include "HandlerRespond.hpp"
 #include <csignal>
+#include <iostream>
 
 extern volatile sig_atomic_t	g_signum;
 
@@ -40,7 +41,7 @@ void	Server::poll_events()
 			{
 				HandlerConnection hconn = HandlerConnection(_master_socket);
 				Client*	newClient = hconn.acceptConnection();
-				hconn.registerClient(newClient, this->_new_clients, this->_epollfd);
+				hconn.registerClient(newClient, _new_clients, _epollfd);
 			}
 			else if (events[i].events & EPOLLIN)
 			{
@@ -153,6 +154,7 @@ void	Server::removeNewClient(int index)
 	it = _new_clients.begin() + index;
 	delete _new_clients.at(index);
 	_new_clients.erase(it);
+	std::cout << "Client quit\n";
 }
 
 void	Server::removeClient(std::string nickname)
@@ -170,15 +172,16 @@ void	Server::removeClient(std::string nickname)
 	}
 	delete _clients.at(nickname);
 	_clients.erase(nickname);
+	std::cout << "Client quit\n";
 }
 
 void	Server::registerClient(Client* client, std::string nickname)
 {
-		std::pair<std::string, Client*> pair(nickname, client);
-		client->setNickname(nickname);
-		std::vector<Client*>::iterator it = std::find(_new_clients.begin(), _new_clients.end(), client);
-		_new_clients.erase(it);
-		_clients.insert(pair);
+	std::pair<std::string, Client*> pair(nickname, client);
+	client->setNickname(nickname);
+	std::vector<Client*>::iterator it = std::find(_new_clients.begin(), _new_clients.end(), client);
+	_new_clients.erase(it);
+	_clients.insert(pair);
 }
 
 void	Server::createChannel(std::string name, Client& user)
@@ -199,13 +202,9 @@ void	Server::updateNickname(Client* client, std::string new_nickname)
 Server::~Server()
 {
 	for (size_t i = 0 ; i < _new_clients.size() ; i++)
-	{
 		delete _new_clients.at(i);
-	}
 	for (std::map<std::string, Client*>::iterator it = _clients.begin(); it != _clients.end(); it++)
-	{
 		delete it->second;
-	}
 	close(_master_socket);
 	close(_epollfd);
 }

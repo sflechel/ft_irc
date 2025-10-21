@@ -24,7 +24,7 @@ Client*	HandlerConnection::acceptConnection()
 	if (fcntl(conn_fd, F_SETFL, O_NONBLOCK) == -1)
 		throw std::runtime_error("failed to set connection socket to non blocking");
 
-	std::cout << "Server connected to a client!" << std::endl;
+	std::cout << "Client connected\n";
 
 	Client* output = new Client(conn_fd);
 	return (output);

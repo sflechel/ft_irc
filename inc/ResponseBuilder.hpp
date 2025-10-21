@@ -35,7 +35,7 @@ typedef enum	numeric
 class ResponseBuilder
 {
 	public:
-		ResponseBuilder(const std::string& servername, Client& target);
+		ResponseBuilder(std::string servername, Client& target);
 		~ResponseBuilder(void);
 
 		std::string	buildResponseNum(std::string user_input, e_numeric numeric);
@@ -47,8 +47,8 @@ class ResponseBuilder
 		std::string	enumericToStringNumber(e_numeric code);
 		std::string	enumericToMessage(e_numeric code, std::string user_input);
 
-		const std::string&	_servername;
-		Client&				_target;
+		std::string	_servername;
+		Client&		_target;
 };
 
 #endif //RESPONSEBUILDER_HPP

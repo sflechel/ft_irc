@@ -3,7 +3,6 @@
 #include "Command.hpp"
 #include <string>
 #include <vector>
-#include "ResponseBuilder.hpp"
 
 Topic::Topic(Server& server, Client& user, std::string cmd_name, std::vector<std::string> params) : Command(server, user, cmd_name, params)
 {}
@@ -19,7 +18,7 @@ void	Topic::enactCommand(void)
 	{
 		Channel*	channel = _server.getChannel(_params.at(0));
 		if (channel == NULL)
-			_user.setResponse(_respbldr.buildResponseNum(channel->getName(), ERR_NOSUCHCHANNEL)); 
+			_user.setResponse(_respbldr.buildResponseNum(channel->getName(), ERR_NOSUCHCHANNEL));
 		else if (channel->getIsTopicRestricted())
 			_user.setResponse(_respbldr.buildResponseNum(channel->getName(), ERR_CHANOPRIVSNEEDED));
 		else if (channel->getTopic().empty())

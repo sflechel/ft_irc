@@ -9,7 +9,7 @@ Command::Command(Server& server, Client& user, std::string cmd_name, std::vector
 	_user(user),
 	_cmd_name(cmd_name),
 	_params(params),
-	_respbldr(_server.getName(), _user)
+	_respbldr(_server.getName(), user)
 {
 
 	std::cout << "cmd: " << cmd_name << "\nparam: ";
@@ -19,7 +19,7 @@ Command::Command(Server& server, Client& user, std::string cmd_name, std::vector
 		if (i != params.size() - 1)
 			std::cout << "|";
 	}
-	std::cout << "\n";
+	std::cout << "\n" + _server.getName() + "\n";
 }
 
 Command::~Command()
