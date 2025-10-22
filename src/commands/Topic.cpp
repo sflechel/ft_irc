@@ -29,7 +29,6 @@ void	Topic::enactCommand(void)
 		}
 		else
 		{
-			std::cout << channel->getIsTopicRestricted() << "\n";
 			if (channel->getIsTopicRestricted() && !channel->isUserOp(_user.getNickname()))
 				_user.addResponse(_respbldr.buildResponseNum(channel->getName(), ERR_CHANOPRIVSNEEDED));
 			else

@@ -95,7 +95,6 @@ void	Join::enactCommand(void)
 				_user.addResponse(_respbldr.buildResponseNum(name, ERR_CHANNELISFULL));
 			else
 			{
-				std::cout << "testtsetst\n";
 				if (channel->getKey().empty())
 					this->joinChannel(*channel);
 				else if (size == 2)
