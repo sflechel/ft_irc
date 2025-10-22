@@ -43,8 +43,9 @@ void	Server::poll_events()
 				HandlerConnection hconn = HandlerConnection(*this);
 				Client*	newClient = hconn.acceptConnection();
 				hconn.registerClient(newClient, _new_clients, _epollfd);
+				continue;
 			}
-			else if (events[i].events & EPOLLIN)
+			if (events[i].events & EPOLLIN)
 			{
 				HandlerReceive	hrecv = HandlerReceive(*(Client *)(events[i].data.ptr), *this);
 				if (hrecv.readClientRequest() <= 0)
@@ -55,13 +56,11 @@ void	Server::poll_events()
 				hrecv.splitResponseToCmds();
 				hrecv.execCmds();
 			}
-			else if (events[i].events & EPOLLOUT)
+			if (events[i].events & EPOLLOUT)
 			{
 				HandlerRespond  hresp = HandlerRespond(*(Client *)(events[i].data.ptr), *this);
 				hresp.respond();
 			}
-			else
-				throw std::runtime_error("how did we get here?");
 		}
 		this->sendersToEpollOut();
 	}
