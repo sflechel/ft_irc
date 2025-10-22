@@ -70,14 +70,11 @@ void	Client::setResponse(std::string response)
 {
 	this->_response = response;
 }
-#include <iostream>
+
 void	Client::addResponse(std::string response)
 {
 	if (this->_response.empty() && !response.empty())
-	{
-		std::cout << "sending\n";
 		_server.addSender(this);
-	}
 	this->_response += response;
 }
 
