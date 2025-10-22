@@ -3,10 +3,12 @@
 
 # include <string>
 
-class Client
+class	Server;
+
+class	Client
 {
 	public:
-		Client(int fd);
+		Client(int fd, Server& server);
 		~Client(void);
 
 		int			getFd(void) const;
@@ -37,8 +39,7 @@ class Client
 		std::string		_nickname;
 		std::string		_username;
 		std::string		_realname;
-
-		Client(void)	{}
+		Server&			_server;		
 };
 
 #endif // !CLIENT_HPP

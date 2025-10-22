@@ -10,7 +10,6 @@
 # include <netinet/in.h>
 # include <string>
 # include "Client.hpp"
-# include <vector>
 # include <map>
 
 class Server
@@ -20,20 +19,25 @@ class Server
 		~Server();
 		void		poll_events(void);
 
-		std::string	getPassword(void) const;
 		void		updateNickname(Client* client, std::string new_nickname);
 		void		createChannel(std::string name, Client& user);
 		void		registerClient(Client* client, std::string nickname);
 		void		removeClient(std::string nickname);
-		void		removeNewClient(int index);
-		void		forceQuitClient(Client* Client);
+		void		removeNewClient(Client* client);
+		void		forceQuitClient(Client* client);
+		void		sendersToEpollOut(void);
+		void		addSender(Client* client);
+		void		removeSender(Client* client);
 
+		std::string							getPassword(void) const;
 		std::string							getName(void) const;
 		Client*								getClient(std::string nickname);
-		std::vector<Client*>&				getNewClients(void);
+		std::set<Client*>&					getNewClients(void);
 		std::map<std::string, Client*>&		getClients(void);
 		Channel*							getChannel(std::string name);
 		std::map<std::string, Channel*>&	getChannels(void);
+		int									getMasterSocket(void) const;
+		int									getEpollFd(void) const;
 
 	private:
 		int								_master_socket;
@@ -41,10 +45,11 @@ class Server
 		std::string						_password;
 		struct sockaddr_in				_master_socket_address;
 		unsigned int					_master_socket_address_len;
-		std::vector<Client*>			_new_clients;
+		std::set<Client*>				_new_clients;
 		std::map<std::string, Client*>	_clients;
 		std::map<std::string, Channel*>	_channels;
 		std::string						_name;
+		std::set<Client*>				_senders;
 
 		void	setup_master_socket(std::string port);
 		void	setup_poll(void);

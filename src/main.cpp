@@ -1,6 +1,7 @@
 #include "Server.hpp"
 #include <csignal>
 #include <cstdlib>
+#include <exception>
 #include <stdexcept>
 #include <iostream>
 #include <signal.h>
@@ -46,7 +47,7 @@ int	main(int ac, char **av)
 		setSignalHandler();
 		Server server = Server(port, password);
 		server.poll_events();
-	} catch (std::runtime_error &e) {
+	} catch (std::exception& e) {
 		std::cerr << e.what() << std::endl;
 	}
 	return (0);

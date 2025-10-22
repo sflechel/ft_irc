@@ -1,7 +1,5 @@
 #include "commands/Quit.hpp"
 #include "Command.hpp"
-#include <cstddef>
-#include <iterator>
 #include <string>
 #include <vector>
 
@@ -16,8 +14,7 @@ void	Quit::enactCommand(void)
 
 	if (_user.getNickname().empty())
 	{
-		std::ptrdiff_t  index = std::distance(*_server.getNewClients().data(), &_user);
-		_server.removeNewClient(index);
+		_server.removeNewClient(&_user);
 	}
 	else
 		_server.removeClient(_user.getNickname());

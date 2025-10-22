@@ -1,20 +1,20 @@
 #ifndef HANDLERCONNECTION_HPP
 # define HANDLERCONNECTION_HPP
 
-# include <Client.hpp>
-# include <vector>
+# include "Client.hpp"
+# include <set>
 
 class HandlerConnection
 {
 	public:
-		HandlerConnection(int masterSock);
+		HandlerConnection(Server& server);
 		~HandlerConnection();
 
 		Client*	acceptConnection();
-		void	registerClient(Client* newClient, std::vector<Client*>& listClients, int epollfd);
+		void	registerClient(Client* newClient, std::set<Client*>& listClients, int epollfd);
 
 	private:
-		int	_masterSock;
+		Server&	_server;
 
 };
 

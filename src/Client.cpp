@@ -1,5 +1,5 @@
 #include "Client.hpp"
-#include <iostream>
+#include "Server.hpp"
 #include <string>
 #include <unistd.h>
 
@@ -70,9 +70,14 @@ void	Client::setResponse(std::string response)
 {
 	this->_response = response;
 }
-
+#include <iostream>
 void	Client::addResponse(std::string response)
 {
+	if (this->_response.empty() && !response.empty())
+	{
+		std::cout << "sending\n";
+		_server.addSender(this);
+	}
 	this->_response += response;
 }
 
@@ -81,7 +86,7 @@ void	Client::setRequest(std::string request)
 	this->_request = request;
 }
 
-Client::Client(int fd) : _fd(fd)
+Client::Client(int fd, Server& server) : _fd(fd), _server(server)
 {
 	_nickname = std::string();
 	_username = std::string();

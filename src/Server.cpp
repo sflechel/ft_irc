@@ -1,8 +1,10 @@
 #include "Server.hpp"
-#include <algorithm>
 #include <asm-generic/socket.h>
+#include <csetjmp>
 #include <cstddef>
 #include <map>
+#include <new>
+#include <set>
 #include <stdexcept>
 #include <string>
 #include <sys/socket.h>
@@ -13,7 +15,6 @@
 #include <fcntl.h>
 #include <sys/epoll.h>
 #include <utility>
-#include <vector>
 #include "Channel.hpp"
 #include "Client.hpp"
 #include "HandlerConnection.hpp"
@@ -39,7 +40,7 @@ void	Server::poll_events()
 		{
 			if (events[i].data.fd == _master_socket)
 			{
-				HandlerConnection hconn = HandlerConnection(_master_socket);
+				HandlerConnection hconn = HandlerConnection(*this);
 				Client*	newClient = hconn.acceptConnection();
 				hconn.registerClient(newClient, _new_clients, _epollfd);
 			}
@@ -56,12 +57,13 @@ void	Server::poll_events()
 			}
 			else if (events[i].events & EPOLLOUT)
 			{
-				HandlerRespond  hresp = HandlerRespond(*(Client *)(events[i].data.ptr));
+				HandlerRespond  hresp = HandlerRespond(*(Client *)(events[i].data.ptr), *this);
 				hresp.respond();
 			}
 			else
 				throw std::runtime_error("how did we get here?");
 		}
+		this->sendersToEpollOut();
 	}
 }
 
@@ -124,6 +126,35 @@ void	Server::setup_master_socket(std::string port)
 		throw  std::runtime_error("failed to change socket to non-blocking");
 }
 
+void	Server::sendersToEpollOut(void)
+{
+	struct epoll_event			poll_opts;
+	std::set<Client*>::iterator	it;
+
+	for (it = _senders.begin() ; it != _senders.end() ; it++)
+	{
+		Client*	client = *it;
+		poll_opts.events = EPOLLIN | EPOLLOUT;
+		int conn_fd = client->getFd();
+		poll_opts.data.fd = conn_fd;
+		poll_opts.data.ptr = client;
+		if (epoll_ctl(_epollfd, EPOLL_CTL_MOD, conn_fd, &poll_opts) == -1)
+			throw std::runtime_error("failed to change client fd to listening out");
+	}
+}
+
+void	Server::addSender(Client* client)
+{
+	_senders.insert(client);
+}
+
+void	Server::removeSender(Client* client)
+{
+	std::set<Client*>::iterator	it = _senders.find(client);
+	if (it != _senders.end())
+		_senders.erase(it);
+}
+
 Server::Server(std::string port, std::string password) : _password(password), _name("IrcTestServer")
 {
 	setup_master_socket(port);
@@ -136,22 +167,25 @@ void	Server::forceQuitClient(Client* client)
 		return;
 	std::string	nickname = client->getNickname();
 	if (nickname.empty())
-	{
-		std::ptrdiff_t  index = std::distance(*this->getNewClients().data(), client);
-		removeNewClient(index);
-	}
+		removeNewClient(client);
 	else
 		removeClient(nickname);
 }
 
-void	Server::removeNewClient(int index)
+void	Server::removeNewClient(Client* client)
 {
-	std::vector<Client*>::iterator   it;
+	std::set<Client*>::iterator   it = _new_clients.find(client);
 
-	it = _new_clients.begin() + index;
-	delete _new_clients.at(index);
+	if (it == _new_clients.end())
+		return;
+	delete *it;
 	_new_clients.erase(it);
 	std::cout << "Client quit\n";
+
+	it = _senders.find(client);
+	if (it == _senders.end())
+		return;
+	_senders.erase(it);
 }
 
 void	Server::removeClient(std::string nickname)
@@ -161,22 +195,33 @@ void	Server::removeClient(std::string nickname)
 	Client*	client = this->getClient(nickname);
 	for (it = channels.begin() ; it != channels.end() ; it++)
 	{
-		std::string		name = it->second->getName();
-		std::string		msg = ":" + nickname + " PART " + name + "\r\n";
-		client->addResponse(msg);
-		it->second->sendChannelMessage(msg, *client);
+		if (it->second->isUserInChannel(nickname))
+		{
+			std::string		name = it->second->getName();
+			std::string		msg = ":" + nickname + " PART " + name + "\r\n";
+			client->addResponse(msg);
+			it->second->sendChannelMessage(msg, *client);
+		}
 		it->second->leave(client->getNickname());
 	}
 	delete _clients.at(nickname);
 	_clients.erase(nickname);
 	std::cout << "Client quit\n";
+
+
+	std::set<Client*>::iterator	iter = _senders.find(client);
+	if (iter == _senders.end())
+		return;
+	_senders.erase(iter);
 }
 
 void	Server::registerClient(Client* client, std::string nickname)
 {
 	std::pair<std::string, Client*> pair(nickname, client);
 	client->setNickname(nickname);
-	std::vector<Client*>::iterator it = std::find(_new_clients.begin(), _new_clients.end(), client);
+	std::set<Client*>::iterator it = _new_clients.find(client);
+	if (it == _new_clients.end())
+		return;
 	_new_clients.erase(it);
 	_clients.insert(pair);
 }
@@ -198,8 +243,8 @@ void	Server::updateNickname(Client* client, std::string new_nickname)
 
 Server::~Server()
 {
-	for (size_t i = 0 ; i < _new_clients.size() ; i++)
-		delete _new_clients.at(i);
+	for (std::set<Client*>::iterator it = _new_clients.begin() ; it != _new_clients.end() ; it++)
+		delete *it;
 	for (std::map<std::string, Client*>::iterator it = _clients.begin(); it != _clients.end(); it++)
 		delete it->second;
 	for (std::map<std::string, Channel*>::iterator it = _channels.begin(); it != _channels.end(); it++)
@@ -239,7 +284,17 @@ Channel*	Server::getChannel(std::string name)
 	return (it->second);
 }
 
-std::vector<Client*>&	Server::getNewClients(void)
+std::set<Client*>&	Server::getNewClients(void)
 {
 	return (_new_clients);
+}
+
+int	Server::getMasterSocket(void) const
+{
+	return _master_socket;
+}
+
+int	Server::getEpollFd(void) const
+{
+	return _epollfd;
 }

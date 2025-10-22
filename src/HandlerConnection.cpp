@@ -5,9 +5,9 @@
 #include <stdexcept>
 #include <sys/socket.h>
 #include <sys/epoll.h>
-#include <vector>
+#include "Server.hpp"
 
-HandlerConnection::HandlerConnection(int masterSock) : _masterSock(masterSock)
+HandlerConnection::HandlerConnection(Server& server) : _server(server)
 {
 }
 
@@ -17,7 +17,7 @@ Client*	HandlerConnection::acceptConnection()
 	socklen_t		len_addr = 0;
 	int				conn_fd;
 
-	conn_fd = accept(this->_masterSock, &addr, &len_addr);
+	conn_fd = accept(_server.getMasterSocket(), &addr, &len_addr);
 	if (conn_fd == -1)
 		throw std::runtime_error("failed to accept connection");
 
@@ -26,16 +26,16 @@ Client*	HandlerConnection::acceptConnection()
 
 	std::cout << "Client connected\n";
 
-	Client* output = new Client(conn_fd);
+	Client* output = new Client(conn_fd, _server);
 	return (output);
 }
 
-void	HandlerConnection::registerClient(Client* newClient, std::vector<Client*>& listClients, int epollfd)
+void	HandlerConnection::registerClient(Client* newClient, std::set<Client*>& listClients, int epollfd)
 {
 	struct epoll_event  poll_opts;
 
-	listClients.push_back(newClient);
-	poll_opts.events = EPOLLIN | EPOLLOUT;
+	listClients.insert(newClient);
+	poll_opts.events = EPOLLIN;
 	int conn_fd = newClient->getFd();
 	poll_opts.data.fd = conn_fd;
 	poll_opts.data.ptr = newClient;
