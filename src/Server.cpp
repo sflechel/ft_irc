@@ -234,10 +234,28 @@ void	Server::createChannel(std::string name, Client& user)
 
 void	Server::updateNickname(Client* client, std::string new_nickname)
 {
+	std::string	old_nickname = client->getNickname();
+	std::map<std::string, Channel*>::iterator   it;
+	for (it = _channels.begin() ; it != _channels.end() ; it++)
+	{
+		if (it->second->isUserInChannel(old_nickname))
+		{
+			std::string		name = it->second->getName();
+			std::string		msg = ":" + old_nickname + " NICK " + new_nickname + "\r\n";
+			client->addResponse(msg);
+			it->second->sendChannelMessage(msg, *client);
+			it->second->updateNickname(old_nickname, new_nickname);
+		}
+		if (it->second->isUserInvited(old_nickname))
+			it->second->updateNicknameInvited(old_nickname, new_nickname);
+		it->second->leave(client->getNickname());
+	}
+
 	_clients.erase(client->getNickname());
 	client->setNickname(new_nickname);
 	std::pair<std::string, Client*> pair(new_nickname, client);
 	_clients.insert(pair);
+
 }
 
 Server::~Server()

@@ -35,6 +35,23 @@ void	Channel::sendChannelMessage(const std::string& message, const Client& sende
 	}
 }
 
+void	Channel::updateNicknameInvited(const std::string& old_nickname, const std::string& new_nickname)
+{
+	_invited.erase(old_nickname);
+	_invited.insert(new_nickname);
+}
+
+void	Channel::updateNickname(const std::string& old_nickname, const std::string& new_nickname)
+{
+	_users.erase(old_nickname);
+	_users.insert(new_nickname);
+	if (this->isUserOp(old_nickname))
+	{
+		_operators.erase(old_nickname);
+		_operators.insert(new_nickname);
+	}
+}
+
 void	Channel::removeOp(const std::string& nickname)
 {
 	_operators.erase(nickname);
