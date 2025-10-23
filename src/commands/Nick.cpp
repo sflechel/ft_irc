@@ -26,7 +26,7 @@ void	Nick::enactCommand(void)
 		}
 	}
 	else
-		_server.updateNickname(&_user, _params.at(0));//TODO when updating nick, update also channels
+		_server.updateNickname(&_user, _params.at(0));
 }
 
 Nick::~Nick(void)

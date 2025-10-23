@@ -90,7 +90,7 @@ void	Server::setup_master_socket(std::string port)
 	hints.ai_socktype = SOCK_STREAM;
 	hints.ai_flags = AI_PASSIVE;
 
-	if (getaddrinfo(NULL, port.c_str(), &hints, &server_info) != 0)//TODO fix port/service TODO be more error specific
+	if (getaddrinfo(NULL, port.c_str(), &hints, &server_info) != 0)
 		throw std::runtime_error("could not get addr info");
 
 	for (iter = server_info ; iter != NULL ; iter = iter->ai_next)
@@ -114,7 +114,7 @@ void	Server::setup_master_socket(std::string port)
 		freeaddrinfo(server_info);
 		throw std::runtime_error("failed to find working address");
 	}
-	this->_master_socket_address = *(struct sockaddr_in *)iter;//TODO fix casts
+	this->_master_socket_address = *(struct sockaddr_in *)iter;
 	this->_master_socket_address_len = iter->ai_addrlen;
 	this->_master_socket = sockfd;
 
