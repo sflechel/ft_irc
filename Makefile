@@ -81,9 +81,11 @@ $(OBJ_DIR)%.o:$(SRC_DIR)%.cpp  Makefile
 
 clean:
 	rm -rf $(OBJ_DIR)
+	@$(MAKE) -C bot clean
 
 fclean:
-	rm -rf $(OBJ_DIR) $(NAME)
+	rm -rf $(OBJ_DIR) $(NAME) smallbot
+	@$(MAKE) -C bot fclean
 
 bonus:
 	$(MAKE) -C bot/

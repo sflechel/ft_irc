@@ -1,4 +1,4 @@
-NAME = bot
+NAME = smallbot
 CXX = c++
 CXXFLAGS = -Wall -Wextra -Werror -g3 -std=c++98 -MMD -MP
 
@@ -38,6 +38,7 @@ all: $(NAME)
 
 $(NAME): $(OBJ)
 	$(CXX) $(CXXFLAGS) $(OBJ) -o $(NAME)
+	cp $(NAME) ..
 
 $(OBJ_DIR)%.o:$(SRC_DIR)%.cpp  Makefile
 	@mkdir -p $(dir $@)
