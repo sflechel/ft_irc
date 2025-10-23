@@ -81,10 +81,13 @@ clean:
 fclean:
 	rm -rf $(OBJ_DIR) $(NAME)
 
+bonus:
+	$(MAKE) -C bot/
+
 re:
 	$(MAKE) fclean
 	$(MAKE) all
 
-.PHONY: all clean fclean re
+.PHONY: all clean fclean re bonus
 
 -include $(DEP)
