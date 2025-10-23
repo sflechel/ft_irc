@@ -32,12 +32,18 @@ void	Server::poll_events()
 
 	while (g_signum != SIGINT)
 	{
-		nb_fds = epoll_wait(_epollfd, events, MAX_EVENTS, 0);
+		std::cerr << "loop" << std::endl;
+		nb_fds = epoll_wait(_epollfd, events, MAX_EVENTS, 5000);
 		if (nb_fds == -1)
 			throw std::runtime_error("epoll failed");
 
 		for (int i = 0 ; i < nb_fds ; i++)
 		{
+			if (events[i].events & (EPOLLERR | EPOLLHUP))
+			{
+				this->forceQuitClient((Client*)events[i].data.ptr);
+				continue;
+			}
 			if (events[i].data.fd == _master_socket)
 			{
 				HandlerConnection hconn = HandlerConnection(*this);
@@ -47,7 +53,7 @@ void	Server::poll_events()
 			}
 			if (events[i].events & EPOLLIN)
 			{
-				HandlerReceive	hrecv = HandlerReceive(*(Client *)(events[i].data.ptr), *this);
+				HandlerReceive	hrecv = HandlerReceive(*(Client*)(events[i].data.ptr), *this);
 				if (hrecv.readClientRequest() <= 0)
 				{
 					this->forceQuitClient((Client*)events[i].data.ptr);
@@ -58,7 +64,7 @@ void	Server::poll_events()
 			}
 			if (events[i].events & EPOLLOUT)
 			{
-				HandlerRespond  hresp = HandlerRespond(*(Client *)(events[i].data.ptr), *this);
+				HandlerRespond  hresp = HandlerRespond(*(Client*)(events[i].data.ptr), *this);
 				hresp.respond();
 			}
 		}
@@ -114,7 +120,7 @@ void	Server::setup_master_socket(std::string port)
 		freeaddrinfo(server_info);
 		throw std::runtime_error("failed to find working address");
 	}
-	this->_master_socket_address = *(struct sockaddr_in *)iter;//TODO fix casts
+	this->_master_socket_address = *(struct sockaddr_in*)iter;//TODO fix casts
 	this->_master_socket_address_len = iter->ai_addrlen;
 	this->_master_socket = sockfd;
 
