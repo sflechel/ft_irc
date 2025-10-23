@@ -10,7 +10,11 @@ OBJ_DIR = obj/
 #__src__
 SRC_FILES = \
 	main.cpp\
-	Server.cpp\
+	server/Server.cpp\
+	server/getters.cpp\
+	server/main_loop.cpp\
+	server/setters.cpp\
+	server/setup.cpp\
 	HandlerConnection.cpp\
 	HandlerReceive.cpp\
 	HandlerRespond.cpp\
