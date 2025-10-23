@@ -1,8 +1,6 @@
 #include <string>
 #include <vector>
 #include "Command.hpp"
-#include "PrivMsg.hpp"
-#include "Invite.hpp"
 
 # define READ_BUFFER_SIZE 10000
 
