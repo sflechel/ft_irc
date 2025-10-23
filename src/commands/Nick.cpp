@@ -1,5 +1,6 @@
 #include "commands/Nick.hpp"
 #include "Command.hpp"
+#include "ResponseBuilder.hpp"
 #include <cstddef>
 #include <string>
 #include <vector>
@@ -13,6 +14,10 @@ void	Nick::enactCommand(void)
 		_user.addResponse(_respbldr.buildResponseNum(_cmd_name, ERR_NOPASSWD));
 	else if (_params.size() != 1 || _params.at(0).empty())
 		_user.addResponse(_respbldr.buildResponseNum(_cmd_name, ERR_NONICKNAMEGIVEN));
+	else if (_params.at(0).at(0) == '#'
+			|| _params.at(0).at(0) == '@'
+			|| _params.at(0).find(':') != std::string::npos)
+		_user.addResponse(_respbldr.buildResponseNum(_params.at(0), ERR_ERRONEUSNICKNAME));
 	else if (_server.getClient(_params.at(0)) != NULL)
 		_user.addResponse(_respbldr.buildResponseNum(_params.at(0), ERR_NICKNAMEINUSE));
 	else if (_user.getNickname().empty())

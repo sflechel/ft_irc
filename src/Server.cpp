@@ -32,12 +32,18 @@ void	Server::poll_events()
 
 	while (g_signum != SIGINT)
 	{
-		nb_fds = epoll_wait(_epollfd, events, MAX_EVENTS, 0);
+		std::cerr << "loop" << std::endl;
+		nb_fds = epoll_wait(_epollfd, events, MAX_EVENTS, 5000);
 		if (nb_fds == -1)
 			throw std::runtime_error("epoll failed");
 
 		for (int i = 0 ; i < nb_fds ; i++)
 		{
+			if (events[i].events & (EPOLLERR | EPOLLHUP))
+			{
+				this->forceQuitClient((Client*)events[i].data.ptr);
+				continue;
+			}
 			if (events[i].data.fd == _master_socket)
 			{
 				HandlerConnection hconn = HandlerConnection(*this);
@@ -47,7 +53,7 @@ void	Server::poll_events()
 			}
 			if (events[i].events & EPOLLIN)
 			{
-				HandlerReceive	hrecv = HandlerReceive(*(Client *)(events[i].data.ptr), *this);
+				HandlerReceive	hrecv = HandlerReceive(*(Client*)(events[i].data.ptr), *this);
 				if (hrecv.readClientRequest() <= 0)
 				{
 					this->forceQuitClient((Client*)events[i].data.ptr);
@@ -58,7 +64,7 @@ void	Server::poll_events()
 			}
 			if (events[i].events & EPOLLOUT)
 			{
-				HandlerRespond  hresp = HandlerRespond(*(Client *)(events[i].data.ptr), *this);
+				HandlerRespond  hresp = HandlerRespond(*(Client*)(events[i].data.ptr), *this);
 				hresp.respond();
 			}
 		}
@@ -114,7 +120,7 @@ void	Server::setup_master_socket(std::string port)
 		freeaddrinfo(server_info);
 		throw std::runtime_error("failed to find working address");
 	}
-	this->_master_socket_address = *(struct sockaddr_in *)iter;
+	this->_master_socket_address = *(struct sockaddr_in*)iter;
 	this->_master_socket_address_len = iter->ai_addrlen;
 	this->_master_socket = sockfd;
 
@@ -234,10 +240,28 @@ void	Server::createChannel(std::string name, Client& user)
 
 void	Server::updateNickname(Client* client, std::string new_nickname)
 {
+	std::string	old_nickname = client->getNickname();
+	std::map<std::string, Channel*>::iterator   it;
+	for (it = _channels.begin() ; it != _channels.end() ; it++)
+	{
+		if (it->second->isUserInChannel(old_nickname))
+		{
+			std::string		name = it->second->getName();
+			std::string		msg = ":" + old_nickname + " NICK " + new_nickname + "\r\n";
+			client->addResponse(msg);
+			it->second->sendChannelMessage(msg, *client);
+			it->second->updateNickname(old_nickname, new_nickname);
+		}
+		if (it->second->isUserInvited(old_nickname))
+			it->second->updateNicknameInvited(old_nickname, new_nickname);
+		it->second->leave(client->getNickname());
+	}
+
 	_clients.erase(client->getNickname());
 	client->setNickname(new_nickname);
 	std::pair<std::string, Client*> pair(new_nickname, client);
 	_clients.insert(pair);
+
 }
 
 Server::~Server()

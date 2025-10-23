@@ -23,6 +23,8 @@ class Channel
 		void	removeOp(const std::string& nickname);
 		void	addOp(const std::string& nickname);
 		void	addInvited(const std::string& nickname);
+		void	updateNickname(const std::string& old_nickname, const std::string& new_nickname);
+		void	updateNicknameInvited(const std::string& old_nickname, const std::string& new_nickname);
 
 		void					setIsInviteOnly(const bool flag);
 		void					setIsTopicRestricted(const bool flag);
