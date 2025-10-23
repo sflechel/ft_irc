@@ -14,7 +14,9 @@
 extern volatile sig_atomic_t g_signum;
 
 Bot::Bot(int port, std::string password, std::string nickname)
-    : _port(port), _password(password), _nickname(nickname) 
+    : _port(port),
+	_password(password),
+	_nickname(nickname)
 {
 	struct sockaddr_in addr;
 	const char *ip = "127.0.0.1";
@@ -30,7 +32,7 @@ Bot::Bot(int port, std::string password, std::string nickname)
 		throw std::runtime_error("Failed to connect to server host");
 }
 
-void Bot::receivePacket(void) 
+void Bot::receivePacket(void)
 {
 	char buffer[READ_BUFFER_SIZE + 1];
 	int bytes_read = READ_BUFFER_SIZE;
@@ -66,7 +68,8 @@ void Bot::splitPacketToCmds(void)
 
 void Bot::parseCmdParams(std::string &input, std::string &sender, std::vector<std::string> &params)
 {
-	if (input.find(':') == 0) {
+	if (input.find(':') == 0)
+	{
 		size_t first_space = input.find(' ');
 		if (first_space == std::string::npos)
 			return;
@@ -77,7 +80,8 @@ void Bot::parseCmdParams(std::string &input, std::string &sender, std::vector<st
 	std::string last_param;
 	bool has_last_param = false;
 	size_t colon_pos = input.find(':');
-	if (colon_pos != std::string::npos) {
+	if (colon_pos != std::string::npos)
+	{
 		last_param = input.substr(colon_pos + 1, std::string::npos);
 		input = input.substr(0, colon_pos);
 		has_last_param = true;
@@ -93,8 +97,10 @@ void Bot::parseCmdParams(std::string &input, std::string &sender, std::vector<st
 		params.push_back(last_param);
 }
 
-void Bot::execCmds(void) {
-	for (size_t i = 0; i < _cmd_strings.size(); i++) {
+void Bot::execCmds(void)
+{
+	for (size_t i = 0; i < _cmd_strings.size(); i++)
+	{
 		std::vector<std::string> params;
 		std::string sender;
 		parseCmdParams(_cmd_strings[i], sender, params);
@@ -120,19 +126,18 @@ void Bot::execCmds(void) {
 	_cmds.erase(_cmds.begin(), _cmds.end());
 }
 
-void Bot::run(void) 
+void Bot::run(void)
 {
 	std::string response = "PASS " + _password + "\r\n";
 	response += "USER bot bot bot bot\r\n";
 	response += "NICK " + _nickname + "\r\n";
 	send(_socket, response.c_str(), response.size(), 0);
 	this->receivePacket();
-	std::cout << _packet << "\n";
-
 	if (_packet.find("001") == std::string::npos)
 		throw std::runtime_error("could not register to server");
 
-	while (g_signum != SIGINT) {
+	while (g_signum != SIGINT)
+	{
 		this->receivePacket();
 		this->splitPacketToCmds();
 		this->execCmds();
