@@ -15,7 +15,7 @@ void	PrivMsg::enactCommand(void)
 	else
 	{
 		const std::string&	target = _params.at(0);
-		const std::string	message_response = ":" + _user.getNickname() + " " + _cmd_name + " " + _params.at(0) + " " + _params.at(1) + "\r\n";
+		const std::string	message_response = ":" + _user.getNickname() + " " + _cmd_name + " " + _params.at(0) + " :" + _params.at(1) + "\r\n";
 
 		if (target[0] == '#')
 		{

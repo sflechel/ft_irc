@@ -20,7 +20,7 @@ void	setSignalHandler(void)
 	if (sigemptyset(&sigset.sa_mask) == -1)
 		throw std::runtime_error("failed to empty signal mask");
 	sigaddset(&sigset.sa_mask, SIGINT);
-	sigset.sa_flags = SA_RESTART;
+	sigset.sa_flags = 0;
 	sigset.sa_handler = &signalHandler;
 	sigaction(SIGINT, &sigset, 0);
 }

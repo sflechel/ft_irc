@@ -70,7 +70,7 @@ void Bot::parseCmdParams(std::string &input, std::string &sender, std::vector<st
 		size_t first_space = input.find(' ');
 		if (first_space == std::string::npos)
 			return;
-		sender = input.substr(0, first_space);
+		sender = input.substr(1, first_space);
 		input = input.substr(first_space + 1, std::string::npos);
 	}
 

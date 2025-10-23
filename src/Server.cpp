@@ -32,7 +32,6 @@ void	Server::poll_events()
 
 	while (g_signum != SIGINT)
 	{
-		std::cerr << "loop" << std::endl;
 		nb_fds = epoll_wait(_epollfd, events, MAX_EVENTS, 5000);
 		if (nb_fds == -1)
 			throw std::runtime_error("epoll failed");
