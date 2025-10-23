@@ -17,18 +17,21 @@ class Server
 	public:
 		Server(std::string port, std::string password);
 		~Server();
+		//main loop
 		void		poll_events(void);
+		void		sendersToEpollOut(void);
+		void		addSender(Client* client);
+		void		removeSender(Client* client);
 
+		//setters
 		void		updateNickname(Client* client, std::string new_nickname);
 		void		createChannel(std::string name, Client& user);
 		void		registerClient(Client* client, std::string nickname);
 		void		removeClient(std::string nickname);
 		void		removeNewClient(Client* client);
 		void		forceQuitClient(Client* client);
-		void		sendersToEpollOut(void);
-		void		addSender(Client* client);
-		void		removeSender(Client* client);
 
+		//getters
 		std::string							getPassword(void) const;
 		std::string							getName(void) const;
 		Client*								getClient(std::string nickname);
@@ -51,6 +54,7 @@ class Server
 		std::string						_name;
 		std::set<Client*>				_senders;
 
+		//setup
 		void	setup_master_socket(std::string port);
 		void	setup_poll(void);
 
