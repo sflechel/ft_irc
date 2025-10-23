@@ -1,7 +1,7 @@
 #include "Server.hpp"
 #include <csignal>
 
-Server::Server(std::string port, std::string password) : _password(password), _name("IrcTestServer")
+Server::Server(std::string port, std::string password) : _password(password), _name("cIRCussy")
 {
 	setup_master_socket(port);
 	setup_poll();

@@ -17,6 +17,7 @@ class Server
 	public:
 		Server(std::string port, std::string password);
 		~Server();
+
 		//main loop
 		void		poll_events(void);
 		void		sendersToEpollOut(void);
