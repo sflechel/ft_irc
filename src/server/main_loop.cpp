@@ -8,6 +8,7 @@
 
 extern volatile sig_atomic_t	g_signum;
 
+#include <iostream>
 void	Server::poll_events()
 {
 	struct epoll_event	events[MAX_EVENTS];
@@ -36,7 +37,7 @@ void	Server::poll_events()
 			if (events[i].events & EPOLLIN)
 			{
 				HandlerReceive	hrecv = HandlerReceive(*(Client*)(events[i].data.ptr), *this);
-				if (hrecv.readClientRequest() <= 0)
+				if (hrecv.readClientRequest() < 0)
 				{
 					this->forceQuitClient((Client*)events[i].data.ptr);
 					continue;

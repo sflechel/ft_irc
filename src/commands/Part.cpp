@@ -23,7 +23,7 @@ void	Part::enactCommand(void)
 
 	if (!_user.getIsRegistered())
 		_user.addResponse(_respbldr.buildResponseNum("", ERR_NOTREGISTERED));
-	else if (size != 1 && size != 2)
+	else if (size != 1)
 		_user.addResponse(_respbldr.buildResponseNum(_cmd_name, ERR_NEEDMOREPARAMS));
 	else
 	{

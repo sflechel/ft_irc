@@ -52,14 +52,18 @@ void	Join::leaveAllChannels(void)
 {
 	std::map<std::string, Channel*>  channels = _server.getChannels();
 	std::map<std::string, Channel*>::iterator   it;
+	std::string	nickname = _user.getNickname();
 
 	for (it = channels.begin() ; it != channels.end() ; it++)
 	{
-		std::string		name = it->second->getName();
-		std::string		msg = ":" + _user.getNickname() + " PART " + name + "\r\n";
-		_user.addResponse(msg);
-		it->second->sendChannelMessage(msg, _user);
-		it->second->leave(_user.getNickname());
+		if (it->second->isUserInChannel(nickname))
+		{
+			std::string		name = it->second->getName();
+			std::string		msg = ":" + nickname + " PART " + name + "\r\n";
+			_user.addResponse(msg);
+			it->second->sendChannelMessage(msg, _user);
+			it->second->leave(nickname);
+		}
 	}
 }
 

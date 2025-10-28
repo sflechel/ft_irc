@@ -20,21 +20,24 @@
 
 int HandlerReceive::readClientRequest()
 {
+	const unsigned int	READ_BUFFER_SIZE = 3;
 	std::string new_request;
 	char read_buffer[READ_BUFFER_SIZE + 1];
 	int bytes_read = READ_BUFFER_SIZE;
 	int client_fd = _client.getFd();
+	bool	is_first_read = true;
 
 	read_buffer[0] = 0;
 	while (bytes_read == READ_BUFFER_SIZE)
 	{
 		bytes_read = recv(client_fd, read_buffer, READ_BUFFER_SIZE, 0);
-		if (bytes_read < 0)
+		if (bytes_read <= 0 && is_first_read)
 			return -1;
-		if (bytes_read == 0)
+		if (bytes_read <= 0 && !is_first_read)
 			return 0;
 		read_buffer[bytes_read] = 0;
 		new_request += read_buffer;
+		is_first_read = false;
 	}
 	_client.setRequest(_client.getRequest() + new_request);
 	return 1;

@@ -3,7 +3,6 @@
 #include "Command.hpp"
 #include <string>
 #include <vector>
-#include <iostream>
 
 Topic::Topic(Server& server, Client& user, std::string cmd_name, std::vector<std::string> params) : Command(server, user, cmd_name, params)
 {}
@@ -11,7 +10,7 @@ Topic::Topic(Server& server, Client& user, std::string cmd_name, std::vector<std
 void	Topic::enactCommand(void)
 {
 	int size = _params.size();
-	if (size < 1 || size > 2)
+	if (size != 2)
 		_user.addResponse(_respbldr.buildResponseNum(_cmd_name, ERR_NEEDMOREPARAMS));
 	else if (!_user.getIsRegistered())
 		_user.addResponse(_respbldr.buildResponseNum("", ERR_NOTREGISTERED));

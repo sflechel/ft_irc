@@ -1,6 +1,7 @@
 #include "commands/PrivMsg.hpp"
 #include "Channel.hpp"
 #include "Client.hpp"
+#include "ResponseBuilder.hpp"
 #include <unistd.h>
 
 PrivMsg::PrivMsg(Server& server, Client& user, std::string cmd_name, std::vector<std::string> params) : Command(server, user, cmd_name, params)
@@ -22,10 +23,10 @@ void	PrivMsg::enactCommand(void)
 			Channel* channel = _server.getChannel(target);
 			if (channel == NULL)
 				_user.addResponse(_respbldr.buildResponseNum(target, ERR_NOSUCHCHANNEL));
+			else if (!channel->isUserInChannel(_user.getNickname()))
+				_user.addResponse(_respbldr.buildResponseNum(target, ERR_NOTONCHANNEL));
 			else
-			{
 				channel->sendChannelMessage(message_response, _user);
-			}
 		}
 		else
 		{

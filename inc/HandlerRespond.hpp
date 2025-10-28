@@ -1,8 +1,6 @@
 #ifndef HANDLER_RESPOND_HPP
 # define HANDLER_RESPOND_HPP
 
-# define READ_BUFFER_SIZE 1024
-
 # include "Client.hpp"
 # include "Server.hpp"
 

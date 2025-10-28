@@ -1,9 +1,7 @@
 #ifndef HANDLER_RECEIVE_HPP
 # define HANDLER_RECEIVE_HPP
 
-#include <vector>
-# define READ_BUFFER_SIZE 1024
-
+# include <vector>
 # include "Client.hpp"
 # include "Command.hpp"
 # include "Server.hpp"

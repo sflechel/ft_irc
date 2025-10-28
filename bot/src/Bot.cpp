@@ -4,7 +4,6 @@
 #include <arpa/inet.h>
 #include <csignal>
 #include <cstddef>
-#include <iostream>
 #include <netinet/in.h>
 #include <sstream>
 #include <stdexcept>
@@ -29,18 +28,22 @@ Bot::Bot(int port, std::string password, std::string nickname)
 	addr.sin_addr.s_addr = inet_addr(ip);
 	addr.sin_port = htons(_port);
 	if (connect(_socket, (struct sockaddr *)&addr, sizeof(addr)) < 0)
+	{
+		close(_socket);
 		throw std::runtime_error("Failed to connect to server host");
+	}
 }
 
 void Bot::receivePacket(void)
 {
+	const unsigned int READ_BUFFER_SIZE = 1024;
 	char buffer[READ_BUFFER_SIZE + 1];
 	int bytes_read = READ_BUFFER_SIZE;
 
 	while (bytes_read == READ_BUFFER_SIZE)
 	{
 		bytes_read = recv(_socket, buffer, READ_BUFFER_SIZE, 0);
-		if (bytes_read < 0)
+		if (bytes_read <= 0)
 			throw std::runtime_error("Disconnected from server host");
 		buffer[bytes_read] = 0;
 		_packet += std::string(buffer);
@@ -149,3 +152,4 @@ std::string Bot::getNickname(void) const { return _nickname; }
 std::string Bot::getPassword(void) const { return _password; }
 
 Bot::~Bot(void) { close(_socket); }
+

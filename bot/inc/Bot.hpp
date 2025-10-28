@@ -2,8 +2,6 @@
 #include <vector>
 #include "Command.hpp"
 
-# define READ_BUFFER_SIZE 10000
-
 class Bot
 {
 	public:
