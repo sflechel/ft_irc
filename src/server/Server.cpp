@@ -1,7 +1,7 @@
 #include "Server.hpp"
 #include <csignal>
 
-Server::Server(std::string password) : _password(password), _name("cIRCussy")
+Server::Server(std::string password) : _master_socket(-1), _epollfd(-1), _password(password), _name("cIRCussy")
 {}
 
 Server::~Server()
@@ -12,6 +12,8 @@ Server::~Server()
 		delete it->second;
 	for (std::map<std::string, Channel*>::iterator it = _channels.begin(); it != _channels.end(); it++)
 		delete it->second;
-	close(_master_socket);
-	close(_epollfd);
+	if (_master_socket != -1)
+		close(_master_socket);
+	if (_epollfd != -1)
+		close(_epollfd);
 }
