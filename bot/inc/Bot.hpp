@@ -1,3 +1,7 @@
+#ifndef BOT_HPP
+
+#define BOT_HPP
+
 #include <string>
 #include <vector>
 #include "Command.hpp"
@@ -23,3 +27,5 @@ class Bot
 		std::vector<std::string>	_cmd_strings;
 		std::vector<Command*>		_cmds;
 };
+
+#endif

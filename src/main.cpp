@@ -45,7 +45,8 @@ int	main(int ac, char **av)
 	}
 	try {
 		setSignalHandler();
-		Server server = Server(port, password);
+		Server server = Server(password);
+		server.init(port);
 		server.poll_events();
 	} catch (std::exception& e) {
 		std::cerr << e.what() << std::endl;

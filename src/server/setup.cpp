@@ -5,6 +5,12 @@
 #include <sys/epoll.h>
 #include <csignal>
 
+void	Server::init(std::string port)
+{
+	setup_master_socket(port);
+	setup_poll();
+}
+
 void Server::setup_poll()
 {
 	struct epoll_event	poll_opts;

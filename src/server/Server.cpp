@@ -1,11 +1,8 @@
 #include "Server.hpp"
 #include <csignal>
 
-Server::Server(std::string port, std::string password) : _password(password), _name("cIRCussy")
-{
-	setup_master_socket(port);
-	setup_poll();
-}
+Server::Server(std::string password) : _password(password), _name("cIRCussy")
+{}
 
 Server::~Server()
 {

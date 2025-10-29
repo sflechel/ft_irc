@@ -15,7 +15,7 @@
 class Server
 {
 	public:
-		Server(std::string port, std::string password);
+		Server(std::string password);
 		~Server();
 
 		//main loop
@@ -42,6 +42,9 @@ class Server
 		std::map<std::string, Channel*>&	getChannels(void);
 		int									getMasterSocket(void) const;
 		int									getEpollFd(void) const;
+
+		//setup
+		void	init(std::string port);
 
 	private:
 		int								_master_socket;
