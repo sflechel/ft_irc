@@ -33,8 +33,8 @@ int HandlerReceive::readClientRequest()
 		bytes_read = recv(client_fd, read_buffer, READ_BUFFER_SIZE, 0);
 		if (bytes_read <= 0 && is_first_read)
 			return -1;
-		if (bytes_read <= 0 && !is_first_read)
-			return 0;
+		if (bytes_read == -1 && !is_first_read)
+			break;
 		read_buffer[bytes_read] = 0;
 		new_request += read_buffer;
 		is_first_read = false;

@@ -13,6 +13,8 @@ void	Pass::enactCommand(void)
 		_user.addResponse(_respbldr.buildResponseNum(_cmd_name, ERR_NEEDMOREPARAMS));
 	else if (_user.getIsRegistered())
 		_user.addResponse(_respbldr.buildResponseNum("", ERR_ALREADYREGISTERED));
+	else if (_user.getSentPassword())
+		_user.addResponse(_respbldr.buildResponseNum("", ERR_PASSWDALREADYSENT));
 	else if (_params.at(0) != _server.getPassword())
 		_user.addResponse(_respbldr.buildResponseNum( "", ERR_PASSWDMISMATCH));
 	else

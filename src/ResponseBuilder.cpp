@@ -55,6 +55,9 @@ std::string ResponseBuilder::enumericToMessage(e_numeric code, std::string user_
 		case ERR_NOSUCHCHANNEL:
 			response += user_input + " :No such channel";
 			break;
+		case ERR_PASSWDALREADYSENT:
+			response += ":Password already sent";
+			break;
 		case ERR_UNKNOWNCOMMAND:
 			response += user_input + " :Unknown command";
 			break;
@@ -71,7 +74,7 @@ std::string ResponseBuilder::enumericToMessage(e_numeric code, std::string user_
 			response += user_input + " :They aren't on that channel";
 			break;
 		case ERR_NOTONCHANNEL:
-			response += user_input + "  :You're not on that channel";
+			response += user_input + " :You're not on that channel";
 			break;
 		case ERR_USERONCHANNEL:
 			response += user_input + " :is already on channel";

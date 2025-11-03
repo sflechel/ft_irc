@@ -1,6 +1,7 @@
 #include "commands/Topic.hpp"
 #include "Channel.hpp"
 #include "Command.hpp"
+#include "ResponseBuilder.hpp"
 #include <string>
 #include <vector>
 
@@ -10,7 +11,7 @@ Topic::Topic(Server& server, Client& user, std::string cmd_name, std::vector<std
 void	Topic::enactCommand(void)
 {
 	int size = _params.size();
-	if (size != 2)
+	if (size != 1 && size != 2)
 		_user.addResponse(_respbldr.buildResponseNum(_cmd_name, ERR_NEEDMOREPARAMS));
 	else if (!_user.getIsRegistered())
 		_user.addResponse(_respbldr.buildResponseNum("", ERR_NOTREGISTERED));
@@ -18,7 +19,9 @@ void	Topic::enactCommand(void)
 	{
 		Channel*	channel = _server.getChannel(_params.at(0));
 		if (channel == NULL)
-			_user.addResponse(_respbldr.buildResponseNum(channel->getName(), ERR_NOSUCHCHANNEL));
+			_user.addResponse(_respbldr.buildResponseNum(_params.at(0), ERR_NOSUCHCHANNEL));
+		else if (!channel->isUserInChannel(_user.getNickname()))
+			_user.addResponse(_respbldr.buildResponseNum(channel->getName(), ERR_USERNOTINCHANNEL));
 		else if (size == 1)
 		{
 			if (channel->getTopic().empty())

@@ -8,7 +8,6 @@
 #include <map>
 #include <string>
 #include <vector>
-#include <iostream>
 
 Join::Join(Server& server, Client& user, std::string cmd_name, std::vector<std::string> params) : Command(server, user, cmd_name, params)
 {}
@@ -93,6 +92,8 @@ void	Join::enactCommand(void)
 			Channel*	channel = _server.getChannel(name);
 			if (channel == NULL)
 				this->createChannel(name);
+			else if (channel->isUserInChannel(_user.getNickname()))
+				_user.addResponse(_respbldr.buildResponseNum(channel->getName(), ERR_USERONCHANNEL));
 			else if (channel->getIsInviteOnly() && !channel->isUserInvited(_user.getNickname()))
 				_user.addResponse(_respbldr.buildResponseNum(name, ERR_INVITEONLYCHAN));
 			else if (channel->getUserLimit() != -1 && (long)channel->getUsers().size() >= channel->getUserLimit())

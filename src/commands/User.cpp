@@ -10,7 +10,7 @@ void	User::enactCommand(void)
 {
 	if (!_user.getSentPassword())
 		_user.addResponse(_respbldr.buildResponseNum(_cmd_name, ERR_NOPASSWD));
-	else if (_params.size() != 4)
+	else if (_params.size() != 4 || _params.at(3).empty())
 		_user.addResponse(_respbldr.buildResponseNum(_cmd_name, ERR_NEEDMOREPARAMS));
 	else if (_user.getIsRegistered())
 		_user.addResponse(_respbldr.buildResponseNum("", ERR_ALREADYREGISTERED));
