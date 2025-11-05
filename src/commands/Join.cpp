@@ -85,7 +85,7 @@ void	Join::enactCommand(void)
 	else
 	{
 		std::string	name = _params.at(0);
-		if (name.size() < 2 || name.at(0) != '#')
+		if (name.size() < 2 || name.at(0) != '#' || name.find(":") != std::string::npos)
 			_user.addResponse(_respbldr.buildResponseNum(name, ERR_NOSUCHCHANNEL));
 		else
 		{
